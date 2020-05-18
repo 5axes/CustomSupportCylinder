@@ -1,7 +1,7 @@
 # Copyright (c) 2018 Lokster <http://lokspace.eu>
 # Based on the SupportBlocker plugin by Ultimaker B.V., and licensed under LGPLv3 or higher.
-# Modif lal le 18_05_2020  to change into cylinder support
-# Ref A : Cylinder length -> Pick point height
+# Modif lal 05-18-2020  to change the initial plugin into cylinder support
+# Modif 0.01 : Cylinder length -> Pick Point to base plate height
 
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtWidgets import QApplication
@@ -101,7 +101,7 @@ class CustomSupportsCylinder(Tool):
 
         node.setName("CustomSupportCylinder")
         node.setSelectable(True)
-        # création cylindre R , angle 2°
+        # Cylinder creation Radius , angle 2°, length
         long=position.y          
         mesh = self._createCylinder(10,2,long)
         node.setMeshData(mesh.build())
@@ -180,18 +180,20 @@ class CustomSupportsCylinder(Tool):
         
         verts = []
         for i in range(0, rng):
+            # Top
             verts.append([0, 2, 0])
             verts.append([r*math.cos((i+1)*ang), 2, r*math.sin((i+1)*ang)])
             verts.append([r*math.cos(i*ang), 2, r*math.sin(i*ang)])
- 
+            
+            #Side 1a
             verts.append([r*math.cos(i*ang), 2, r*math.sin(i*ang)])
             verts.append([r*math.cos((i+1)*ang), 2, r*math.sin((i+1)*ang)])
             verts.append([r*math.cos((i+1)*ang), l, r*math.sin((i+1)*ang)])
-
+            #Side 1b
             verts.append([r*math.cos((i+1)*ang), l, r*math.sin((i+1)*ang)])
             verts.append([r*math.cos(i*ang), l, r*math.sin(i*ang)])
             verts.append([r*math.cos(i*ang), 2, r*math.sin(i*ang)])
- 
+            #Bottom 
             verts.append([0, l, 0])
             verts.append([r*math.cos((i+1)*ang), l, r*math.sin((i+1)*ang)]) 
             verts.append([r*math.cos(i*ang), l, r*math.sin(i*ang)])
@@ -199,6 +201,7 @@ class CustomSupportsCylinder(Tool):
         mesh.setVertices(numpy.asarray(verts, dtype=numpy.float32))
 
         indices = []
+        # for every angle increment 12 Vertices
         tot = rng * 12
         for i in range(0, tot, 3): # 
             indices.append([i, i+1, i+2])
