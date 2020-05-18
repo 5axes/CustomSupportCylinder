@@ -1,10 +1,8 @@
 # Custom Supports plugin for Cura
 
-Cura plugin which enables you to add custom cylindical supports!
-It is based on the CustomSupports plugin version of Krasimir Stenanov Custom Supports plugin : http://lokspace.eu/cura-custom-supports-plugin/.
+Cura plugin which enables you to add custom cylindical supports. It is based on the CustomSupports plugin version of Krasimir Stenanov Custom Supports plugin : http://lokspace.eu/cura-custom-supports-plugin/.
 
 The initial version was tested on Cura 4.5
-
 
 Installation
 ----
@@ -25,7 +23,8 @@ How to use
 - click anywhere on the model to place support cylinder there
 - clicking existing support cylinder deletes it
 
-The length of the support is automaticaly set from the pick point to the construction plate of the printer.
+* The length of the support is automaticaly set from the pick point to the construction plate of the printer.
+* The diameter is define by using the value of support_tower_diameter (Support as Tower diameter) as Cylinder diameter 
 
 Note: it's easier to add/remove supports when you are in "Solid View" mode
 	
