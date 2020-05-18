@@ -3,10 +3,12 @@
 # All modification 5@xes
 # Modif lal 05-18-2020  to change the initial plugin into cylinder support
 # Modif 0.01 : Cylinder length -> Pick Point to base plate height
+# Modif 0.02 : Using  support_tower_diameter as variable to define the cylinder
 
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtWidgets import QApplication
 
+from UM.Logger import Logger
 from UM.Application import Application
 from UM.Math.Vector import Vector
 from UM.Tool import Tool
@@ -103,8 +105,14 @@ class CustomSupportsCylinder(Tool):
         node.setName("CustomSupportCylinder")
         node.setSelectable(True)
         # Cylinder creation Radius , angle 2°, length
-        long=position.y          
-        mesh = self._createCylinder(10,2,long)
+        long=position.y
+        
+        # get support_tower_diameter as cyminder value
+        id_ex=0
+        extrud = Application.getInstance().getGlobalContainerStack().extruderList
+        DiamCylinder = extrud[id_ex].getProperty("support_tower_diameter", "value")
+        # Logger.log('d', 'support_tower_diameter : ' + str(DiamCylinder))
+        mesh = self._createCylinder(DiamCylinder,2,long)
         node.setMeshData(mesh.build())
 
         active_build_plate = CuraApplication.getInstance().getMultiBuildPlateModel().activeBuildPlate
@@ -151,7 +159,7 @@ class CustomSupportsCylinder(Tool):
             plugin_enabled = global_container_stack.getProperty("support_mesh", "enabled")
 
         CuraApplication.getInstance().getController().toolEnabledChanged.emit(self._plugin_id, plugin_enabled)
-
+    
     def _onSelectionChanged(self):
         # When selection is passed from one object to another object, first the selection is cleared
         # and then it is set to the new object. We are only interested in the change from no selection
@@ -175,6 +183,8 @@ class CustomSupportsCylinder(Tool):
         # Can't use MeshBuilder.addCylinder() because that does not get per-vertex normals
         # Per-vertex normals require duplication of vertices
         r = size / 2
+        # additionale length
+        sup = size * 0.1
         l = -lg
         rng = int(360 / nb)
         ang = math.radians(nb)
@@ -182,18 +192,17 @@ class CustomSupportsCylinder(Tool):
         verts = []
         for i in range(0, rng):
             # Top
-            verts.append([0, 2, 0])
-            verts.append([r*math.cos((i+1)*ang), 2, r*math.sin((i+1)*ang)])
-            verts.append([r*math.cos(i*ang), 2, r*math.sin(i*ang)])
-            
+            verts.append([0, sup, 0])
+            verts.append([r*math.cos((i+1)*ang), sup, r*math.sin((i+1)*ang)])
+            verts.append([r*math.cos(i*ang), sup, r*math.sin(i*ang)])
             #Side 1a
-            verts.append([r*math.cos(i*ang), 2, r*math.sin(i*ang)])
-            verts.append([r*math.cos((i+1)*ang), 2, r*math.sin((i+1)*ang)])
+            verts.append([r*math.cos(i*ang), sup, r*math.sin(i*ang)])
+            verts.append([r*math.cos((i+1)*ang), sup, r*math.sin((i+1)*ang)])
             verts.append([r*math.cos((i+1)*ang), l, r*math.sin((i+1)*ang)])
             #Side 1b
             verts.append([r*math.cos((i+1)*ang), l, r*math.sin((i+1)*ang)])
             verts.append([r*math.cos(i*ang), l, r*math.sin(i*ang)])
-            verts.append([r*math.cos(i*ang), 2, r*math.sin(i*ang)])
+            verts.append([r*math.cos(i*ang), sup, r*math.sin(i*ang)])
             #Bottom 
             verts.append([0, l, 0])
             verts.append([r*math.cos((i+1)*ang), l, r*math.sin((i+1)*ang)]) 
