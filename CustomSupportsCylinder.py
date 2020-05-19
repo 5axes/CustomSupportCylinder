@@ -1,7 +1,7 @@
 # Initial Copyright (c) 2018 Lokster <http://lokspace.eu>
 # Based on the SupportBlocker plugin by Ultimaker B.V., and licensed under LGPLv3 or higher.
 # All modification 5@xes
-# Modif lal 05-18-2020  to change the initial plugin into cylinder support
+# First release 05-18-2020  to change the initial plugin into cylinder support
 # Modif 0.01 : Cylinder length -> Pick Point to base plate height
 # Modif 0.02 : Using  support_tower_diameter as variable to define the cylinder
 # Modif 0.03 : Using a special parameter  support_tower_diameter as variable to define the cylinder
