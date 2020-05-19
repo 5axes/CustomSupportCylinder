@@ -13,7 +13,8 @@ Item
     height: childrenRect.height
     UM.I18nCatalog { id: catalog; name: "uranium"}
 
-    property string xText
+    property string sizeText
+	property bool lockType: false
 
     //Rounds a floating point number to 4 decimals. This prevents floating
     //point rounding errors.
@@ -57,7 +58,7 @@ Item
         Label
         {
             height: UM.Theme.getSize("setting_control").height;
-            text: "Diameter";
+            text: "Size";
             font: UM.Theme.getFont("default");
             color: UM.Theme.getColor("text");
             verticalAlignment: Text.AlignVCenter;
@@ -72,32 +73,84 @@ Item
             height: UM.Theme.getSize("setting_control").height;
             property string unit: "mm";
             style: UM.Theme.styles.text_field;
-            text: xText
+            text: sizeText
             validator: DoubleValidator
             {
-                decimals: 4
+                decimals: 3
                 locale: "en_US"
             }
 
             onEditingFinished:
             {
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.ActiveTool.setProperty("Diam", modified_text);
+                UM.ActiveTool.setProperty("SSize", modified_text);
             }
             // Keys.onBacktabPressed: selectTextInTextfield(zTextField)
             // Keys.onTabPressed: selectTextInTextfield(yTextField)
         }
     }
 
+    CheckBox
+    {
+        property var checkbox_state: 0; // 
 
+        // temporary property, which is used to recalculate checkbox state and keeps reference of the
+        // binging object. If the binding object changes then checkBox state will be updated.
+        property var temp_checkBox_value:{
+
+            checkbox_state = getCheckBoxState()
+
+            // returning the lockType the propery will keep reference, for updating
+            return base.lockType
+        }
+
+        function getCheckBoxState(){
+            if (base.lockType == true){
+                lockTypeCheckbox.checked = true
+                return 1;
+            }
+            else{
+                lockTypeCheckbox.checked = false
+                return 0;
+            }
+        }
+
+
+        id: lockTypeCheckbox
+        anchors.top: textfields.bottom
+        anchors.topMargin: UM.Theme.getSize("default_margin").height;
+        anchors.left: textfields.left
+        anchors.leftMargin: UM.Theme.getSize("default_margin").width
+
+        text: catalog.i18nc("@option:check","Create Cube");
+        style: UM.Theme.styles.partially_checkbox;
+
+        onClicked: {
+
+            UM.ActiveTool.setProperty("LockCube", lockTypeCheckbox.checked);
+
+
+            // After clicking the base.lockType is not refreshed, fot this reason manually update the state
+            // Set zero because only 2 will show partially icon in checkbox
+            checkbox_state = 0;
+        }
+    }
+	
     // We have to use indirect bindings, as the values can be changed from the outside, which could cause breaks
     // (for instance, a value would be set, but it would be impossible to change it).
     // Doing it indirectly does not break these.
     Binding
     {
         target: base
-        property: "xText"
-        value: base.roundFloat(UM.ActiveTool.properties.getValue("Diam"), 4)
+        property: "sizeText"
+        value: base.roundFloat(UM.ActiveTool.properties.getValue("SSize"), 4)
+    }
+	
+    Binding
+    {
+        target: base
+        property: "lockType"
+        value: UM.ActiveTool.properties.getValue("LockCube")
     }
 
 }

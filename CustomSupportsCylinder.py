@@ -6,6 +6,7 @@
 # Modif 0.02 : Using  support_tower_diameter as variable to define the cylinder
 # Modif 0.03 : Using a special parameter  support_tower_diameter as variable to define the cylinder
 # Modif 0.04 : Add a text field to define the diameter
+# Modif 0.05 : Add checkbox and option to swaitch between Cube / Cylinder
 
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtWidgets import QApplication
@@ -46,7 +47,8 @@ class CustomSupportsCylinder(Tool):
     def __init__(self):
         super().__init__()
         
-        self.UseDiameter = 0.0
+        self.UseSize = 0.0
+        self.Usecube = False
         
         self._shortcut_key = Qt.Key_S
         self._controller = self.getController()
@@ -57,14 +59,13 @@ class CustomSupportsCylinder(Tool):
 
         self._i18n_catalog = None
         
-        self.setExposedProperties("ToolHint", "Diam")
+        self.setExposedProperties("SSize", "LockCube")
                                   
-                                  
-                                  
+                                                     
         self._settings_dict = OrderedDict()
-        self._settings_dict["diameter_custom_support"] = {
-            "label": "Diameter custom support",
-            "description": "Define the diameter custom support",
+        self._settings_dict["size_custom_support"] = {
+            "label": "Size custom support",
+            "description": "Define the default size for the custom support",
             "type": "float",
             "unit": "mm",
             "default_value": 10,
@@ -173,7 +174,11 @@ class CustomSupportsCylinder(Tool):
     def _createSupportMesh(self, parent: CuraSceneNode, position: Vector):
         node = CuraSceneNode()
 
-        node.setName("CustomSupportCylinder")
+        if self.Usecube:
+            node.setName("CustomSupportCube")
+        else:
+            node.setName("CustomSupportCylinder")
+            
         node.setSelectable(True)
         
         # Cylinder creation Diameter , Increment angle 2°, length
@@ -184,8 +189,10 @@ class CustomSupportsCylinder(Tool):
         # extrud = Application.getInstance().getGlobalContainerStack().extruderList
         # DiamCyl = extrud[id_ex].getProperty("diameter_custom_support", "value"
         # Logger.log('d', 'diameter_custom_support : ' + str(DiamCylinder))
-        
-        mesh = self._createCylinder(self.UseDiameter,2,long)
+        if self.Usecube :
+            mesh =  self._createCube(self.UseSize,long)
+        else:
+            mesh = self._createCylinder(self.UseSize,2,long)
         node.setMeshData(mesh.build())
 
         active_build_plate = CuraApplication.getInstance().getMultiBuildPlateModel().activeBuildPlate
@@ -249,11 +256,37 @@ class CustomSupportsCylinder(Tool):
             self._skip_press = False
 
         self._had_selection = has_selection
-
-    def _createCylinder(self, size, nb , lg):
+    
+    # Cylinder Cube
+    def _createCube(self, size, height):
         mesh = MeshBuilder()
 
-        # Can't use MeshBuilder.addCylinder() because that does not get per-vertex normals
+        # Can't use MeshBuilder.addCube() because that does not get per-vertex normals
+        # Per-vertex normals require duplication of vertices
+        s = size / 2
+        l = height 
+        verts = [ # 6 faces with 4 corners each
+            [-s, -l,  s], [-s,  s,  s], [ s,  s,  s], [ s, -l,  s],
+            [-s,  s, -s], [-s, -l, -s], [ s, -l, -s], [ s,  s, -s],
+            [ s, -l, -s], [-s, -l, -s], [-s, -l,  s], [ s, -l,  s],
+            [-s,  s, -s], [ s,  s, -s], [ s,  s,  s], [-s,  s,  s],
+            [-s, -l,  s], [-s, -l, -s], [-s,  s, -s], [-s,  s,  s],
+            [ s, -l, -s], [ s, -l,  s], [ s,  s,  s], [ s,  s, -s]
+        ]
+        mesh.setVertices(numpy.asarray(verts, dtype=numpy.float32))
+
+        indices = []
+        for i in range(0, 24, 4): # All 6 quads (12 triangles)
+            indices.append([i, i+2, i+1])
+            indices.append([i, i+3, i+2])
+        mesh.setIndices(numpy.asarray(indices, dtype=numpy.int32))
+
+        mesh.calculateNormals()
+        return mesh
+    
+    # Cylinder creation
+    def _createCylinder(self, size, nb , lg):
+        mesh = MeshBuilder()
         # Per-vertex normals require duplication of vertices
         r = size / 2
         # additionale length
@@ -293,34 +326,41 @@ class CustomSupportsCylinder(Tool):
         mesh.calculateNormals()
         return mesh
     
-    def getDiam(self) -> float:
-        """ return: Diam  in mm.
+    def getSSize(self) -> float:
+        """ return: SSize  in mm.
         """
         # get diameter_custom_support as cylinder value
-        if self.UseDiameter == 0:
+        if self.UseSize == 0:
             id_ex=0
             extrud = Application.getInstance().getGlobalContainerStack().extruderList
-            DiamCylinder = extrud[id_ex].getProperty("diameter_custom_support", "value")
-            self.UseDiameter = DiamCylinder
+            DiamCylinder = extrud[id_ex].getProperty("size_custom_support", "value")
+            self.UseSize = DiamCylinder
         else:
-            DiamCylinder = self.UseDiameter 
+            DiamCylinder = self.UseSize 
            
-        
         return DiamCylinder
   
-    def setDiam(self, Diam: str) -> None:
+    def setSSize(self, SSize: str) -> None:
         """
-        :param Diam: Diameter in mm.
+        :param SSize: Size in mm.
         """
        
         self._controller.toolOperationStopped.emit(self)
-        self.UseDiameter = float(Diam)
-        #Logger.log('d', 'diameter_custom_support : ' + self.UseDiameter)
-        
-    def getToolHint(self):
-        """Return a formatted distance of the current translate operation.
-        
-        :return: Fully formatted string showing the distance by which the
-        mesh(es) are dragged.
+        self.UseSize = float(SSize)
+        #Logger.log('d', 'size_custom_support : ' + self.Usecube)
+ 
+    def getLockCube(self) -> bool:
         """
-        return None
+        Usecube
+        """        
+        Logger.log('d', 'getLockCube : ' + str(self.Usecube))
+        return self.Usecube
+  
+    def setLockCube(self, LockCube: bool) -> None:
+        """
+         Param lock for cube
+        """
+       
+        self._controller.toolOperationStopped.emit(self)
+        self.Usecube = LockCube
+
