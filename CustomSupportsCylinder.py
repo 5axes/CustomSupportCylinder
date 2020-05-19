@@ -46,6 +46,7 @@ class CustomSupportsCylinder(Tool):
         self._UseSize = 0.0
         self._UseCube = False
         
+        # Shortcut
         self._shortcut_key = Qt.Key_F
         self._controller = self.getController()
 
@@ -69,49 +70,13 @@ class CustomSupportsCylinder(Tool):
         self._had_selection_timer.setInterval(0)
         self._had_selection_timer.setSingleShot(True)
         self._had_selection_timer.timeout.connect(self._selectionChangeDelay)
-
-
+        
+        # set the preferences to store the default value
         self._preferences = CuraApplication.getInstance().getPreferences()
         self._preferences.addPreference("customsupportcylinder/s_size", 5)
         # rajout du float pour etre sure sinon sur valeur ronde pense que c'est un INT
         self._UseSize = float(self._preferences.getValue("customsupportcylinder/s_size"))
         
-        
-        
-    def _onContainerLoadComplete(self, container_id):
-        if not ContainerRegistry.getInstance().isLoaded(container_id):
-            # skip containers that could not be loaded, or subsequent findContainers() will cause an infinite loop
-            return
-
-        try:
-            container = ContainerRegistry.getInstance().findContainers(id = container_id)[0]
-        except IndexError:
-            # the container no longer exists
-            return
-
-        if not isinstance(container, DefinitionContainer):
-            # skip containers that are not definitions
-            return
-        if container.getMetaDataEntry("type") == "extruder":
-            # skip extruder definitions
-            return
-
-        support_category = container.findDefinitions(key="support")
-        customsupport_setting = container.findDefinitions(key=list(self._settings_dict.keys())[0])
-        if support_category and not customsupport_setting:
-            # this machine doesn't have a zoffset setting yet
-            support_category = support_category[0]
-            for setting_key, setting_dict in self._settings_dict.items():
-
-                definition = SettingDefinition(setting_key, container, support_category, self._i18n_catalog)
-                definition.deserialize(setting_dict)
-
-                # add the setting to the already existing platform adhesion settingdefinition
-                # private member access is naughty, but the alternative is to serialise, nix and deserialise the whole thing,
-                # which breaks stuff
-                support_category._children.append(definition)
-                container._definition_cache[setting_key] = definition
-                container._updateRelations(definition)
                 
     def event(self, event):
         super().event(event)
@@ -241,7 +206,7 @@ class CustomSupportsCylinder(Tool):
 
         self._had_selection = has_selection
     
-    # Cube creation
+    # Cylinder Cube
     def _createCube(self, size, height):
         mesh = MeshBuilder()
 
