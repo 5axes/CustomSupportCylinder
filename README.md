@@ -26,7 +26,7 @@ How to use
 - Click on the "Custom Supports Cylinder" button on the left toolbar
 
 
-![Numeric input field in the tool panel](./images/diameter.jpg)
+![Numeric input field in the tool panel](./images/option.jpg)
 
 
 
@@ -34,9 +34,11 @@ How to use
 - **Clicking existing support cylinder deletes it**
 
 * The length of the support is automaticaly set from the pick point to the construction plate of the printer.
-* The default diameter is define by using the value of diameter_custom_support in the support section (parameter added by this plugin)
+* The default diameter is define by using the value of size_custom_support in the support section (parameter added by this plugin)
 
-![parameter diameter_custom_support](./images/parametrediam.jpg)
+![parameter size_custom_support](./images/parametre_size.jpg)
+
+With the CheckBox 'Create cube', it's possible to switch the geometry between a cylinder or a cubic support
 
 >Note: it's easier to add/remove supports when you are in "Solid View" mode
 	
