@@ -5,7 +5,7 @@
 # Modif 0.01 : Cylinder length -> Pick Point to base plate height
 # Modif 0.02 : Using  support_tower_diameter as variable to define the cylinder
 # Modif 0.03 : Using a special parameter  support_tower_diameter as variable to define the cylinder
-# Modif 0.03 : Ajout du menu
+# Modif 0.04 : Add a text field to define the diameter
 
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtWidgets import QApplication
@@ -46,6 +46,7 @@ class CustomSupportsCylinder(Tool):
     def __init__(self):
         super().__init__()
         
+        # Default value for the support diameter
         self.UseDiameter = 10.0
         
         self._shortcut_key = Qt.Key_S
@@ -58,9 +59,7 @@ class CustomSupportsCylinder(Tool):
         self._i18n_catalog = None
         
         self.setExposedProperties("ToolHint", "Diam")
-                                  
-                                  
-                                  
+                                                 
         self._settings_dict = OrderedDict()
         self._settings_dict["diameter_custom_support"] = {
             "label": "Diameter custom support",
@@ -175,15 +174,14 @@ class CustomSupportsCylinder(Tool):
 
         node.setName("CustomSupportCylinder")
         node.setSelectable(True)
-        # Cylinder creation Radius , angle 2°, length
+        
+        # Cylinder creation Diameter , Increment angle 2°, length
         long=position.y
 
         # get diameter_custom_support as cylinder value
-        
         # id_ex=0
         # extrud = Application.getInstance().getGlobalContainerStack().extruderList
-        # DiamCyl = extrud[id_ex].getProperty("diameter_custom_support", "value")
-        
+        # DiamCyl = extrud[id_ex].getProperty("diameter_custom_support", "value"
         # Logger.log('d', 'diameter_custom_support : ' + str(DiamCylinder))
         
         mesh = self._createCylinder(self.UseDiameter,2,long)
