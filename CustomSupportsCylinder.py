@@ -5,6 +5,7 @@
 # Modif 0.01 : Cylinder length -> Pick Point to base plate height
 # Modif 0.02 : Using  support_tower_diameter as variable to define the cylinder
 # Modif 0.03 : Using a special parameter  support_tower_diameter as variable to define the cylinder
+# Modif 0.03 : Ajout du menu
 
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtWidgets import QApplication
@@ -34,6 +35,8 @@ from UM.Settings.SettingInstance import SettingInstance
 from cura.Scene.SliceableObjectDecorator import SliceableObjectDecorator
 from cura.Scene.BuildPlateDecorator import BuildPlateDecorator
 from cura.Scene.CuraSceneNode import CuraSceneNode
+from UM.Scene.ToolHandle import ToolHandle
+from UM.Tool import Tool
 
 from collections import OrderedDict
 import math
@@ -42,6 +45,9 @@ import numpy
 class CustomSupportsCylinder(Tool):
     def __init__(self):
         super().__init__()
+        
+        self.UseDiameter = 10.0
+        
         self._shortcut_key = Qt.Key_S
         self._controller = self.getController()
 
@@ -50,7 +56,11 @@ class CustomSupportsCylinder(Tool):
         self._application = Application.getInstance()
 
         self._i18n_catalog = None
-
+        
+        self.setExposedProperties("ToolHint", "Diam")
+                                  
+                                  
+                                  
         self._settings_dict = OrderedDict()
         self._settings_dict["diameter_custom_support"] = {
             "label": "Diameter custom support",
@@ -167,13 +177,16 @@ class CustomSupportsCylinder(Tool):
         node.setSelectable(True)
         # Cylinder creation Radius , angle 2°, length
         long=position.y
-        
+
         # get diameter_custom_support as cylinder value
-        id_ex=0
-        extrud = Application.getInstance().getGlobalContainerStack().extruderList
-        DiamCylinder = extrud[id_ex].getProperty("diameter_custom_support", "value")
+        
+        # id_ex=0
+        # extrud = Application.getInstance().getGlobalContainerStack().extruderList
+        # DiamCyl = extrud[id_ex].getProperty("diameter_custom_support", "value")
+        
         # Logger.log('d', 'diameter_custom_support : ' + str(DiamCylinder))
-        mesh = self._createCylinder(DiamCylinder,2,long)
+        
+        mesh = self._createCylinder(self.UseDiameter,2,long)
         node.setMeshData(mesh.build())
 
         active_build_plate = CuraApplication.getInstance().getMultiBuildPlateModel().activeBuildPlate
@@ -280,3 +293,30 @@ class CustomSupportsCylinder(Tool):
 
         mesh.calculateNormals()
         return mesh
+    
+    def getDiam(self) -> float:
+        """ return: Diam  in mm.
+        """
+        # get diameter_custom_support as cylinder value
+        id_ex=0
+        extrud = Application.getInstance().getGlobalContainerStack().extruderList
+        DiamCylinder = extrud[id_ex].getProperty("diameter_custom_support", "value")
+        
+        return DiamCylinder
+  
+    def setDiam(self, Diam: str) -> None:
+        """
+        :param Diam: Diameter in mm.
+        """
+       
+        self._controller.toolOperationStopped.emit(self)
+        self.UseDiameter = float(Diam)
+        #Logger.log('d', 'diameter_custom_support : ' + self.UseDiameter)
+        
+    def getToolHint(self):
+        """Return a formatted distance of the current translate operation.
+        
+        :return: Fully formatted string showing the distance by which the
+        mesh(es) are dragged.
+        """
+        return None

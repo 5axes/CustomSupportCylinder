@@ -12,7 +12,8 @@ def getMetaData():
             "name": i18n_catalog.i18nc("@label", "Custom Supports Cylinder"),
             "description": i18n_catalog.i18nc("@info:tooltip", "Add custom supports Cylinder"),
             "icon": "tool_icon.svg",
-            "weight": 4
+            "tool_panel": "CustomSupport.qml",
+            "weight": 8
         }
     }
 
