@@ -4,9 +4,12 @@
 # Modif lal 05-18-2020  to change the initial plugin into cylinder support
 # Modif 0.01 : Cylinder length -> Pick Point to base plate height
 # Modif 0.02 : Using  support_tower_diameter as variable to define the cylinder
+# Modif 0.03 : Using a special parameter  support_tower_diameter as variable to define the cylinder
 
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtWidgets import QApplication
+
+from cura.CuraApplication import CuraApplication
 
 from UM.Logger import Logger
 from UM.Application import Application
@@ -16,8 +19,6 @@ from UM.Event import Event, MouseEvent
 from UM.Mesh.MeshBuilder import MeshBuilder
 from UM.Scene.Selection import Selection
 
-from cura.CuraApplication import CuraApplication
-from cura.Scene.CuraSceneNode import CuraSceneNode
 from cura.PickingPass import PickingPass
 
 from UM.Operations.GroupedOperation import GroupedOperation
@@ -25,11 +26,16 @@ from UM.Operations.AddSceneNodeOperation import AddSceneNodeOperation
 from UM.Operations.RemoveSceneNodeOperation import RemoveSceneNodeOperation
 from cura.Operations.SetParentOperation import SetParentOperation
 
-from cura.Scene.SliceableObjectDecorator import SliceableObjectDecorator
-from cura.Scene.BuildPlateDecorator import BuildPlateDecorator
-
+from UM.Settings.SettingDefinition import SettingDefinition
+from UM.Settings.DefinitionContainer import DefinitionContainer
+from UM.Settings.ContainerRegistry import ContainerRegistry
 from UM.Settings.SettingInstance import SettingInstance
 
+from cura.Scene.SliceableObjectDecorator import SliceableObjectDecorator
+from cura.Scene.BuildPlateDecorator import BuildPlateDecorator
+from cura.Scene.CuraSceneNode import CuraSceneNode
+
+from collections import OrderedDict
 import math
 import numpy
 
@@ -40,6 +46,26 @@ class CustomSupportsCylinder(Tool):
         self._controller = self.getController()
 
         self._selection_pass = None
+        
+        self._application = Application.getInstance()
+
+        self._i18n_catalog = None
+
+        self._settings_dict = OrderedDict()
+        self._settings_dict["diameter_custom_support"] = {
+            "label": "Diameter custom support",
+            "description": "Define the diameter custom support",
+            "type": "float",
+            "unit": "mm",
+            "default_value": 10,
+            "minimum_value": 0.1,
+            "settable_per_mesh": False,
+            "settable_per_extruder": False,
+            "settable_per_meshgroup": False
+        }
+
+        ContainerRegistry.getInstance().containerLoadComplete.connect(self._onContainerLoadComplete)
+        
         CuraApplication.getInstance().globalContainerStackChanged.connect(self._updateEnabled)
 
         # Note: if the selection is cleared with this tool active, there is no way to switch to
@@ -55,6 +81,41 @@ class CustomSupportsCylinder(Tool):
         self._had_selection_timer.setSingleShot(True)
         self._had_selection_timer.timeout.connect(self._selectionChangeDelay)
 
+    def _onContainerLoadComplete(self, container_id):
+        if not ContainerRegistry.getInstance().isLoaded(container_id):
+            # skip containers that could not be loaded, or subsequent findContainers() will cause an infinite loop
+            return
+
+        try:
+            container = ContainerRegistry.getInstance().findContainers(id = container_id)[0]
+        except IndexError:
+            # the container no longer exists
+            return
+
+        if not isinstance(container, DefinitionContainer):
+            # skip containers that are not definitions
+            return
+        if container.getMetaDataEntry("type") == "extruder":
+            # skip extruder definitions
+            return
+
+        support_category = container.findDefinitions(key="support")
+        customsupport_setting = container.findDefinitions(key=list(self._settings_dict.keys())[0])
+        if support_category and not customsupport_setting:
+            # this machine doesn't have a zoffset setting yet
+            support_category = support_category[0]
+            for setting_key, setting_dict in self._settings_dict.items():
+
+                definition = SettingDefinition(setting_key, container, support_category, self._i18n_catalog)
+                definition.deserialize(setting_dict)
+
+                # add the setting to the already existing platform adhesion settingdefinition
+                # private member access is naughty, but the alternative is to serialise, nix and deserialise the whole thing,
+                # which breaks stuff
+                support_category._children.append(definition)
+                container._definition_cache[setting_key] = definition
+                container._updateRelations(definition)
+                
     def event(self, event):
         super().event(event)
         modifiers = QApplication.keyboardModifiers()
@@ -107,11 +168,11 @@ class CustomSupportsCylinder(Tool):
         # Cylinder creation Radius , angle 2°, length
         long=position.y
         
-        # get support_tower_diameter as cyminder value
+        # get diameter_custom_support as cylinder value
         id_ex=0
         extrud = Application.getInstance().getGlobalContainerStack().extruderList
-        DiamCylinder = extrud[id_ex].getProperty("support_tower_diameter", "value")
-        # Logger.log('d', 'support_tower_diameter : ' + str(DiamCylinder))
+        DiamCylinder = extrud[id_ex].getProperty("diameter_custom_support", "value")
+        # Logger.log('d', 'diameter_custom_support : ' + str(DiamCylinder))
         mesh = self._createCylinder(DiamCylinder,2,long)
         node.setMeshData(mesh.build())
 
