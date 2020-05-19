@@ -25,7 +25,7 @@ How to use
 - clicking existing support cylinder deletes it
 
 * The length of the support is automaticaly set from the pick point to the construction plate of the printer.
-* The diameter is define by using the value of support_tower_diameter (Support as Tower diameter) as Cylinder diameter 
+* The diameter is define by using the value of diameter_custom_support in the support section (parameter added by this plugin) 
 
 Note: it's easier to add/remove supports when you are in "Solid View" mode
 	
