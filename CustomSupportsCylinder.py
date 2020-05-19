@@ -7,6 +7,7 @@
 # Modif 0.03 : Using a special parameter  support_tower_diameter as variable to define the cylinder
 # Modif 0.04 : Add a text field to define the diameter
 # Modif 0.05 : Add checkbox and option to swaitch between Cube / Cylinder
+# Modif 0.06 : Symplify code and store defaut size support in Preference "customsupportcylinder/s_size" default 5
 
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtWidgets import QApplication
@@ -14,7 +15,6 @@ from PyQt5.QtWidgets import QApplication
 from cura.CuraApplication import CuraApplication
 
 from UM.Logger import Logger
-from UM.Application import Application
 from UM.Math.Vector import Vector
 from UM.Tool import Tool
 from UM.Event import Event, MouseEvent
@@ -28,9 +28,6 @@ from UM.Operations.AddSceneNodeOperation import AddSceneNodeOperation
 from UM.Operations.RemoveSceneNodeOperation import RemoveSceneNodeOperation
 from cura.Operations.SetParentOperation import SetParentOperation
 
-from UM.Settings.SettingDefinition import SettingDefinition
-from UM.Settings.DefinitionContainer import DefinitionContainer
-from UM.Settings.ContainerRegistry import ContainerRegistry
 from UM.Settings.SettingInstance import SettingInstance
 
 from cura.Scene.SliceableObjectDecorator import SliceableObjectDecorator
@@ -47,35 +44,17 @@ class CustomSupportsCylinder(Tool):
     def __init__(self):
         super().__init__()
         
-        self.UseSize = 0.0
-        self.Usecube = False
+        self._UseSize = 0.0
+        self._UseCube = False
         
         self._shortcut_key = Qt.Key_S
         self._controller = self.getController()
 
         self._selection_pass = None
-        
-        self._application = Application.getInstance()
 
         self._i18n_catalog = None
         
         self.setExposedProperties("SSize", "LockCube")
-                                  
-                                                     
-        self._settings_dict = OrderedDict()
-        self._settings_dict["size_custom_support"] = {
-            "label": "Size custom support",
-            "description": "Define the default size for the custom support",
-            "type": "float",
-            "unit": "mm",
-            "default_value": 10,
-            "minimum_value": 0.1,
-            "settable_per_mesh": False,
-            "settable_per_extruder": False,
-            "settable_per_meshgroup": False
-        }
-
-        ContainerRegistry.getInstance().containerLoadComplete.connect(self._onContainerLoadComplete)
         
         CuraApplication.getInstance().globalContainerStackChanged.connect(self._updateEnabled)
 
@@ -92,6 +71,14 @@ class CustomSupportsCylinder(Tool):
         self._had_selection_timer.setSingleShot(True)
         self._had_selection_timer.timeout.connect(self._selectionChangeDelay)
 
+
+        self._preferences = CuraApplication.getInstance().getPreferences()
+        self._preferences.addPreference("customsupportcylinder/s_size", 5)
+        # rajout du float pour etre sure sinon sur valeur ronde pense que c'est un INT
+        self._UseSize = float(self._preferences.getValue("customsupportcylinder/s_size"))
+        
+        
+        
     def _onContainerLoadComplete(self, container_id):
         if not ContainerRegistry.getInstance().isLoaded(container_id):
             # skip containers that could not be loaded, or subsequent findContainers() will cause an infinite loop
@@ -145,7 +132,7 @@ class CustomSupportsCylinder(Tool):
 
             if self._selection_pass is None:
                 # The selection renderpass is used to identify objects in the current view
-                self._selection_pass = Application.getInstance().getRenderer().getRenderPass("selection")
+                self._selection_pass = CuraApplication.getInstance().getRenderer().getRenderPass("selection")
             picked_node = self._controller.getScene().findObject(self._selection_pass.getIdAtPosition(event.x, event.y))
             if not picked_node:
                 # There is no slicable object at the picked location
@@ -174,25 +161,23 @@ class CustomSupportsCylinder(Tool):
     def _createSupportMesh(self, parent: CuraSceneNode, position: Vector):
         node = CuraSceneNode()
 
-        if self.Usecube:
+        if self._UseCube:
             node.setName("CustomSupportCube")
         else:
             node.setName("CustomSupportCylinder")
             
         node.setSelectable(True)
         
-        # Cylinder creation Diameter , Increment angle 2°, length
+        # long=Support Height
         long=position.y
 
-        # get diameter_custom_support as cylinder value
-        # id_ex=0
-        # extrud = Application.getInstance().getGlobalContainerStack().extruderList
-        # DiamCyl = extrud[id_ex].getProperty("diameter_custom_support", "value"
-        # Logger.log('d', 'diameter_custom_support : ' + str(DiamCylinder))
-        if self.Usecube :
-            mesh =  self._createCube(self.UseSize,long)
+        if self._UseCube :
+            # Cube creation Size , length
+            mesh =  self._createCube(self._UseSize,long)
         else:
-            mesh = self._createCylinder(self.UseSize,2,long)
+            # Cylinder creation Diameter , Increment angle 2°, length
+            mesh = self._createCylinder(self._UseSize,2,long)
+        
         node.setMeshData(mesh.build())
 
         active_build_plate = CuraApplication.getInstance().getMultiBuildPlateModel().activeBuildPlate
@@ -327,40 +312,39 @@ class CustomSupportsCylinder(Tool):
         return mesh
     
     def getSSize(self) -> float:
-        """ return: SSize  in mm.
-        """
-        # get diameter_custom_support as cylinder value
-        if self.UseSize == 0:
-            id_ex=0
-            extrud = Application.getInstance().getGlobalContainerStack().extruderList
-            DiamCylinder = extrud[id_ex].getProperty("size_custom_support", "value")
-            self.UseSize = DiamCylinder
-        else:
-            DiamCylinder = self.UseSize 
-           
-        return DiamCylinder
+        """ 
+            return: SSize  in mm.
+        """           
+        return self._UseSize
   
     def setSSize(self, SSize: str) -> None:
         """
-        :param SSize: Size in mm.
+        param SSize: Size in mm.
         """
-       
-        self._controller.toolOperationStopped.emit(self)
-        self.UseSize = float(SSize)
-        #Logger.log('d', 'size_custom_support : ' + self.Usecube)
+ 
+        try:
+            s_value = float(SSize)
+        except ValueError:
+            return
+
+        if s_value <= 0:
+            return
+        
+        #Logger.log('d', 's_value : ' + str(s_value))        
+        self._UseSize = s_value
+        self._preferences.setValue("customsupportcylinder/s_size", s_value)
  
     def getLockCube(self) -> bool:
         """
         Usecube
         """        
-        # Logger.log('d', 'getLockCube : ' + str(self.Usecube))
-        return self.Usecube
+        # Logger.log('d', 'getLockCube : ' + str(self._UseCube))
+        return self._UseCube
   
     def setLockCube(self, LockCube: bool) -> None:
         """
          Param lock for cube
         """
-       
-        self._controller.toolOperationStopped.emit(self)
-        self.Usecube = LockCube
+        #Logger.log('d', 'getLockCube : ' + str(LockCube))
+        self._UseCube = LockCube
 
