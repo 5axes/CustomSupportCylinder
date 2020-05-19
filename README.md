@@ -21,8 +21,8 @@ How to use
 ----
 - Load some model in Cura and select it
 - Uncheck the "Generate Support" checkbox in the right panel **(if you want to use ONLY custom supports)**
-- Change de value for the diameter in numeric input field in the tool panel
 - Click on the "Custom Supports Cylinder" button on the left toolbar
+- Change de value for the support *Size* in numeric input field in the tool panel if necessary
 
 
 ![Numeric input field in the tool panel](./images/option.jpg)
