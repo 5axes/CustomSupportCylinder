@@ -23,12 +23,14 @@ How to use
 ----
 - Load some model in Cura and select it
 - Uncheck the "Generate Support" checkbox in the right panel (if you want to use ONLY custom supports)
+- Change de value for the diameter in numeric input field in the tool panel
+![Numeric input field in the tool panel](./images/diameter.jpg)
 - click on the "Custom Supports Cylinder" button on the left toolbar
 - click anywhere on the model to place support cylinder there
 - clicking existing support cylinder deletes it
 
 * The length of the support is automaticaly set from the pick point to the construction plate of the printer.
-* The diameter is define by using the value of diameter_custom_support in the support section (parameter added by this plugin)
+* The default diameter is define by using the value of diameter_custom_support in the support section (parameter added by this plugin)
 
 ![parameter diameter_custom_support](./images/parametrediam.jpg)
 
