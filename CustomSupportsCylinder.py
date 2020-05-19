@@ -46,8 +46,7 @@ class CustomSupportsCylinder(Tool):
     def __init__(self):
         super().__init__()
         
-        # Default value for the support diameter
-        self.UseDiameter = 10.0
+        self.UseDiameter = 0.0
         
         self._shortcut_key = Qt.Key_S
         self._controller = self.getController()
@@ -59,7 +58,9 @@ class CustomSupportsCylinder(Tool):
         self._i18n_catalog = None
         
         self.setExposedProperties("ToolHint", "Diam")
-                                                 
+                                  
+                                  
+                                  
         self._settings_dict = OrderedDict()
         self._settings_dict["diameter_custom_support"] = {
             "label": "Diameter custom support",
@@ -296,9 +297,14 @@ class CustomSupportsCylinder(Tool):
         """ return: Diam  in mm.
         """
         # get diameter_custom_support as cylinder value
-        id_ex=0
-        extrud = Application.getInstance().getGlobalContainerStack().extruderList
-        DiamCylinder = extrud[id_ex].getProperty("diameter_custom_support", "value")
+        if self.UseDiameter == 0:
+            id_ex=0
+            extrud = Application.getInstance().getGlobalContainerStack().extruderList
+            DiamCylinder = extrud[id_ex].getProperty("diameter_custom_support", "value")
+            self.UseDiameter = DiamCylinder
+        else:
+            DiamCylinder = self.UseDiameter 
+           
         
         return DiamCylinder
   
