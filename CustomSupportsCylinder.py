@@ -46,7 +46,7 @@ class CustomSupportsCylinder(Tool):
         self._UseSize = 0.0
         self._UseCube = False
         
-        self._shortcut_key = Qt.Key_S
+        self._shortcut_key = Qt.Key_F
         self._controller = self.getController()
 
         self._selection_pass = None
