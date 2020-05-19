@@ -36,7 +36,6 @@ from cura.Scene.CuraSceneNode import CuraSceneNode
 from UM.Scene.ToolHandle import ToolHandle
 from UM.Tool import Tool
 
-from collections import OrderedDict
 import math
 import numpy
 
