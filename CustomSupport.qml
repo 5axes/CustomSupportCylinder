@@ -11,37 +11,7 @@ Item
     id: base
     width: childrenRect.width
     height: childrenRect.height
-    UM.I18nCatalog { id: catalog; name: "uranium"}
-
-    property string xText
-
-    //Rounds a floating point number to 4 decimals. This prevents floating
-    //point rounding errors.
-    //
-    //input:    The number to round.
-    //decimals: The number of decimals (digits after the radix) to round to.
-    //return:   The rounded number.
-    function roundFloat(input, decimals)
-    {
-        //First convert to fixed-point notation to round the number to 4 decimals and not introduce new floating point errors.
-        //Then convert to a string (is implicit). The fixed-point notation will be something like "3.200".
-        //Then remove any trailing zeroes and the radix.
-        var output = "";
-        if (input !== undefined)
-        {
-            output = input.toFixed(decimals).replace(/\.?0*$/, ""); //Match on periods, if any ( \.? ), followed by any number of zeros ( 0* ), then the end of string ( $ ).
-        }
-        if (output == "-0")
-        {
-            output = "0";
-        }
-        return output;
-    }
-
-    function selectTextInTextfield(selected_item){
-        selected_item.selectAll()
-        selected_item.focus = true
-    }
+    UM.I18nCatalog { id: catalog; name: "cura"}
 
     Grid
     {
@@ -67,37 +37,24 @@ Item
 
         TextField
         {
-            id: xTextField
+            id: diameterTextField
             width: UM.Theme.getSize("setting_control").width;
             height: UM.Theme.getSize("setting_control").height;
             property string unit: "mm";
             style: UM.Theme.styles.text_field;
-            text: xText
+            text: UM.ActiveTool.properties.getValue("Diameter")
             validator: DoubleValidator
             {
-                decimals: 4
+                decimals: 2
+                bottom: 0.1
                 locale: "en_US"
             }
 
             onEditingFinished:
             {
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.ActiveTool.setProperty("Diam", modified_text);
+                UM.ActiveTool.setProperty("Diameter", modified_text);
             }
-            // Keys.onBacktabPressed: selectTextInTextfield(zTextField)
-            // Keys.onTabPressed: selectTextInTextfield(yTextField)
         }
     }
-
-
-    // We have to use indirect bindings, as the values can be changed from the outside, which could cause breaks
-    // (for instance, a value would be set, but it would be impossible to change it).
-    // Doing it indirectly does not break these.
-    Binding
-    {
-        target: base
-        property: "xText"
-        value: base.roundFloat(UM.ActiveTool.properties.getValue("Diam"), 4)
-    }
-
 }
