@@ -241,7 +241,7 @@ class CustomSupportsCylinder(Tool):
 
         self._had_selection = has_selection
     
-    # Cylinder Cube
+    # Cube creation
     def _createCube(self, size, height):
         mesh = MeshBuilder()
 
