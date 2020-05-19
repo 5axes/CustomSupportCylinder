@@ -353,7 +353,7 @@ class CustomSupportsCylinder(Tool):
         """
         Usecube
         """        
-        Logger.log('d', 'getLockCube : ' + str(self.Usecube))
+        # Logger.log('d', 'getLockCube : ' + str(self.Usecube))
         return self.Usecube
   
     def setLockCube(self, LockCube: bool) -> None:
