@@ -36,7 +36,7 @@ How to use
 * The length of the support is automaticaly set from the pick point to the construction plate of the printer.
 * The default diameter is define by using the value of size_custom_support in the support section (parameter added by this plugin)
 
-![parameter size_custom_support](./images/parametre_size.jpg)
+![parameter size_custom_support](./images/parameter_size.jpg)
 
 With the CheckBox 'Create cube', it's possible to switch the geometry between a cylinder or a cubic support
 
