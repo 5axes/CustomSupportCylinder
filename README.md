@@ -1,12 +1,11 @@
 # Custom Supports plugin for Cura
 
-Cura plugin which enables you to add custom cylindical supports. It is based on the CustomSupports plugin version of Krasimir Stenanov Custom : http://lokspace.eu/cura-custom-supports-plugin/
+Cura plugin which enables you to add custom cylindrical and cubic supports. It is based on the CustomSupports plugin version of Krasimir Stenanov Custom : http://lokspace.eu/cura-custom-supports-plugin/
 Source code on Github : https://github.com/lokster/cura-custom-supports/tree/master/CustomSupports
 
 The initial version was tested on Cura 4.5
 
 ![View plugin](./images/plugin.jpg)
-
 
 Installation
 ----
