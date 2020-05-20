@@ -6,8 +6,9 @@
 # Modif 0.02 : Using  support_tower_diameter as variable to define the cylinder
 # Modif 0.03 : Using a special parameter  diameter_custom_support as variable to define the cylinder
 # Modif 0.04 : Add a text field to define the diameter
-# Modif 0.05 : Add checkbox and option to swaitch between Cube / Cylinder
-# Modif 0.06 : Symplify code and store defaut size support in Preference "customsupportcylinder/s_size" default 5
+# Modif 0.05 : Add checkbox and option to switch between Cube / Cylinder
+# Modif 0.06 : Symplify code and store defaut size support in Preference "customsupportcylinder/s_size" default value 5
+# V1.0.0 05-20-2020
 
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtWidgets import QApplication
