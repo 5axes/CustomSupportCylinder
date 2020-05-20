@@ -4,7 +4,7 @@
 # First release 05-18-2020  to change the initial plugin into cylinder support
 # Modif 0.01 : Cylinder length -> Pick Point to base plate height
 # Modif 0.02 : Using  support_tower_diameter as variable to define the cylinder
-# Modif 0.03 : Using a special parameter  support_tower_diameter as variable to define the cylinder
+# Modif 0.03 : Using a special parameter  diameter_custom_support as variable to define the cylinder
 # Modif 0.04 : Add a text field to define the diameter
 # Modif 0.05 : Add checkbox and option to swaitch between Cube / Cylinder
 # Modif 0.06 : Symplify code and store defaut size support in Preference "customsupportcylinder/s_size" default 5
@@ -43,6 +43,7 @@ class CustomSupportsCylinder(Tool):
     def __init__(self):
         super().__init__()
         
+        # variable for menu dialog        
         self._UseSize = 0.0
         self._UseCube = False
         
@@ -74,7 +75,7 @@ class CustomSupportsCylinder(Tool):
         # set the preferences to store the default value
         self._preferences = CuraApplication.getInstance().getPreferences()
         self._preferences.addPreference("customsupportcylinder/s_size", 5)
-        # rajout du float pour etre sure sinon sur valeur ronde pense que c'est un INT
+        # convert as float to avoid further issue
         self._UseSize = float(self._preferences.getValue("customsupportcylinder/s_size"))
         
                 
@@ -206,7 +207,7 @@ class CustomSupportsCylinder(Tool):
 
         self._had_selection = has_selection
     
-    # Cylinder Cube
+    # Cube Creation
     def _createCube(self, size, height):
         mesh = MeshBuilder()
 
@@ -277,7 +278,7 @@ class CustomSupportsCylinder(Tool):
     
     def getSSize(self) -> float:
         """ 
-            return: SSize  in mm.
+            return: golabl _UseSize  in mm.
         """           
         return self._UseSize
   
@@ -300,14 +301,14 @@ class CustomSupportsCylinder(Tool):
  
     def getLockCube(self) -> bool:
         """
-        Usecube
+        return: golabl _UseCube  
         """        
         # Logger.log('d', 'getLockCube : ' + str(self._UseCube))
         return self._UseCube
   
     def setLockCube(self, LockCube: bool) -> None:
         """
-         Param lock for cube
+         Param lock for cube creation
         """
         #Logger.log('d', 'getLockCube : ' + str(LockCube))
         self._UseCube = LockCube
