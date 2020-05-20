@@ -19,8 +19,7 @@ Download & extract the repository as ZIP or clone it. Copy the files/plugins/Cus
 
 How to use
 ----
-- Load some model in Cura and select it
-- Uncheck the "Generate Support" checkbox in the right panel **(if you want to use ONLY custom supports)**
+- Load a model in Cura and select it
 - Click on the "Custom Supports Cylinder" button on the left toolbar
 - Change de value for the support *Size* in numeric input field in the tool panel if necessary
 
@@ -28,11 +27,12 @@ How to use
 ![Numeric input field in the tool panel](./images/option.jpg)
 
 
-
 - Click anywhere on the model to place support cylinder there
 - **Clicking existing support cylinder deletes it**
 
 * The length of the support is automaticaly set from the pick point to the construction plate of the printer.
+
+- Before to slice your model, uncheck the "Generate Support" checkbox in the right panel **(if you want to use ONLY custom supports)**
 
 With the CheckBox 'Create cube', it's possible to switch the geometry between a cylinder or a cubic support
 
