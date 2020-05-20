@@ -1,5 +1,9 @@
 // Copyright (c) 2016 Ultimaker B.V.
-// Uranium is released under the terms of the LGPLv3 or higher.
+// 
+// proterties values
+//   "SSize"   : Support Size in mm
+//   "LockCube" : boolean Cubre/Cylinder Creation  
+//
 
 import QtQuick 2.2
 import QtQuick.Controls 1.2
@@ -38,7 +42,7 @@ Item
 
         TextField
         {
-            id: xTextField
+            id: sizeTextField
             width: UM.Theme.getSize("setting_control").width;
             height: UM.Theme.getSize("setting_control").height;
             property string unit: "mm";
