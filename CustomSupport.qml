@@ -76,7 +76,6 @@ Item
 
         checked: UM.ActiveTool.properties.getValue("LockCube")
         onClicked: UM.ActiveTool.setProperty("LockCube", checked)
-		
     }
 
 }
