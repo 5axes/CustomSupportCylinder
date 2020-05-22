@@ -1,4 +1,4 @@
-# Copyright (c) 2019 5axes
+# Copyright (c) 2020 5axes
 # Based on the SupportBlocker plugin by Ultimaker B.V., and licensed under LGPLv3 or higher.
 
 from . import CustomSupportsCylinder
