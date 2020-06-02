@@ -9,6 +9,7 @@
 # Modif 0.05 : Add checkbox and option to switch between Cube / Cylinder
 # Modif 0.06 : Symplify code and store defaut size support in Preference "customsupportcylinder/s_size" default value 5
 # V1.0.0 05-20-2020
+# V1.0.1 06-01-2020 catalog.i18nc("@label","Size") sur QML
 
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtWidgets import QApplication

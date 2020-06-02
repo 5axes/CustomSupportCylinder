@@ -32,7 +32,7 @@ Item
         Label
         {
             height: UM.Theme.getSize("setting_control").height;
-            text: "Size";
+            text: catalog.i18nc("@label","Size");
             font: UM.Theme.getFont("default");
             color: UM.Theme.getColor("text");
             verticalAlignment: Text.AlignVCenter;
@@ -71,7 +71,7 @@ Item
         anchors.left: textfields.left
         anchors.leftMargin: UM.Theme.getSize("default_margin").width
 
-        text: catalog.i18nc("@option:check","Create Cube");
+        text: catalog.i18nc("@label:checkbox","Create Cube");
         style: UM.Theme.styles.partially_checkbox;
 
         checked: UM.ActiveTool.properties.getValue("LockCube")
