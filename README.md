@@ -20,7 +20,7 @@ Download & extract the repository as ZIP or clone it. Copy the files/plugins/Cus
 
 **Automatic Install**
 This plugin is now avalaible in the markerplace of cura. So you can install it automatissaly from this place:
-![Automatic Install](./images/MarketPlace.jpg)
+![Automatic Install](./images/MarketPlace.JPG)
 
 
 How to use
