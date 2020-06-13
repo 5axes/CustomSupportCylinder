@@ -14,8 +14,12 @@ First, make sure your Cura version is 3.6 or newer.
 **Manual Install**
 Download & extract the repository as ZIP or clone it. Copy the files/plugins/CustomSupports directory to:
 - on Windows: [Cura installation folder]/plugins/CustomSupports
-- on Linux: ~/.local/share/cura/[YOUR CURA VERSION]/plugins/CustomSupports (e.g. ~/.local/share/cura/3.4/plugins/CustomSupports)
+- on Linux: ~/.local/share/cura/[YOUR CURA VERSION]/plugins/CustomSupports (e.g. ~/.local/share/cura/4.6/plugins/CustomSupports)
 - on Mac: ~/Library/Application Support/cura/[YOUR CURA VERSION]/plugins/CustomSupports
+
+
+Automatic Install Go to the releases page, and download the correct file for your Cura version - the .curapackage file for Cura 4.0 and newer. Start Cura, and drag & drop the file on the main window. Restart Cura, and you are done!
+
 
 How to use
 ----
