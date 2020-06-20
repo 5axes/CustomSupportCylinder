@@ -57,5 +57,5 @@ With the CheckBox 'Create cube', it's possible to switch the geometry between a 
 
 - Version 1.03 : Possibility to define conical support
 
-![Conical Support](./images/connical_support.jpg)
+![Conical Support](./images/conical_support.jpg)
 	
