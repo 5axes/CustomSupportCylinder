@@ -8,9 +8,9 @@
 # Modif 0.04 : Add a text field to define the diameter
 # Modif 0.05 : Add checkbox and option to switch between Cube / Cylinder
 # Modif 0.06 : Symplify code and store defaut size support in Preference "customsupportcylinder/s_size" default value 5
-# V1.0.0 05-20-2020
-# V1.0.1 06-01-2020 catalog.i18nc("@label","Size") sur QML
-# V1.0.2 06-20-2020 test angle
+# V0.9.0 05-20-2020
+# V1.0.0 06-01-2020 catalog.i18nc("@label","Size") sur QML
+# V1.0.1 06-20-2020 Add Angle for conical support
 
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtWidgets import QApplication
