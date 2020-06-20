@@ -23,14 +23,17 @@ This plugin is now avalaible in the markerplace of cura. So you can install it a
 ![Automatic Install](./images/MarketPlace.JPG)
 
 
-How to use
-----
+## How to use
+
 - Load a model in Cura and select it
 - Click on the "Custom Supports Cylinder" button on the left toolbar
 - Change de value for the support *Size* in numeric input field in the tool panel if necessary
 
+### Version 1.0.3
 
-![Numeric input field in the tool panel](./images/option.jpg)
+- Change de value for the support *Angle* in numeric input field in the tool panel if necessary
+
+![Numeric input field in the tool panel](./images/option_n.jpg)
 
 
 - Click anywhere on the model to place support cylinder there
@@ -43,4 +46,10 @@ How to use
 With the CheckBox 'Create cube', it's possible to switch the geometry between a cylinder or a cubic support
 
 >Note: it's easier to add/remove supports when you are in "Solid View" mode
+
+## Modifications
+
+- Version 1.03 : Possibility to define conical support
+
+![Conical Support](./images/connical_support.jpg)
 	
