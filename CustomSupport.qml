@@ -1,7 +1,8 @@
 // Copyright (c) 2016 Ultimaker B.V.
 // 
 // proterties values
-//   "SSize"   : Support Size in mm
+//   "SSize"    : Support Size in mm
+//   "AAngle"   : Support Angle in °
 //   "LockCube" : boolean Cubre/Cylinder Creation  
 //
 
@@ -40,6 +41,17 @@ Item
             width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
         }
 
+        Label
+        {
+            height: UM.Theme.getSize("setting_control").height;
+            text: catalog.i18nc("@label","Angle");
+            font: UM.Theme.getFont("default");
+            color: UM.Theme.getColor("text");
+            verticalAlignment: Text.AlignVCenter;
+            renderType: Text.NativeRendering
+            width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
+        }
+		
         TextField
         {
             id: sizeTextField
@@ -59,6 +71,28 @@ Item
             {
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
                 UM.ActiveTool.setProperty("SSize", modified_text);
+            }
+        }
+		
+		TextField
+        {
+            id: angleTextField
+            width: UM.Theme.getSize("setting_control").width;
+            height: UM.Theme.getSize("setting_control").height;
+            property string unit: "°";
+            style: UM.Theme.styles.text_field;
+            text: UM.ActiveTool.properties.getValue("AAngle")
+            validator: DoubleValidator
+            {
+                decimals: 0
+                bottom: 0
+                locale: "en_US"
+            }
+
+            onEditingFinished:
+            {
+                var modified_angle_text = text.replace(",", ".") // User convenience. We use dots for decimal values
+                UM.ActiveTool.setProperty("AAngle", modified_angle_text);
             }
         }
     }

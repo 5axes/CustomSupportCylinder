@@ -1,9 +1,9 @@
 {
     "name": "Custom Supports Cylinder",
     "author": "5axes",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "description": "Create cylindric custom supports",
     "i18n-catalog": "cura",
-    "api": 5,
+    "api": 6,
     "supported_sdk_versions": ["5.0.0", "6.0.0", "7.0.0"]
 }

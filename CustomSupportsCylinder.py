@@ -10,6 +10,7 @@
 # Modif 0.06 : Symplify code and store defaut size support in Preference "customsupportcylinder/s_size" default value 5
 # V1.0.0 05-20-2020
 # V1.0.1 06-01-2020 catalog.i18nc("@label","Size") sur QML
+# V1.0.2 06-20-2020 test angle
 
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtWidgets import QApplication
@@ -47,6 +48,7 @@ class CustomSupportsCylinder(Tool):
         
         # variable for menu dialog        
         self._UseSize = 0.0
+        self._UseAngle = 0.0
         self._UseCube = False
         
         # Shortcut
@@ -57,7 +59,7 @@ class CustomSupportsCylinder(Tool):
 
         self._i18n_catalog = None
         
-        self.setExposedProperties("SSize", "LockCube")
+        self.setExposedProperties("SSize", "AAngle", "LockCube")
         
         CuraApplication.getInstance().globalContainerStackChanged.connect(self._updateEnabled)
 
@@ -77,8 +79,10 @@ class CustomSupportsCylinder(Tool):
         # set the preferences to store the default value
         self._preferences = CuraApplication.getInstance().getPreferences()
         self._preferences.addPreference("customsupportcylinder/s_size", 5)
+        self._preferences.addPreference("customsupportcylinder/a_angle", 0)
         # convert as float to avoid further issue
         self._UseSize = float(self._preferences.getValue("customsupportcylinder/s_size"))
+        self._UseAngle = float(self._preferences.getValue("customsupportcylinder/a_angle"))
         
                 
     def event(self, event):
@@ -140,10 +144,10 @@ class CustomSupportsCylinder(Tool):
 
         if self._UseCube :
             # Cube creation Size , length
-            mesh =  self._createCube(self._UseSize,long)
+            mesh =  self._createCube(self._UseSize,long,self._UseAngle)
         else:
             # Cylinder creation Diameter , Increment angle 2°, length
-            mesh = self._createCylinder(self._UseSize,2,long)
+            mesh = self._createCylinder(self._UseSize,2,long,self._UseAngle)
         
         node.setMeshData(mesh.build())
 
@@ -210,20 +214,21 @@ class CustomSupportsCylinder(Tool):
         self._had_selection = has_selection
     
     # Cube Creation
-    def _createCube(self, size, height):
+    def _createCube(self, size, height, dep):
         mesh = MeshBuilder()
 
         # Can't use MeshBuilder.addCube() because that does not get per-vertex normals
         # Per-vertex normals require duplication of vertices
         s = size / 2
         l = height 
+        s_inf=math.tan(math.radians(dep))*l+s
         verts = [ # 6 faces with 4 corners each
-            [-s, -l,  s], [-s,  s,  s], [ s,  s,  s], [ s, -l,  s],
-            [-s,  s, -s], [-s, -l, -s], [ s, -l, -s], [ s,  s, -s],
-            [ s, -l, -s], [-s, -l, -s], [-s, -l,  s], [ s, -l,  s],
+            [-s_inf, -l,  s_inf], [-s,  s,  s], [ s,  s,  s], [ s_inf, -l,  s_inf],
+            [-s,  s, -s], [-s_inf, -l, -s_inf], [ s_inf, -l, -s_inf], [ s,  s, -s],
+            [ s_inf, -l, -s_inf], [-s_inf, -l, -s_inf], [-s_inf, -l,  s_inf], [ s_inf, -l,  s_inf],
             [-s,  s, -s], [ s,  s, -s], [ s,  s,  s], [-s,  s,  s],
-            [-s, -l,  s], [-s, -l, -s], [-s,  s, -s], [-s,  s,  s],
-            [ s, -l, -s], [ s, -l,  s], [ s,  s,  s], [ s,  s, -s]
+            [-s_inf, -l,  s_inf], [-s_inf, -l, -s_inf], [-s,  s, -s], [-s,  s,  s],
+            [ s_inf, -l, -s_inf], [ s_inf, -l,  s_inf], [ s,  s,  s], [ s,  s, -s]
         ]
         mesh.setVertices(numpy.asarray(verts, dtype=numpy.float32))
 
@@ -237,7 +242,7 @@ class CustomSupportsCylinder(Tool):
         return mesh
     
     # Cylinder creation
-    def _createCylinder(self, size, nb , lg):
+    def _createCylinder(self, size, nb , lg ,dep):
         mesh = MeshBuilder()
         # Per-vertex normals require duplication of vertices
         r = size / 2
@@ -246,6 +251,7 @@ class CustomSupportsCylinder(Tool):
         l = -lg
         rng = int(360 / nb)
         ang = math.radians(nb)
+        r_inf=math.tan(math.radians(dep))*lg+r
         
         verts = []
         for i in range(0, rng):
@@ -256,15 +262,15 @@ class CustomSupportsCylinder(Tool):
             #Side 1a
             verts.append([r*math.cos(i*ang), sup, r*math.sin(i*ang)])
             verts.append([r*math.cos((i+1)*ang), sup, r*math.sin((i+1)*ang)])
-            verts.append([r*math.cos((i+1)*ang), l, r*math.sin((i+1)*ang)])
+            verts.append([r_inf*math.cos((i+1)*ang), l, r_inf*math.sin((i+1)*ang)])
             #Side 1b
-            verts.append([r*math.cos((i+1)*ang), l, r*math.sin((i+1)*ang)])
-            verts.append([r*math.cos(i*ang), l, r*math.sin(i*ang)])
+            verts.append([r_inf*math.cos((i+1)*ang), l, r_inf*math.sin((i+1)*ang)])
+            verts.append([r_inf*math.cos(i*ang), l, r_inf*math.sin(i*ang)])
             verts.append([r*math.cos(i*ang), sup, r*math.sin(i*ang)])
             #Bottom 
             verts.append([0, l, 0])
-            verts.append([r*math.cos((i+1)*ang), l, r*math.sin((i+1)*ang)]) 
-            verts.append([r*math.cos(i*ang), l, r*math.sin(i*ang)])
+            verts.append([r_inf*math.cos((i+1)*ang), l, r_inf*math.sin((i+1)*ang)]) 
+            verts.append([r_inf*math.cos(i*ang), l, r_inf*math.sin(i*ang)])
             
         mesh.setVertices(numpy.asarray(verts, dtype=numpy.float32))
 
@@ -300,7 +306,30 @@ class CustomSupportsCylinder(Tool):
         #Logger.log('d', 's_value : ' + str(s_value))        
         self._UseSize = s_value
         self._preferences.setValue("customsupportcylinder/s_size", s_value)
+
+    def getAAngle(self) -> float:
+        """ 
+            return: golabl _UseAngle  in °.
+        """           
+        return self._UseAngle
+  
+    def setAAngle(self, AAngle: str) -> None:
+        """
+        param AAngle: Angle in °.
+        """
  
+        try:
+            s_value = float(AAngle)
+        except ValueError:
+            return
+
+        if s_value < 0:
+            return
+        
+        #Logger.log('d', 's_value : ' + str(s_value))        
+        self._UseAngle = s_value
+        self._preferences.setValue("customsupportcylinder/a_angle", s_value)
+        
     def getLockCube(self) -> bool:
         """
         return: golabl _UseCube  
