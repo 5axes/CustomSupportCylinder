@@ -35,9 +35,7 @@ This plugin is now avalaible in the markerplace of cura. So you can install it a
 - Click on the "Custom Supports Cylinder" button on the left toolbar
 - Change de value for the support *Size* in numeric input field in the tool panel if necessary
 
-### Version 1.0.3
-
-- Change de value for the support *Angle* in numeric input field in the tool panel if necessary
+- Change de value for the support *Angle* in numeric input field in the tool panel if necessary **(Version 1.0.03)**
 
 ![Numeric input field in the tool panel](./images/option_n.jpg)
 
@@ -47,7 +45,7 @@ This plugin is now avalaible in the markerplace of cura. So you can install it a
 
 - **Clicking existing support cylinder + Ctrl** switch automaticaly to the Translate Tool to modify the position of the support.
 
-* The length of the support is automaticaly set from the pick point to the construction plate of the printer.
+* The length of the support is automaticaly set from the pick point to the construction plate.
 
 - Before to slice your model, uncheck the "Generate Support" checkbox in the right panel **(if you want to use ONLY custom supports)**
 
