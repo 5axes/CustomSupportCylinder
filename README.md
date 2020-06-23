@@ -43,12 +43,12 @@ This plugin is now avalaible in the markerplace of cura. So you can install it a
 
 
 - Click anywhere on the model to place support cylinder there
+* The length of the support is automaticaly set from the pick point to the construction plate.
 
 - **Clicking existing support cylinder deletes it**
 
 - **Clicking existing support cylinder + Ctrl** switch automaticaly to the Translate Tool to modify the position of the support.
 
-* The length of the support is automaticaly set from the pick point to the construction plate.
 
 - Before to slice your model, uncheck the "Generate Support" checkbox in the right panel **(if you want to use ONLY custom supports)**
 
