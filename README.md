@@ -13,18 +13,20 @@ The initial version was tested on Cura 4.5
 
 ![View plugin](./images/plugin.jpg)
 
-Installation
-----
+## Installation
+
 First, make sure your Cura version is 3.6 or newer. 
 
-**Manual Install**
+### Manual Install
+
 Download & extract the repository as ZIP or clone it. Copy the files/plugins/CustomSupportCylinder directory to:
 - on Windows: [Cura installation folder]/plugins/CustomSupportCylinder
 - on Linux: ~/.local/share/cura/[YOUR CURA VERSION]/plugins/CustomSupportCylinder (e.g. ~/.local/share/cura/4.6/plugins/CustomSupportCylinder)
 - on Mac: ~/Library/Application Support/cura/[YOUR CURA VERSION]/plugins/CustomSupportCylinder
 
 
-**Automatic Install**
+### Automatic Install
+
 This plugin is now avalaible in the markerplace of cura. So you can install it automatissaly from this place:
 ![Automatic Install](./images/MarketPlace.JPG)
 
@@ -41,6 +43,7 @@ This plugin is now avalaible in the markerplace of cura. So you can install it a
 
 
 - Click anywhere on the model to place support cylinder there
+
 - **Clicking existing support cylinder deletes it**
 
 - **Clicking existing support cylinder + Ctrl** switch automaticaly to the Translate Tool to modify the position of the support.
