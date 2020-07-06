@@ -58,9 +58,11 @@ Select the type of support to create with the buttons in the support plugin inte
 
 - Before to slice your model, uncheck the "Generate Support" checkbox in the right panel **(if you want to use ONLY custom supports)**
 
-With the 3 buttons in the plugin windows, it's possible to switch the geometry between a cylinder,a cubic or a custom support
+
+>Note: With the 3 buttons in the plugin windows, it's possible to switch the geometry between a cylinder,a cubic or a custom support.
 
 >Note: it's easier to add/remove supports when you are in "Solid View" mode
+
 
 ## Modifications
 
