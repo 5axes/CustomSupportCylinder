@@ -366,7 +366,7 @@ class CustomSupportsCylinder(Tool):
         """
         1) Top
         2) Front
-        3) Left -
+        3) Left
         4) Right
         5) Back 
         6) Bottom
