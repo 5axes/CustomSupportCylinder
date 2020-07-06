@@ -7,7 +7,7 @@ Source code on Github : [https://github.com/Ultimaker/Cura/tree/master/plugins/S
 This plugin offer now much more possibilities :
 ----
 
-- Possibility to define cylindrical / squarred support
+- Possibility to define cylindrical / squarred / custom by 2 points support
 - Possibility to define the support size
 - Visualisation of the support on the total height
 - Possibility to add angle to obtain conical support
@@ -44,6 +44,8 @@ This plugin is now avalaible in the Cura marketplace. So you can install it auto
 
 ![Numeric input field in the tool panel](./images/option_n.jpg)
 
+Select the type of support to create with button in the support plugin interface :
+![Support type selection](./images/button.jpg)
 
 - Click anywhere on the model to place support cylinder there
 * The length of the support is automaticaly set from the pick point to the construction plate.
