@@ -2,7 +2,7 @@
 
 Cura plugin which enables you to add custom cylindrical and cubic supports. It was originaly based on the Support Eraser plugin code of Ultimaker B.V. but instead of creating a cube **"anti_overhang_mesh"**, this plugin offer you the possibility to define a custom sized **"support_mesh"** element.
 
-Source code on Github : [https://github.com/5axes/Cura/tree/master/plugins/SupportEraser](https://github.com/5axes/Cura/tree/master/plugins/SupportEraser)
+Source code on Github : [https://github.com/Ultimaker/Cura/tree/master/plugins/SupportEraser](https://github.com/Ultimaker/Cura/tree/master/plugins/SupportEraser)
 
 This plugin offer now much more possibilities :
 
