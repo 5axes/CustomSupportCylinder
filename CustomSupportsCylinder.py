@@ -17,7 +17,7 @@
 # V0.9.0 05-20-2020
 # V1.0.0 06-01-2020 catalog.i18nc("@label","Size") sur QML
 # V1.0.1 06-20-2020 Add Angle for conical support
-# V2.0.0 07-04-2020 Add Button and Custom Support Type
+# V2.0.0 07-04-2020 Add Button and custom support type
 #--------------------------------------------------------------------------------------------
 
 from PyQt5.QtCore import Qt, QTimer
@@ -93,7 +93,7 @@ class CustomSupportsCylinder(Tool):
         self._preferences = CuraApplication.getInstance().getPreferences()
         self._preferences.addPreference("customsupportcylinder/s_size", 5)
         self._preferences.addPreference("customsupportcylinder/a_angle", 0)
-        self._preferences.addPreference("customsupportcylinder/t_type", "Cylinder")
+        self._preferences.addPreference("customsupportcylinder/t_type", "cylinder")
         # convert as float to avoid further issue
         self._UseSize = float(self._preferences.getValue("customsupportcylinder/s_size"))
         self._UseAngle = float(self._preferences.getValue("customsupportcylinder/a_angle"))
