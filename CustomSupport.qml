@@ -80,8 +80,6 @@ Item
                 checked: UM.ActiveTool.properties.getValue("SType") === 'custom';
                 z: 1; // Profondeur
             }
-
-
         }
     }
 
