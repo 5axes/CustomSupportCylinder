@@ -1,6 +1,12 @@
-# Initial Copyright (c) 2018 Lokster <http://lokspace.eu>
+# Initial Copyright (c) 2018 Ultimaker B.V.
+#--------------------------------------------------------------------------------------------
 # Based on the SupportBlocker plugin by Ultimaker B.V., and licensed under LGPLv3 or higher.
+#
+#  https://github.com/5axes/Cura/tree/master/plugins/SupportEraser
+#
+#--------------------------------------------------------------------------------------------
 # All modification 5@xes
+#--------------------------------------------------------------------------------------------
 # First release 05-18-2020  to change the initial plugin into cylinder support
 # Modif 0.01 : Cylinder length -> Pick Point to base plate height
 # Modif 0.02 : Using  support_tower_diameter as variable to define the cylinder
@@ -11,6 +17,8 @@
 # V0.9.0 05-20-2020
 # V1.0.0 06-01-2020 catalog.i18nc("@label","Size") sur QML
 # V1.0.1 06-20-2020 Add Angle for conical support
+# V2.0.0 07-04-2020 Add Button and Custom Support Type
+#--------------------------------------------------------------------------------------------
 
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtWidgets import QApplication
@@ -19,6 +27,7 @@ from cura.CuraApplication import CuraApplication
 
 from UM.Logger import Logger
 from UM.Math.Vector import Vector
+
 from UM.Tool import Tool
 from UM.Event import Event, MouseEvent
 from UM.Mesh.MeshBuilder import MeshBuilder
@@ -42,24 +51,28 @@ from UM.Tool import Tool
 import math
 import numpy
 
+
 class CustomSupportsCylinder(Tool):
     def __init__(self):
         super().__init__()
         
+        self._Nb_Point = 0  
+        
         # variable for menu dialog        
         self._UseSize = 0.0
         self._UseAngle = 0.0
-        self._UseCube = False
+        self._SType = 'cylinder'
         
         # Shortcut
         self._shortcut_key = Qt.Key_F
         self._controller = self.getController()
 
+        self._Svg_Position = Vector
         self._selection_pass = None
 
         self._i18n_catalog = None
         
-        self.setExposedProperties("SSize", "AAngle", "LockCube")
+        self.setExposedProperties("SSize", "AAngle", "SType")
         
         CuraApplication.getInstance().globalContainerStackChanged.connect(self._updateEnabled)
 
@@ -80,9 +93,12 @@ class CustomSupportsCylinder(Tool):
         self._preferences = CuraApplication.getInstance().getPreferences()
         self._preferences.addPreference("customsupportcylinder/s_size", 5)
         self._preferences.addPreference("customsupportcylinder/a_angle", 0)
+        self._preferences.addPreference("customsupportcylinder/t_type", "Cylinder")
         # convert as float to avoid further issue
         self._UseSize = float(self._preferences.getValue("customsupportcylinder/s_size"))
         self._UseAngle = float(self._preferences.getValue("customsupportcylinder/a_angle"))
+        # convert as string to avoid further issue
+        self._SType = str(self._preferences.getValue("customsupportcylinder/t_type"))
         
                 
     def event(self, event):
@@ -105,6 +121,8 @@ class CustomSupportsCylinder(Tool):
                 # The selection renderpass is used to identify objects in the current view
                 self._selection_pass = CuraApplication.getInstance().getRenderer().getRenderPass("selection")
             picked_node = self._controller.getScene().findObject(self._selection_pass.getIdAtPosition(event.x, event.y))
+            
+            
             if not picked_node:
                 # There is no slicable object at the picked location
                 return
@@ -123,32 +141,56 @@ class CustomSupportsCylinder(Tool):
             active_camera = self._controller.getScene().getActiveCamera()
             picking_pass = PickingPass(active_camera.getViewportWidth(), active_camera.getViewportHeight())
             picking_pass.render()
+            
+            
+            if self._SType == 'custom': 
+                self._Nb_Point += 1
+                if self._Nb_Point == 2 :
+                    picked_position =  self._Svg_Position 
+                    picked_position_b = picking_pass.getPickedPosition(event.x, event.y)
+                    self._Svg_Position = picked_position_b
+                    self._Nb_Point = 0
+                    # Add the support_mesh cube at the picked location
+                    self._createSupportMesh(picked_node, picked_position,picked_position_b)
+                else:
+                    self._Svg_Position = picking_pass.getPickedPosition(event.x, event.y)
+            
+            else:
+                self._Nb_Point = 0
+                picked_position =  picking_pass.getPickedPosition(event.x, event.y)
+                picked_position_b = picking_pass.getPickedPosition(event.x, event.y)
+                self._Svg_Position = picked_position_b
+                # Add the support_mesh cube at the picked location
+                self._createSupportMesh(picked_node, picked_position,picked_position_b)
 
-            picked_position = picking_pass.getPickedPosition(event.x, event.y)
 
-            # Add the support_mesh cube at the picked location
-            self._createSupportMesh(picked_node, picked_position)
-
-    def _createSupportMesh(self, parent: CuraSceneNode, position: Vector):
+    def _createSupportMesh(self, parent: CuraSceneNode, position: Vector , position2: Vector):
         node = CuraSceneNode()
 
-        if self._UseCube:
+        if self._SType == 'cylinder':
+            node.setName("CustomSupportCylinder")
+        elif self._SType == 'cube':
             node.setName("CustomSupportCube")
         else:
-            node.setName("CustomSupportCylinder")
+            node.setName("CustomSupportCustom")
+
             
         node.setSelectable(True)
         
         # long=Support Height
         long=position.y
-
-        if self._UseCube :
-            # Cube creation Size , length
-            mesh =  self._createCube(self._UseSize,long,self._UseAngle)
-        else:
+                
+                
+        if self._SType == 'cylinder':
             # Cylinder creation Diameter , Increment angle 2°, length
             mesh = self._createCylinder(self._UseSize,2,long,self._UseAngle)
-        
+        elif self._SType == 'cube':
+            # Cube creation Size , length
+            mesh =  self._createCube(self._UseSize,long,self._UseAngle)
+        else:           
+            # Custom creation Size , P1 as vector P2 as vector
+            mesh =  self._createCustom(self._UseSize,position,position2,self._UseAngle)
+            
         node.setMeshData(mesh.build())
 
         active_build_plate = CuraApplication.getInstance().getMultiBuildPlateModel().activeBuildPlate
@@ -283,7 +325,73 @@ class CustomSupportsCylinder(Tool):
 
         mesh.calculateNormals()
         return mesh
-    
+ 
+
+    # Custom Support Creation
+    def _createCustom(self, size, pos1 , pos2, dep):
+        mesh = MeshBuilder()
+        # Init point
+        Pt1 = Vector(pos1.x,pos1.z,pos1.y)
+        Pt2 = Vector(pos2.x,pos2.z,pos2.y)
+
+        V_Dir = Pt2 - Pt1
+
+        # Calcul vecteur
+        s = size / 2
+        l_a = pos1.y 
+        s_infa=math.tan(math.radians(dep))*l_a+s
+        l_b = pos2.y 
+        s_infb=math.tan(math.radians(dep))*l_b+s
+        
+        VZ = Vector(0,0,s)
+        VZa = Vector(0,0,-l_a)
+        VZb = Vector(0,0,-l_b)
+        
+        Norm=Vector.cross(V_Dir,VZ).normalized()
+        Dec = Vector(Norm.x*s,Norm.y*s,Norm.z*s)
+        Deca = Vector(Norm.x*s_infa,Norm.y*s_infa,Norm.z*s_infa)
+        Decb = Vector(Norm.x*s_infb,Norm.y*s_infb,Norm.z*s_infb)
+
+        # X Z Y
+        P_1t = VZ+Dec
+        P_2t = VZ-Dec
+        P_3t = V_Dir+VZ+Dec
+        P_4t = V_Dir+VZ-Dec
+ 
+        P_1i = VZa+Deca
+        P_2i = VZa-Deca
+        P_3i = VZb+V_Dir+Decb
+        P_4i = VZb+V_Dir-Decb
+         
+        """
+        1) Top
+        2) Front
+        3) Left -
+        4) Right
+        5) Back 
+        6) Bottom
+        """
+        verts = [ # 6 faces with 4 corners each
+            [P_1t.x, P_1t.z, P_1t.y], [P_2t.x, P_2t.z, P_2t.y], [P_4t.x, P_4t.z, P_4t.y], [P_3t.x, P_3t.z, P_3t.y],
+            [P_1t.x, P_1t.z, P_1t.y], [P_3t.x, P_3t.z, P_3t.y], [P_3i.x, P_3i.z, P_3i.y], [P_1i.x, P_1i.z, P_1i.y],
+            [P_2t.x, P_2t.z, P_2t.y], [P_1t.x, P_1t.z, P_1t.y], [P_1i.x, P_1i.z, P_1i.y], [P_2i.x, P_2i.z, P_2i.y],
+            [P_3t.x, P_3t.z, P_3t.y], [P_4t.x, P_4t.z, P_4t.y], [P_4i.x, P_4i.z, P_4i.y], [P_3i.x, P_3i.z, P_3i.y],
+            [P_4t.x, P_4t.z, P_4t.y], [P_2t.x, P_2t.z, P_2t.y], [P_2i.x, P_2i.z, P_2i.y], [P_4i.x, P_4i.z, P_4i.y],
+            [P_1i.x, P_1i.z, P_1i.y], [P_2i.x, P_2i.z, P_2i.y], [P_4i.x, P_4i.z, P_4i.y], [P_3i.x, P_3i.z, P_3i.y]
+        ]
+        
+        mesh.setVertices(numpy.asarray(verts, dtype=numpy.float32))
+
+        indices = []
+        for i in range(0, 24, 4): # All 6 quads (12 triangles)
+            indices.append([i, i+2, i+1])
+            indices.append([i, i+3, i+2])
+        mesh.setIndices(numpy.asarray(indices, dtype=numpy.int32))
+
+        mesh.calculateNormals()
+        return mesh
+
+        
     def getSSize(self) -> float:
         """ 
             return: golabl _UseSize  in mm.
@@ -329,18 +437,17 @@ class CustomSupportsCylinder(Tool):
         #Logger.log('d', 's_value : ' + str(s_value))        
         self._UseAngle = s_value
         self._preferences.setValue("customsupportcylinder/a_angle", s_value)
-        
-    def getLockCube(self) -> bool:
+    
+    def getSType(self) -> bool:
+        """ 
+            return: golabl _SType  as text paramater.
+        """ 
+        return self._SType
+    
+    def setSType(self, SType: str) -> None:
         """
-        return: golabl _UseCube  
-        """        
-        # Logger.log('d', 'getLockCube : ' + str(self._UseCube))
-        return self._UseCube
-  
-    def setLockCube(self, LockCube: bool) -> None:
+        param SType: SType as text paramater.
         """
-         Param lock for cube creation
-        """
-        #Logger.log('d', 'getLockCube : ' + str(LockCube))
-        self._UseCube = LockCube
-
+        self._SType = SType
+        Logger.log('d', 'SType : ' + str(SType))   
+        self._preferences.setValue("customsupportcylinder/t_type", SType)
