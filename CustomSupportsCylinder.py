@@ -449,5 +449,5 @@ class CustomSupportsCylinder(Tool):
         param SType: SType as text paramater.
         """
         self._SType = SType
-        Logger.log('d', 'SType : ' + str(SType))   
+        #Logger.log('d', 'SType : ' + str(SType))   
         self._preferences.setValue("customsupportcylinder/t_type", SType)
