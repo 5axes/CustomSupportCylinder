@@ -44,7 +44,7 @@ This plugin is now avalaible in the Cura marketplace. So you can install it auto
 
 ![Numeric input field in the tool panel](./images/option_n.jpg)
 
-Select the type of support to create with button in the support plugin interface :
+Select the type of support to create with the buttons in the support plugin interface :
 
 ![Support type selection](./images/button.jpg)
 
