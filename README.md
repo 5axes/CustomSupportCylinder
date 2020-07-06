@@ -45,14 +45,15 @@ This plugin is now avalaible in the Cura marketplace. So you can install it auto
 ![Numeric input field in the tool panel](./images/option_n.jpg)
 
 Select the type of support to create with button in the support plugin interface :
+
 ![Support type selection](./images/button.jpg)
 
 - Click anywhere on the model to place support cylinder there
 * The length of the support is automaticaly set from the pick point to the construction plate.
 
-- **Clicking existing support cylinder deletes it**
+- **Clicking existing support deletes it**
 
-- **Clicking existing support cylinder + Ctrl** switch automaticaly to the Translate Tool to modify the position of the support.
+- **Clicking existing support + Ctrl** switch automaticaly to the Translate Tool to modify the position of the support.
 
 
 - Before to slice your model, uncheck the "Generate Support" checkbox in the right panel **(if you want to use ONLY custom supports)**
