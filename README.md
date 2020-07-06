@@ -54,7 +54,7 @@ This plugin is now avalaible in the Cura marketplace. So you can install it auto
 
 - Before to slice your model, uncheck the "Generate Support" checkbox in the right panel **(if you want to use ONLY custom supports)**
 
-With the CheckBox 'Create cube', it's possible to switch the geometry between a cylinder or a cubic support
+With the 3 buttons in the plugin windows, it's possible to switch the geometry between a cylinder,a cubic or a custom support
 
 >Note: it's easier to add/remove supports when you are in "Solid View" mode
 
@@ -63,4 +63,10 @@ With the CheckBox 'Create cube', it's possible to switch the geometry between a 
 - Version 1.03 : Possibility to define conical support
 
 ![Conical Support](./images/conical_support.jpg)
+	
+- Version 2.00 : Possibility to define custom support
+
+![Custom Support](./images/custom_support.jpg)
+
+To create custom support you need to clic 2 points on the model.
 	
