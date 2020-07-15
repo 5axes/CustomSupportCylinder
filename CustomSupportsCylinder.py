@@ -74,8 +74,11 @@ class CustomSupportsCylinder(Tool):
         
         self.setExposedProperties("SSize", "AAngle", "SType")
         
+        self._application = CuraApplication.getInstance()
+        
+        
         CuraApplication.getInstance().globalContainerStackChanged.connect(self._updateEnabled)
-
+        
         # Note: if the selection is cleared with this tool active, there is no way to switch to
         # another tool than to reselect an object (by clicking it) because the tool buttons in the
         # toolbar will have been disabled. That is why we need to ignore the first press event
@@ -99,6 +102,8 @@ class CustomSupportsCylinder(Tool):
         self._UseAngle = float(self._preferences.getValue("customsupportcylinder/a_angle"))
         # convert as string to avoid further issue
         self._SType = str(self._preferences.getValue("customsupportcylinder/t_type"))
+        
+
         
                 
     def event(self, event):
@@ -189,7 +194,10 @@ class CustomSupportsCylinder(Tool):
             mesh =  self._createCube(self._UseSize,long,self._UseAngle)
         else:           
             # Custom creation Size , P1 as vector P2 as vector
-            mesh =  self._createCustom(self._UseSize,position,position2,self._UseAngle)
+            # Get support_interface_height as extra distance 
+            extruder_stack = self._application.getExtruderManager().getActiveExtruderStacks()[0]
+            extra_top=extruder_stack.getProperty("support_interface_height", "value")            
+            mesh =  self._createCustom(self._UseSize,position,position2,self._UseAngle,extra_top)
             
         node.setMeshData(mesh.build())
 
@@ -328,7 +336,7 @@ class CustomSupportsCylinder(Tool):
  
 
     # Custom Support Creation
-    def _createCustom(self, size, pos1 , pos2, dep):
+    def _createCustom(self, size, pos1 , pos2, dep, ztop):
         mesh = MeshBuilder()
         # Init point
         Pt1 = Vector(pos1.x,pos1.z,pos1.y)
@@ -343,6 +351,7 @@ class CustomSupportsCylinder(Tool):
         l_b = pos2.y 
         s_infb=math.tan(math.radians(dep))*l_b+s
         
+        Vtop = Vector(0,0,ztop)
         VZ = Vector(0,0,s)
         VZa = Vector(0,0,-l_a)
         VZb = Vector(0,0,-l_b)
@@ -353,10 +362,10 @@ class CustomSupportsCylinder(Tool):
         Decb = Vector(Norm.x*s_infb,Norm.y*s_infb,Norm.z*s_infb)
 
         # X Z Y
-        P_1t = VZ+Dec
-        P_2t = VZ-Dec
-        P_3t = V_Dir+VZ+Dec
-        P_4t = V_Dir+VZ-Dec
+        P_1t = Vtop+Dec
+        P_2t = Vtop-Dec
+        P_3t = V_Dir+Vtop+Dec
+        P_4t = V_Dir+Vtop-Dec
  
         P_1i = VZa+Deca
         P_2i = VZa-Deca
