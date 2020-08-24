@@ -4,7 +4,7 @@
 // proterties values
 //   "SSize"       : Support Size in mm
 //   "AAngle"      : Support Angle in °
-//   "SType" : Support Type : Cylinder/Cube/Custom  
+//   "SType"       : Support Type ( Cylinder/Cube/Custom ) 
 //-----------------------------------------------------------------------------
 
 import QtQuick 2.2

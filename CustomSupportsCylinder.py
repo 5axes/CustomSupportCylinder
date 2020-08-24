@@ -18,6 +18,7 @@
 # V1.0.0 06-01-2020 catalog.i18nc("@label","Size") sur QML
 # V1.0.1 06-20-2020 Add Angle for conical support
 # V2.0.0 07-04-2020 Add Button and custom support type
+# V2.0.1 
 #--------------------------------------------------------------------------------------------
 
 from PyQt5.QtCore import Qt, QTimer
