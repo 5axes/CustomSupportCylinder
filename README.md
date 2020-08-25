@@ -38,9 +38,9 @@ This plugin is now avalaible in the Cura marketplace. So you can install it auto
 
 - Load a model in Cura and select it
 - Click on the "Custom Supports Cylinder" button on the left toolbar
-- Change de value for the support *Size* in numeric input field in the tool panel if necessary
+- Change the value for the support *Size* in numeric input field in the tool panel if necessary
 
-- Change de value for the support *Angle* in numeric input field in the tool panel if necessary **(Version 1.0.03)**
+- Change the value for the support *Angle* in numeric input field in the tool panel if necessary **(Version 1.0.03)**
 
 ![Numeric input field in the tool panel](./images/option_n.jpg)
 
