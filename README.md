@@ -75,4 +75,9 @@ Select the type of support to create with the buttons in the support plugin inte
 ![Custom Support](./images/custom_support.jpg)
 
 To create custom support you need to clic 2 points on the model.
-	
+
+- Version 2.10 : Possibility to define Abutment support
+
+![Abutment Support](./images/Abutment.jpg)
+
+To create custom support you need to clic 2 points on the model.	
