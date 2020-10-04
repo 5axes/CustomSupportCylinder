@@ -19,6 +19,7 @@
 # V1.0.1 06-20-2020 Add Angle for conical support
 # V2.0.0 07-04-2020 Add Button and custom support type
 # V2.0.1 
+# V2.1.0 04-10-2020 Add Abutment support type
 #--------------------------------------------------------------------------------------------
 
 from PyQt5.QtCore import Qt, QTimer
@@ -177,6 +178,8 @@ class CustomSupportsCylinder(Tool):
             node.setName("CustomSupportCylinder")
         elif self._SType == 'cube':
             node.setName("CustomSupportCube")
+        elif self._SType == 'abutment':
+            node.setName("CustomSupportAbutment")
         else:
             node.setName("CustomSupportCustom")
 
@@ -193,6 +196,9 @@ class CustomSupportsCylinder(Tool):
         elif self._SType == 'cube':
             # Cube creation Size , length
             mesh =  self._createCube(self._UseSize,long,self._UseAngle)
+        elif self._SType == 'abutment':
+            # Abutement creation Size , length
+            mesh =  self._createAbutment(self._UseSize,long,self._UseAngle)
         else:           
             # Custom creation Size , P1 as vector P2 as vector
             # Get support_interface_height as extra distance 
@@ -292,6 +298,34 @@ class CustomSupportsCylinder(Tool):
         mesh.calculateNormals()
         return mesh
     
+    # Abutment Creation
+    def _createAbutment(self, size, height, dep):
+        mesh = MeshBuilder()
+
+        # Can't use MeshBuilder.addCube() because that does not get per-vertex normals
+        # Per-vertex normals require duplication of vertices
+        s = size / 2
+        l = height 
+        s_inf=math.tan(math.radians(dep))*l+(2*s)
+        verts = [ # 6 faces with 4 corners each
+            [-s, -l,  s_inf], [-s,  s,  2*s], [ s,  s,  2*s], [ s, -l,  s_inf],
+            [-s,  s, -2*s], [-s, -l, -s_inf], [ s, -l, -s_inf], [ s,  s, -2*s],
+            [ s, -l, -s_inf], [-s, -l, -s_inf], [-s, -l,  s_inf], [ s, -l,  s_inf],
+            [-s,  s, -2*s], [ s,  s, -2*s], [ s,  s,  2*s], [-s,  s,  2*s],
+            [-s, -l,  s_inf], [-s, -l, -s_inf], [-s,  s, -2*s], [-s,  s,  2*s],
+            [ s, -l, -s_inf], [ s, -l,  s_inf], [ s,  s,  2*s], [ s,  s, -2*s]
+        ]
+        mesh.setVertices(numpy.asarray(verts, dtype=numpy.float32))
+
+        indices = []
+        for i in range(0, 24, 4): # All 6 quads (12 triangles)
+            indices.append([i, i+2, i+1])
+            indices.append([i, i+3, i+2])
+        mesh.setIndices(numpy.asarray(indices, dtype=numpy.int32))
+
+        mesh.calculateNormals()
+        return mesh
+        
     # Cylinder creation
     def _createCylinder(self, size, nb , lg ,dep):
         mesh = MeshBuilder()

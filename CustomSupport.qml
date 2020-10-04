@@ -26,6 +26,7 @@ Item
         // set checked state of mesh type buttons
 		cylinderButton.checked = type === 'cylinder';
         cubeButton.checked = type === 'cube';  
+		abutmentButton.checked = type === 'abutment';
 		customButton.checked = type === 'custom';
         UM.ActiveTool.setProperty("SType", type);
     }
@@ -52,7 +53,7 @@ Item
                 onClicked: setSType('cylinder');
                 style: UM.Theme.styles.tool_button;
                 checked: UM.ActiveTool.properties.getValue("SType") === 'cylinder';
-                z: 3; // Profondeur
+                z: 4; // Profondeur
             }
 			
             Button
@@ -65,9 +66,22 @@ Item
                 onClicked: setSType('cube');
                 style: UM.Theme.styles.tool_button;
                 checked: UM.ActiveTool.properties.getValue("SType") === 'cube';
-                z: 2; // Profondeur
+                z: 3; // Profondeur
             }
 
+            Button
+            {
+                id: abutmentButton;
+                text: catalog.i18nc("@label", "Abutment");
+                iconSource: "type_abutment.svg";
+                property bool needBorder: true;
+                checkable: true;
+                onClicked: setSType('abutment');
+                style: UM.Theme.styles.tool_button;
+                checked: UM.ActiveTool.properties.getValue("SType") === 'abutment';
+                z: 2; // Profondeur
+            }
+			
             Button
             {
                 id: customButton;
