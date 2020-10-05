@@ -3,8 +3,9 @@
 // 
 // proterties values
 //   "SSize"       : Support Size in mm
+//   "ISize"       : Support Interior Size in mm
 //   "AAngle"      : Support Angle in °
-//   "SType"       : Support Type ( Cylinder/Cube/Custom ) 
+//   "SType"       : Support Type ( Cylinder/Tube/Cube/Abutment/Custom ) 
 //-----------------------------------------------------------------------------
 
 import QtQuick 2.2
@@ -19,12 +20,14 @@ Item
     height: childrenRect.height
     UM.I18nCatalog { id: catalog; name: "cura"}
 
-    property var currentSType: UM.ActiveTool.properties.getValue("SType");
+    property var maximum: UM.ActiveTool.properties.getValue("SSize")
+    property var currentSType: UM.ActiveTool.properties.getValue("SType")
 
     function setSType(type)
     {
         // set checked state of mesh type buttons
 		cylinderButton.checked = type === 'cylinder';
+		tubeButton.checked = type === 'tube';
         cubeButton.checked = type === 'cube';  
 		abutmentButton.checked = type === 'abutment';
 		customButton.checked = type === 'custom';
@@ -53,6 +56,19 @@ Item
                 onClicked: setSType('cylinder');
                 style: UM.Theme.styles.tool_button;
                 checked: UM.ActiveTool.properties.getValue("SType") === 'cylinder';
+                z: 5; // Profondeur
+            }
+
+            Button
+            {
+                id: tubeButton;
+                text: catalog.i18nc("@label", "Tube");
+                iconSource: "type_tube.svg";
+                property bool needBorder: true;
+                checkable:true;
+                onClicked: setSType('tube');
+                style: UM.Theme.styles.tool_button;
+                checked: UM.ActiveTool.properties.getValue("SType") === 'tube';
                 z: 4; // Profondeur
             }
 			
@@ -118,7 +134,19 @@ Item
             renderType: Text.NativeRendering
             width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
         }
-
+        
+		Label
+        {
+            height: UM.Theme.getSize("setting_control").height;
+            text: catalog.i18nc("@label","Interior size");
+            font: UM.Theme.getFont("default");
+            color: UM.Theme.getColor("text");
+            verticalAlignment: Text.AlignVCenter;
+            renderType: Text.NativeRendering
+			visible: tubeButton.checked;
+            width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
+        }
+		
         Label
         {
             height: UM.Theme.getSize("setting_control").height;
@@ -149,6 +177,34 @@ Item
             {
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
                 UM.ActiveTool.setProperty("SSize", modified_text);
+            }
+        }
+
+        TextField
+        {
+            id: sizeInteriorTextField
+            width: UM.Theme.getSize("setting_control").width;
+            height: UM.Theme.getSize("setting_control").height;
+            property string unit: "mm";
+            style: UM.Theme.styles.text_field;
+			visible: tubeButton.checked;
+            text: UM.ActiveTool.properties.getValue("ISize")
+            validator: DoubleValidator
+            {
+                decimals: 2
+				top: maximum
+                bottom: 0.1
+                locale: "en_US"
+            }
+
+            onEditingFinished:
+            {
+			    var cur_text = parseFloat(text)
+				if ( cur_text >= maximum )
+				{
+				}
+                var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
+                UM.ActiveTool.setProperty("ISize", modified_text);
             }
         }
 		

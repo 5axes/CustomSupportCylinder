@@ -20,6 +20,7 @@
 # V2.0.0 07-04-2020 Add Button and custom support type
 # V2.0.1 
 # V2.1.0 04-10-2020 Add Abutment support type
+# V2.2.0 05-10-2020 Add Tube support type
 #--------------------------------------------------------------------------------------------
 
 from PyQt5.QtCore import Qt, QTimer
@@ -62,6 +63,7 @@ class CustomSupportsCylinder(Tool):
         
         # variable for menu dialog        
         self._UseSize = 0.0
+        self._UseISize = 0.0
         self._UseAngle = 0.0
         self._SType = 'cylinder'
         
@@ -74,7 +76,7 @@ class CustomSupportsCylinder(Tool):
 
         self._i18n_catalog = None
         
-        self.setExposedProperties("SSize", "AAngle", "SType")
+        self.setExposedProperties("SSize", "ISize", "AAngle", "SType")
         
         self._application = CuraApplication.getInstance()
         
@@ -97,10 +99,12 @@ class CustomSupportsCylinder(Tool):
         # set the preferences to store the default value
         self._preferences = CuraApplication.getInstance().getPreferences()
         self._preferences.addPreference("customsupportcylinder/s_size", 5)
+        self._preferences.addPreference("customsupportcylinder/i_size", 2)
         self._preferences.addPreference("customsupportcylinder/a_angle", 0)
         self._preferences.addPreference("customsupportcylinder/t_type", "cylinder")
         # convert as float to avoid further issue
         self._UseSize = float(self._preferences.getValue("customsupportcylinder/s_size"))
+        self._UseISize = float(self._preferences.getValue("customsupportcylinder/i_size"))
         self._UseAngle = float(self._preferences.getValue("customsupportcylinder/a_angle"))
         # convert as string to avoid further issue
         self._SType = str(self._preferences.getValue("customsupportcylinder/t_type"))
@@ -176,6 +180,8 @@ class CustomSupportsCylinder(Tool):
 
         if self._SType == 'cylinder':
             node.setName("CustomSupportCylinder")
+        elif self._SType == 'tube':
+            node.setName("CustomSupportTube")
         elif self._SType == 'cube':
             node.setName("CustomSupportCube")
         elif self._SType == 'abutment':
@@ -193,6 +199,9 @@ class CustomSupportsCylinder(Tool):
         if self._SType == 'cylinder':
             # Cylinder creation Diameter , Increment angle 2°, length
             mesh = self._createCylinder(self._UseSize,2,long,self._UseAngle)
+        elif self._SType == 'tube':
+            # Tube creation Diameter , Diameter Int, Increment angle 2°, length
+            mesh =  self._createTube(self._UseSize,self._UseISize,2,long,self._UseAngle)
         elif self._SType == 'cube':
             # Cube creation Size , length
             mesh =  self._createCube(self._UseSize,long,self._UseAngle)
@@ -302,8 +311,6 @@ class CustomSupportsCylinder(Tool):
     def _createAbutment(self, size, height, dep):
         mesh = MeshBuilder()
 
-        # Can't use MeshBuilder.addCube() because that does not get per-vertex normals
-        # Per-vertex normals require duplication of vertices
         s = size / 2
         l = height 
         s_inf=math.tan(math.radians(dep))*l+(2*s)
@@ -354,8 +361,8 @@ class CustomSupportsCylinder(Tool):
             verts.append([r*math.cos(i*ang), sup, r*math.sin(i*ang)])
             #Bottom 
             verts.append([0, l, 0])
-            verts.append([r_inf*math.cos((i+1)*ang), l, r_inf*math.sin((i+1)*ang)]) 
             verts.append([r_inf*math.cos(i*ang), l, r_inf*math.sin(i*ang)])
+            verts.append([r_inf*math.cos((i+1)*ang), l, r_inf*math.sin((i+1)*ang)]) 
             
         mesh.setVertices(numpy.asarray(verts, dtype=numpy.float32))
 
@@ -369,7 +376,72 @@ class CustomSupportsCylinder(Tool):
         mesh.calculateNormals()
         return mesh
  
+   # Tube creation
+    def _createTube(self, size, isize, nb , lg ,dep):
+        Logger.log('d', 'isize : ' + str(isize)) 
+        mesh = MeshBuilder()
+        # Per-vertex normals require duplication of vertices
+        r = size / 2
+        ri = isize / 2
+        # additionale length
+        sup = size * 0.1
+        l = -lg
+        rng = int(360 / nb)
+        ang = math.radians(nb)
+        r_inf=math.tan(math.radians(dep))*lg+r
+        
+        verts = []
+        for i in range(0, rng):
+            # Top
+            verts.append([ri*math.cos(i*ang), sup, ri*math.sin(i*ang)])
+            verts.append([r*math.cos((i+1)*ang), sup, r*math.sin((i+1)*ang)])
+            verts.append([r*math.cos(i*ang), sup, r*math.sin(i*ang)])
+            
+            verts.append([ri*math.cos((i+1)*ang), sup, ri*math.sin((i+1)*ang)])
+            verts.append([r*math.cos((i+1)*ang), sup, r*math.sin((i+1)*ang)])
+            verts.append([ri*math.cos(i*ang), sup, ri*math.sin(i*ang)])
+            
+            #Side 1a
+            verts.append([r*math.cos(i*ang), sup, r*math.sin(i*ang)])
+            verts.append([r*math.cos((i+1)*ang), sup, r*math.sin((i+1)*ang)])
+            verts.append([r_inf*math.cos((i+1)*ang), l, r_inf*math.sin((i+1)*ang)])
+            
+            #Side 1b
+            verts.append([r_inf*math.cos((i+1)*ang), l, r_inf*math.sin((i+1)*ang)])
+            verts.append([r_inf*math.cos(i*ang), l, r_inf*math.sin(i*ang)])
+            verts.append([r*math.cos(i*ang), sup, r*math.sin(i*ang)])
+            
+            #Bottom 
+            verts.append([ri*math.cos(i*ang), l, ri*math.sin(i*ang)])
+            verts.append([r_inf*math.cos(i*ang), l, r_inf*math.sin(i*ang)])
+            verts.append([r_inf*math.cos((i+1)*ang), l, r_inf*math.sin((i+1)*ang)]) 
+            
+            verts.append([ri*math.cos((i+1)*ang), l, ri*math.sin((i+1)*ang)])
+            verts.append([ri*math.cos(i*ang), l, ri*math.sin(i*ang)])
+            verts.append([r_inf*math.cos((i+1)*ang), l, r_inf*math.sin((i+1)*ang)]) 
+            
+            #Side Inta
+            verts.append([ri*math.cos(i*ang), sup, ri*math.sin(i*ang)])
+            verts.append([ri*math.cos((i+1)*ang), l, ri*math.sin((i+1)*ang)])
+            verts.append([ri*math.cos((i+1)*ang), sup, ri*math.sin((i+1)*ang)])
+            
+            #Side Intb
+            verts.append([ri*math.cos((i+1)*ang), l, ri*math.sin((i+1)*ang)])
+            verts.append([ri*math.cos(i*ang), sup, ri*math.sin(i*ang)])
+            verts.append([ri*math.cos(i*ang), l, ri*math.sin(i*ang)])
 
+        mesh.setVertices(numpy.asarray(verts, dtype=numpy.float32))
+
+        indices = []
+        # for every angle increment 24 Vertices
+        tot = rng * 24
+        for i in range(0, tot, 3): # 
+            indices.append([i, i+1, i+2])
+        mesh.setIndices(numpy.asarray(indices, dtype=numpy.int32))
+
+        mesh.calculateNormals()
+        return mesh
+        
     # Custom Support Creation
     def _createCustom(self, size, pos1 , pos2, dep, ztop):
         mesh = MeshBuilder()
@@ -459,6 +531,29 @@ class CustomSupportsCylinder(Tool):
         self._UseSize = s_value
         self._preferences.setValue("customsupportcylinder/s_size", s_value)
 
+    def getISize(self) -> float:
+        """ 
+            return: golabl _UseISize  in mm.
+        """           
+        return self._UseISize
+  
+    def setISize(self, ISize: str) -> None:
+        """
+        param ISize: interior Size in mm.
+        """
+ 
+        try:
+            s_value = float(ISize)
+        except ValueError:
+            return
+
+        if s_value <= 0:
+            return
+        
+        #Logger.log('d', 's_value : ' + str(s_value))        
+        self._UseISize = s_value
+        self._preferences.setValue("customsupportcylinder/i_size", s_value)
+        
     def getAAngle(self) -> float:
         """ 
             return: golabl _UseAngle  in °.
