@@ -18,7 +18,7 @@ The initial version was tested on Cura 4.5
 
 ## Installation
 
-First, make sure your Cura version is 3.6 or newer. 
+First, make sure your Cura version is 4.5 or newer. 
 
 ### Manual Install
 
@@ -42,6 +42,8 @@ This plugin is now avalaible in the Cura marketplace. So you can install it auto
 
 - Change the value for the support *Angle* in numeric input field in the tool panel if necessary **(Version 1.0.03)**
 
+- Change the value for the support *Interior size* in numeric input field in the tool panel if necessary **(Version 2.2.0 for Tube support)**
+
 ![Numeric input field in the tool panel](./images/option_n.jpg)
 
 Select the type of support to create with the buttons in the support plugin interface :
@@ -59,7 +61,7 @@ Select the type of support to create with the buttons in the support plugin inte
 - Before to slice your model, uncheck the "Generate Support" checkbox in the right panel **(if you want to use ONLY custom supports)**
 
 
->Note: With the 3 buttons in the plugin windows, it's possible to switch the geometry between a cylinder,a cubic or a custom support.
+>Note: With the 5 buttons in the plugin windows, it's possible to switch the geometry between a cylinder, a tube, a cubic, an abutment or a custom support.
 
 >Note: it's easier to add/remove supports when you are in "Solid View" mode
 
@@ -70,13 +72,16 @@ Select the type of support to create with the buttons in the support plugin inte
 
 ![Conical Support](./images/conical_support.jpg)
 	
-- Version 2.00 : Possibility to define custom support
+- Version 2.0.0 : Possibility to define custom support
 
 ![Custom Support](./images/custom_support.jpg)
 
 To create custom support you need to clic 2 points on the model.
 
-- Version 2.10 : Possibility to define Abutment support
+- Version 2.1.0 : Possibility to define Abutment support
 
 ![Abutment Support](./images/Abutment.jpg)
-	
+
+- Version 2.2.0 : Possibility to define a Tube as support
+
+![Tube Support](./images/Tube.jpg)
