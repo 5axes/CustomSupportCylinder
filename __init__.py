@@ -10,7 +10,7 @@ def getMetaData():
     return {
         "tool": {
             "name": i18n_catalog.i18nc("@label", "Custom Supports Cylinder"),
-            "description": i18n_catalog.i18nc("@info:tooltip", "Add 4 types of custom support"),
+            "description": i18n_catalog.i18nc("@info:tooltip", "Add 5 types of custom support"),
             "icon": "tool_icon.svg",
             "tool_panel": "CustomSupport.qml",
             "weight": 8

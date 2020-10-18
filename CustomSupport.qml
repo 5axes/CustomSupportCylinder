@@ -5,6 +5,8 @@
 //   "SSize"       : Support Size in mm
 //   "ISize"       : Support Interior Size in mm
 //   "AAngle"      : Support Angle in °
+//   "YDirection"  : Support Y direction (Abutment)
+//   "EHeights"    : Equalize heights (Abutment)
 //   "SType"       : Support Type ( Cylinder/Tube/Cube/Abutment/Custom ) 
 //-----------------------------------------------------------------------------
 
@@ -112,7 +114,6 @@ Item
             }
         }
     }
-
     Grid
     {
         id: textfields;
@@ -229,6 +230,34 @@ Item
                 UM.ActiveTool.setProperty("AAngle", modified_angle_text);
             }
         }
+    }
+	CheckBox
+    {
+        id: useYDirectionCheckbox;
+        anchors.top: textfields.bottom;
+        anchors.topMargin: UM.Theme.getSize("default_margin").height;
+        anchors.left: parent.left;
+        text: catalog.i18nc("@option:check","Set on Y direction");
+        style: UM.Theme.styles.partially_checkbox;
+		visible: abutmentButton.checked;
+
+        checked: UM.ActiveTool.properties.getValue("YDirection");
+        onClicked: UM.ActiveTool.setProperty("YDirection", checked);
+		
+    }
+    CheckBox
+    {
+        id: equalizeHeightsCheckbox;
+        anchors.top: useYDirectionCheckbox.bottom;
+        anchors.topMargin: UM.Theme.getSize("default_margin").height;
+        anchors.left: parent.left;
+        text: catalog.i18nc("@option:check","Equalize heights");
+        style: UM.Theme.styles.partially_checkbox;
+		visible: abutmentButton.checked;
+
+        checked: UM.ActiveTool.properties.getValue("EHeights");
+        onClicked: UM.ActiveTool.setProperty("EHeights", checked);
+		
     }
 
 }

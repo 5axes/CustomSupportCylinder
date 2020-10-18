@@ -15,12 +15,13 @@
 # Modif 0.05 : Add checkbox and option to switch between Cube / Cylinder
 # Modif 0.06 : Symplify code and store defaut size support in Preference "customsupportcylinder/s_size" default value 5
 # V0.9.0 05-20-2020
-# V1.0.0 06-01-2020 catalog.i18nc("@label","Size") sur QML
+# V1.0.0 06-01-2020 catalog.i18nc("@label","Size") on QML
 # V1.0.1 06-20-2020 Add Angle for conical support
 # V2.0.0 07-04-2020 Add Button and custom support type
 # V2.0.1 
 # V2.1.0 04-10-2020 Add Abutment support type
 # V2.2.0 05-10-2020 Add Tube support type
+# V2.3.0 18-10-2020 Add Y direction and Equalize heights for Abutment support type
 #--------------------------------------------------------------------------------------------
 
 from PyQt5.QtCore import Qt, QTimer
@@ -60,11 +61,14 @@ class CustomSupportsCylinder(Tool):
         super().__init__()
         
         self._Nb_Point = 0  
+        self._SHeights = 0
         
         # variable for menu dialog        
         self._UseSize = 0.0
         self._UseISize = 0.0
         self._UseAngle = 0.0
+        self._UseYDirection = False
+        self._EqualizeHeights = True
         self._SType = 'cylinder'
         
         # Shortcut
@@ -76,7 +80,7 @@ class CustomSupportsCylinder(Tool):
 
         self._i18n_catalog = None
         
-        self.setExposedProperties("SSize", "ISize", "AAngle", "SType")
+        self.setExposedProperties("SSize", "ISize", "AAngle", "SType" , "YDirection" , "EHeights" )
         
         self._application = CuraApplication.getInstance()
         
@@ -101,11 +105,17 @@ class CustomSupportsCylinder(Tool):
         self._preferences.addPreference("customsupportcylinder/s_size", 5)
         self._preferences.addPreference("customsupportcylinder/i_size", 2)
         self._preferences.addPreference("customsupportcylinder/a_angle", 0)
+        self._preferences.addPreference("customsupportcylinder/y_direction", True)
+        self._preferences.addPreference("customsupportcylinder/e_heights", True)
         self._preferences.addPreference("customsupportcylinder/t_type", "cylinder")
+        
         # convert as float to avoid further issue
         self._UseSize = float(self._preferences.getValue("customsupportcylinder/s_size"))
         self._UseISize = float(self._preferences.getValue("customsupportcylinder/i_size"))
         self._UseAngle = float(self._preferences.getValue("customsupportcylinder/a_angle"))
+        # convert as boolean to avoid further issue
+        self._UseYDirection = bool(self._preferences.getValue("customsupportcylinder/y_direction"))
+        self._EqualizeHeights = bool(self._preferences.getValue("customsupportcylinder/e_heights"))
         # convert as string to avoid further issue
         self._SType = str(self._preferences.getValue("customsupportcylinder/t_type"))
         
@@ -116,21 +126,30 @@ class CustomSupportsCylinder(Tool):
         super().event(event)
         modifiers = QApplication.keyboardModifiers()
         ctrl_is_active = modifiers & Qt.ControlModifier
-
+        shift_is_active = modifiers & Qt.ShiftModifier
+        alt_is_active = modifiers & Qt.AltModifier
+        
+        
         if event.type == Event.MousePressEvent and MouseEvent.LeftButton in event.buttons and self._controller.getToolsEnabled():
             if ctrl_is_active:
                 self._controller.setActiveTool("TranslateTool")
                 return
 
+            if shift_is_active:
+                self._controller.setActiveTool("RotateTool")
+                return
+                
             if self._skip_press:
                 # The selection was previously cleared, do not add/remove an support mesh but
                 # use this click for selection and reactivating this tool only.
                 self._skip_press = False
+                self._SHeights=0
                 return
 
             if self._selection_pass is None:
                 # The selection renderpass is used to identify objects in the current view
                 self._selection_pass = CuraApplication.getInstance().getRenderer().getRenderPass("selection")
+                
             picked_node = self._controller.getScene().findObject(self._selection_pass.getIdAtPosition(event.x, event.y))
             
             
@@ -142,6 +161,7 @@ class CustomSupportsCylinder(Tool):
             if node_stack:
                 if node_stack.getProperty("support_mesh", "value"):
                     self._removeSupportMesh(picked_node)
+                    self._SHeights=0
                     return
 
                 elif node_stack.getProperty("anti_overhang_mesh", "value") or node_stack.getProperty("infill_mesh", "value") or node_stack.getProperty("cutting_mesh", "value"):
@@ -194,6 +214,7 @@ class CustomSupportsCylinder(Tool):
         
         # long=Support Height
         long=position.y
+        
                 
                 
         if self._SType == 'cylinder':
@@ -206,8 +227,19 @@ class CustomSupportsCylinder(Tool):
             # Cube creation Size , length
             mesh =  self._createCube(self._UseSize,long,self._UseAngle)
         elif self._SType == 'abutment':
-            # Abutement creation Size , length
-            mesh =  self._createAbutment(self._UseSize,long,self._UseAngle)
+            # Abutement creation Size , length , top
+            if self._EqualizeHeights == True :
+                Logger.log('d', 'SHeights : ' + str(self._SHeights)) 
+                if self._SHeights==0 :
+                    self._SHeights=position.y 
+                top=self._UseSize+(self._SHeights-position.y)
+
+            else:
+                top=self._UseSize
+                self._SHeights=0
+            
+            Logger.log('d', 'top : ' + str(top))
+            mesh =  self._createAbutment(self._UseSize,long,top,self._UseAngle,self._UseYDirection)
         else:           
             # Custom creation Size , P1 as vector P2 as vector
             # Get support_interface_height as extra distance 
@@ -308,20 +340,32 @@ class CustomSupportsCylinder(Tool):
         return mesh
     
     # Abutment Creation
-    def _createAbutment(self, size, height, dep):
+    def _createAbutment(self, size, height, top, dep, ydir):
+    
+        # Logger.log('d', 'Ydir : ' + str(ydir)) 
         mesh = MeshBuilder()
 
         s = size / 2
         l = height 
-        s_inf=math.tan(math.radians(dep))*l+(2*s)
-        verts = [ # 6 faces with 4 corners each
-            [-s, -l,  s_inf], [-s,  s,  2*s], [ s,  s,  2*s], [ s, -l,  s_inf],
-            [-s,  s, -2*s], [-s, -l, -s_inf], [ s, -l, -s_inf], [ s,  s, -2*s],
-            [ s, -l, -s_inf], [-s, -l, -s_inf], [-s, -l,  s_inf], [ s, -l,  s_inf],
-            [-s,  s, -2*s], [ s,  s, -2*s], [ s,  s,  2*s], [-s,  s,  2*s],
-            [-s, -l,  s_inf], [-s, -l, -s_inf], [-s,  s, -2*s], [-s,  s,  2*s],
-            [ s, -l, -s_inf], [ s, -l,  s_inf], [ s,  s,  2*s], [ s,  s, -2*s]
-        ]
+        s_inf=math.tan(math.radians(dep))*(l+top)+(2*s)
+        if ydir == False :
+            verts = [ # 6 faces with 4 corners each
+                [-s, -l,  s_inf], [-s,  top,  2*s], [ s,  top,  2*s], [ s, -l,  s_inf],
+                [-s,  top, -2*s], [-s, -l, -s_inf], [ s, -l, -s_inf], [ s,  top, -2*s],
+                [ s, -l, -s_inf], [-s, -l, -s_inf], [-s, -l,  s_inf], [ s, -l,  s_inf],
+                [-s,  top, -2*s], [ s,  top, -2*s], [ s,  top,  2*s], [-s,  top,  2*s],
+                [-s, -l,  s_inf], [-s, -l, -s_inf], [-s,  top, -2*s], [-s,  top,  2*s],
+                [ s, -l, -s_inf], [ s, -l,  s_inf], [ s,  top,  2*s], [ s,  top, -2*s]
+            ]
+        else:
+            verts = [ # 6 faces with 4 corners each
+                [-s_inf, -l,  s], [-2*s,  top,  s], [ 2*s,  top,  s], [ s_inf, -l,  s],
+                [-2*s,  top, -s], [-s_inf, -l, -s], [ s_inf, -l, -s], [ 2*s,  top, -s],
+                [ s_inf, -l, -s], [-s_inf, -l, -s], [-s_inf, -l,  s], [ s_inf, -l,  s],
+                [-2*s,  top, -s], [ 2*s,  top, -s], [ 2*s,  top,  s], [-2*s,  top,  s],
+                [-s_inf, -l,  s], [-s_inf, -l, -s], [-2*s,  top, -s], [-2*s,  top,  s],
+                [ s_inf, -l, -s], [ s_inf, -l,  s], [ 2*s,  top,  s], [ 2*s,  top, -s]
+            ]        
         mesh.setVertices(numpy.asarray(verts, dtype=numpy.float32))
 
         indices = []
@@ -378,7 +422,7 @@ class CustomSupportsCylinder(Tool):
  
    # Tube creation
     def _createTube(self, size, isize, nb , lg ,dep):
-        Logger.log('d', 'isize : ' + str(isize)) 
+        # Logger.log('d', 'isize : ' + str(isize)) 
         mesh = MeshBuilder()
         # Per-vertex normals require duplication of vertices
         r = size / 2
@@ -590,3 +634,29 @@ class CustomSupportsCylinder(Tool):
         self._SType = SType
         #Logger.log('d', 'SType : ' + str(SType))   
         self._preferences.setValue("customsupportcylinder/t_type", SType)
+        
+    def getYDirection(self) -> bool:
+        """ 
+            return: golabl _UseYDirection  as boolean.
+        """ 
+        return self._UseYDirection
+    
+    def setYDirection(self, YDirection: bool) -> None:
+        """
+        param YDirection: as boolean.
+        """
+        self._UseYDirection = YDirection
+        self._preferences.setValue("customsupportcylinder/y_direction", YDirection)
+        
+    def getEHeights(self) -> bool:
+        """ 
+            return: golabl _EqualizeHeights  as boolean.
+        """ 
+        return self._EqualizeHeights
+  
+    def setEHeights(self, EHeights: bool) -> None:
+        """
+        param EHeights: as boolean.
+        """
+        self._EqualizeHeights = EHeights
+        self._preferences.setValue("customsupportcylinder/e_heights", EHeights)
