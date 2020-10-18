@@ -57,6 +57,7 @@ Select the type of support to create with the buttons in the support plugin inte
 
 - **Clicking existing support + Ctrl** switch automaticaly to the Translate Tool to modify the position of the support.
 
+- **Clicking existing support + Shift** switch automaticaly to the Rotate Tool to modify the orientation of the support.
 
 - Before to slice your model, uncheck the "Generate Support" checkbox in the right panel **(if you want to use ONLY custom supports)**
 
@@ -85,3 +86,7 @@ To create custom support you need to clic 2 points on the model.
 - Version 2.2.0 : Possibility to define a Tube as support
 
 ![Tube Support](./images/Tube.jpg)
+
+- Version 2.3.0 : For Abutment support possibility to create directly the Support on the Y direction and possibility to unify the supports heights
+
+![Abutment Support](./images/AbutmentSupport.jpg)
