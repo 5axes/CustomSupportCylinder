@@ -1,16 +1,16 @@
 # Custom Supports Plugin for Cura
 
-Cura plugin which enables you to add custom cylindrical and cubic supports. It was originaly based on the ***Support Eraser plugin*** code of *Ultimaker BV*. But instead of creating a cube **"anti_overhang_mesh"**, this plugin offer you the possibility to define a custom sized **"support_mesh"** element.
+Cura plugin which enables you to add custom different support types. It was originaly based on the ***Support Eraser plugin*** code of *Ultimaker BV*. But instead of creating a cube **"anti_overhang_mesh"**, this plugin offer you the possibility to define a custom sized **"support_mesh"** element.
 
 Source code on Github : [https://github.com/Ultimaker/Cura/tree/master/plugins/SupportEraser](https://github.com/Ultimaker/Cura/tree/master/plugins/SupportEraser)
 
 This plugin offer now much more possibilities :
 ----
 
-- Possibility to define cylindrical / squarred / custom by 2 points support
+- Possibility to define cylindrical / squarred / custom by 2 points / tube / abutment support style
 - Possibility to define the support size
 - Visualisation of the support on the total height
-- Possibility to add angle to obtain conical support
+- Possibility to add an angle to obtain conical support
 
 The initial version was tested on Cura 4.5
 
@@ -36,13 +36,13 @@ This plugin is now avalaible in the Cura marketplace. So you can install it auto
 
 ## How to use
 
-- Load a model in Cura and select it
-- Click on the "Custom Supports Cylinder" button on the left toolbar
-- Change the value for the support *Size* in numeric input field in the tool panel if necessary
+* Load a model in Cura and select it
 
-- Change the value for the support *Angle* in numeric input field in the tool panel if necessary **(Version 1.0.03)**
-
-- Change the value for the support *Interior size* in numeric input field in the tool panel if necessary **(Version 2.2.0 for Tube support)**
+* Click on the "Custom Supports Cylinder" button on the left toolbar
+* With the 5 buttons in the plugin windows, it's possible to switch the geometry between a cylinder, a tube, a cubic, an abutment or a custom support.
+* Change the value for the support *Size* in numeric input field in the tool panel if necessary
+* Change the value for the support *Angle* in numeric input field in the tool panel if necessary **(Version 1.0.03)**
+* Change the value for the support *Interior size* in numeric input field in the tool panel if necessary **(Version 2.2.0 for Tube support)**
 
 ![Numeric input field in the tool panel](./images/option_n.jpg)
 
@@ -60,9 +60,6 @@ Select the type of support to create with the buttons in the support plugin inte
 - **Clicking existing support + Shift** switch automaticaly to the Rotate Tool to modify the orientation of the support.
 
 - Before to slice your model, uncheck the "Generate Support" checkbox in the right panel **(if you want to use ONLY custom supports)**
-
-
->Note: With the 5 buttons in the plugin windows, it's possible to switch the geometry between a cylinder, a tube, a cubic, an abutment or a custom support.
 
 >Note: it's easier to add/remove supports when you are in "Solid View" mode
 
