@@ -22,6 +22,7 @@
 # V2.1.0 04-10-2020 Add Abutment support type
 # V2.2.0 05-10-2020 Add Tube support type
 # V2.3.0 18-10-2020 Add Y direction and Equalize heights for Abutment support type
+# V2.3.1 21-01-2021 Generate as defaut a support_mesh_drop_down
 #--------------------------------------------------------------------------------------------
 
 from PyQt5.QtCore import Qt, QTimer
@@ -64,7 +65,8 @@ class CustomSupportsCylinder(Tool):
         self._SHeights = 0
         
         # variable for menu dialog        
-        self._UseSize = 0.0
+        self._UseSize = 2.0
+        self._MaxSize = 10.0
         self._UseISize = 0.0
         self._UseAngle = 0.0
         self._UseYDirection = False
@@ -80,7 +82,7 @@ class CustomSupportsCylinder(Tool):
 
         self._i18n_catalog = None
         
-        self.setExposedProperties("SSize", "ISize", "AAngle", "SType" , "YDirection" , "EHeights" )
+        self.setExposedProperties("SSize", "MSize", "ISize", "AAngle", "SType" , "YDirection" , "EHeights" )
         
         self._application = CuraApplication.getInstance()
         
@@ -103,6 +105,7 @@ class CustomSupportsCylinder(Tool):
         # set the preferences to store the default value
         self._preferences = CuraApplication.getInstance().getPreferences()
         self._preferences.addPreference("customsupportcylinder/s_size", 5)
+        self._preferences.addPreference("customsupportcylinder/m_size", 10)
         self._preferences.addPreference("customsupportcylinder/i_size", 2)
         self._preferences.addPreference("customsupportcylinder/a_angle", 0)
         self._preferences.addPreference("customsupportcylinder/y_direction", True)
@@ -111,6 +114,7 @@ class CustomSupportsCylinder(Tool):
         
         # convert as float to avoid further issue
         self._UseSize = float(self._preferences.getValue("customsupportcylinder/s_size"))
+        self._MaxSize = float(self._preferences.getValue("customsupportcylinder/m_size"))
         self._UseISize = float(self._preferences.getValue("customsupportcylinder/i_size"))
         self._UseAngle = float(self._preferences.getValue("customsupportcylinder/a_angle"))
         # convert as boolean to avoid further issue
@@ -208,24 +212,22 @@ class CustomSupportsCylinder(Tool):
             node.setName("CustomSupportAbutment")
         else:
             node.setName("CustomSupportCustom")
-
             
         node.setSelectable(True)
         
         # long=Support Height
         long=position.y
-        
                 
                 
         if self._SType == 'cylinder':
             # Cylinder creation Diameter , Increment angle 2°, length
-            mesh = self._createCylinder(self._UseSize,2,long,self._UseAngle)
+            mesh = self._createCylinder(self._UseSize,self._MaxSize,2,long,self._UseAngle)
         elif self._SType == 'tube':
             # Tube creation Diameter , Diameter Int, Increment angle 2°, length
-            mesh =  self._createTube(self._UseSize,self._UseISize,2,long,self._UseAngle)
+            mesh =  self._createTube(self._UseSize,self._MaxSize,self._UseISize,2,long,self._UseAngle)
         elif self._SType == 'cube':
             # Cube creation Size , length
-            mesh =  self._createCube(self._UseSize,long,self._UseAngle)
+            mesh =  self._createCube(self._UseSize,self._MaxSize,long,self._UseAngle)
         elif self._SType == 'abutment':
             # Abutement creation Size , length , top
             if self._EqualizeHeights == True :
@@ -238,14 +240,14 @@ class CustomSupportsCylinder(Tool):
                 top=self._UseSize
                 self._SHeights=0
             
-            Logger.log('d', 'top : ' + str(top))
-            mesh =  self._createAbutment(self._UseSize,long,top,self._UseAngle,self._UseYDirection)
+            # Logger.log('d', 'top : ' + str(top))
+            mesh =  self._createAbutment(self._UseSize,self._MaxSize,long,top,self._UseAngle,self._UseYDirection)
         else:           
             # Custom creation Size , P1 as vector P2 as vector
             # Get support_interface_height as extra distance 
             extruder_stack = self._application.getExtruderManager().getActiveExtruderStacks()[0]
             extra_top=extruder_stack.getProperty("support_interface_height", "value")            
-            mesh =  self._createCustom(self._UseSize,position,position2,self._UseAngle,extra_top)
+            mesh =  self._createCustom(self._UseSize,self._MaxSize,position,position2,self._UseAngle,extra_top)
             
         node.setMeshData(mesh.build())
 
@@ -262,6 +264,7 @@ class CustomSupportsCylinder(Tool):
             new_instance.setProperty("value", True)
             new_instance.resetState()  # Ensure that the state is not seen as a user state.
             settings.addInstance(new_instance)
+
 
         op = GroupedOperation()
         # First add node to the scene at the correct position/scale, before parenting, so the support mesh does not get scaled with the parent
@@ -312,26 +315,49 @@ class CustomSupportsCylinder(Tool):
         self._had_selection = has_selection
     
     # Cube Creation
-    def _createCube(self, size, height, dep):
+    def _createCube(self, size, maxs, height, dep):
         mesh = MeshBuilder()
 
         # Can't use MeshBuilder.addCube() because that does not get per-vertex normals
         # Per-vertex normals require duplication of vertices
         s = size / 2
+        sm = maxs / 2
         l = height 
         s_inf=math.tan(math.radians(dep))*l+s
-        verts = [ # 6 faces with 4 corners each
-            [-s_inf, -l,  s_inf], [-s,  s,  s], [ s,  s,  s], [ s_inf, -l,  s_inf],
-            [-s,  s, -s], [-s_inf, -l, -s_inf], [ s_inf, -l, -s_inf], [ s,  s, -s],
-            [ s_inf, -l, -s_inf], [-s_inf, -l, -s_inf], [-s_inf, -l,  s_inf], [ s_inf, -l,  s_inf],
-            [-s,  s, -s], [ s,  s, -s], [ s,  s,  s], [-s,  s,  s],
-            [-s_inf, -l,  s_inf], [-s_inf, -l, -s_inf], [-s,  s, -s], [-s,  s,  s],
-            [ s_inf, -l, -s_inf], [ s_inf, -l,  s_inf], [ s,  s,  s], [ s,  s, -s]
-        ]
+        
+        if sm>s and dep!=0:
+            l_max=(sm-s) / math.tan(math.radians(dep))
+        else :
+            l_max=l
+        
+        if l_max<l and l_max>0:
+            nbv=40        
+            verts = [ # 10 faces with 4 corners each
+                [-sm, -l_max,  sm], [-s,  s,  s], [ s,  s,  s], [ sm, -l_max,  sm],
+                [-s,  s, -s], [-sm, -l_max, -sm], [ sm, -l_max, -sm], [ s,  s, -s],
+                [-sm, -l,  sm], [-sm,  -l_max,  sm], [ sm,  -l_max,  sm], [ sm, -l,  sm],
+                [-sm,  -l_max, -sm], [-sm, -l, -sm], [ sm, -l, -sm], [ sm,  -l_max, -sm],
+                [ sm, -l, -sm], [-sm, -l, -sm], [-sm, -l,  sm], [ sm, -l,  sm],
+                [-s,  s, -s], [ s,  s, -s], [ s,  s,  s], [-s,  s,  s],
+                [-sm, -l,  sm], [-sm, -l, -sm], [-sm,  -l_max, -sm], [-sm,  -l_max,  sm],
+                [ sm, -l, -sm], [ sm, -l,  sm], [ sm,  -l_max,  sm], [ sm,  -l_max, -sm],  
+                [-sm, -l_max,  sm], [-sm, -l_max, -sm], [-s,  s, -s], [-s,  s,  s],
+                [ sm, -l_max, -sm], [ sm, -l_max,  sm], [ s,  s,  s], [ s,  s, -s]
+            ]       
+        else:
+            nbv=24        
+            verts = [ # 6 faces with 4 corners each
+                [-s_inf, -l,  s_inf], [-s,  s,  s], [ s,  s,  s], [ s_inf, -l,  s_inf],
+                [-s,  s, -s], [-s_inf, -l, -s_inf], [ s_inf, -l, -s_inf], [ s,  s, -s],
+                [ s_inf, -l, -s_inf], [-s_inf, -l, -s_inf], [-s_inf, -l,  s_inf], [ s_inf, -l,  s_inf],
+                [-s,  s, -s], [ s,  s, -s], [ s,  s,  s], [-s,  s,  s],
+                [-s_inf, -l,  s_inf], [-s_inf, -l, -s_inf], [-s,  s, -s], [-s,  s,  s],
+                [ s_inf, -l, -s_inf], [ s_inf, -l,  s_inf], [ s,  s,  s], [ s,  s, -s]
+            ]
         mesh.setVertices(numpy.asarray(verts, dtype=numpy.float32))
 
         indices = []
-        for i in range(0, 24, 4): # All 6 quads (12 triangles)
+        for i in range(0, nbv, 4): # All 6 quads (12 triangles)
             indices.append([i, i+2, i+1])
             indices.append([i, i+3, i+2])
         mesh.setIndices(numpy.asarray(indices, dtype=numpy.int32))
@@ -340,36 +366,74 @@ class CustomSupportsCylinder(Tool):
         return mesh
     
     # Abutment Creation
-    def _createAbutment(self, size, height, top, dep, ydir):
+    def _createAbutment(self, size, maxs, height, top, dep, ydir):
     
         # Logger.log('d', 'Ydir : ' + str(ydir)) 
         mesh = MeshBuilder()
 
         s = size / 2
+        sm = maxs / 2
         l = height 
         s_inf=math.tan(math.radians(dep))*(l+top)+(2*s)
-        if ydir == False :
-            verts = [ # 6 faces with 4 corners each
-                [-s, -l,  s_inf], [-s,  top,  2*s], [ s,  top,  2*s], [ s, -l,  s_inf],
-                [-s,  top, -2*s], [-s, -l, -s_inf], [ s, -l, -s_inf], [ s,  top, -2*s],
-                [ s, -l, -s_inf], [-s, -l, -s_inf], [-s, -l,  s_inf], [ s, -l,  s_inf],
-                [-s,  top, -2*s], [ s,  top, -2*s], [ s,  top,  2*s], [-s,  top,  2*s],
-                [-s, -l,  s_inf], [-s, -l, -s_inf], [-s,  top, -2*s], [-s,  top,  2*s],
-                [ s, -l, -s_inf], [ s, -l,  s_inf], [ s,  top,  2*s], [ s,  top, -2*s]
-            ]
+        
+        if sm>s and dep!=0:
+            l_max=(sm-s) / math.tan(math.radians(dep))
+        else :
+            l_max=l
+        
+        if l_max<l and l_max>0:
+            nbv=40  
+            if ydir == False :
+                verts = [ # 10 faces with 4 corners each
+                    [-s, -l_max,  sm], [-s,  top,  2*s], [ s,  top,  2*s], [ s, -l_max,  sm],
+                    [-s,  top, -2*s], [-s, -l_max, -sm], [ s, -l_max, -sm], [ s,  top, -2*s],
+                    [-s, -l,  sm], [-s,  -l_max,  sm], [ s,  -l_max,  sm], [ s, -l,  sm],
+                    [-s,  -l_max, -sm], [-s, -l, -sm], [ s, -l, -sm], [ s,  -l_max, -sm],                  
+                    [ s, -l, -sm], [-s, -l, -sm], [-s, -l,  sm], [ s, -l,  sm],
+                    [-s,  top, -2*s], [ s,  top, -2*s], [ s,  top,  2*s], [-s,  top,  2*s],
+                    [-s, -l_max,  sm], [-s, -l_max, -sm], [-s,  top, -2*s], [-s,  top,  2*s],
+                    [ s, -l_max, -sm], [ s, -l_max,  sm], [ s,  top,  2*s], [ s,  top, -2*s],                   
+                    [-s, -l,  sm], [-s, -l, -sm], [-s,  -l_max, -sm], [-s,  -l_max,  sm],
+                    [ s, -l, -sm], [ s, -l,  sm], [ s,  -l_max,  sm], [ s,  -l_max, -sm]
+                ]
+            else:
+                verts = [ # 10 faces with 4 corners each
+                    [-sm, -l_max,  s], [-2*s,  top,  s], [ 2*s,  top,  s], [ sm, -l_max,  s],
+                    [-2*s,  top, -s], [-sm, -l_max, -s], [ sm, -l_max, -s], [ 2*s,  top, -s],                
+                    [-sm, -l,  s], [-sm,  -l_max,  s], [ sm,  -l_max,  s], [ sm, -l,  s],
+                    [-sm,  -l_max, -s], [-sm, -l, -s], [ sm, -l, -s], [ sm,  -l_max, -s],                         
+                    [ sm, -l, -s], [-sm, -l, -s], [-sm, -l,  s], [ sm, -l,  s],
+                    [-2*s,  top, -s], [ 2*s,  top, -s], [ 2*s,  top,  s], [-2*s,  top,  s],             
+                    [-sm, -l_max,  s], [-sm, -l_max, -s], [-2*s,  top, -s], [-2*s,  top,  s],
+                    [ sm, -l_max, -s], [ sm, -l_max,  s], [ 2*s,  top,  s], [ 2*s,  top, -s],                                  
+                    [-sm, -l,  s], [-sm, -l, -s], [-sm,  -l_max, -s], [-sm,  -l_max,  s],
+                    [ sm, -l, -s], [ sm, -l,  s], [ sm,  -l_max,  s], [ sm,  -l_max, -s]
+                ]             
         else:
-            verts = [ # 6 faces with 4 corners each
-                [-s_inf, -l,  s], [-2*s,  top,  s], [ 2*s,  top,  s], [ s_inf, -l,  s],
-                [-2*s,  top, -s], [-s_inf, -l, -s], [ s_inf, -l, -s], [ 2*s,  top, -s],
-                [ s_inf, -l, -s], [-s_inf, -l, -s], [-s_inf, -l,  s], [ s_inf, -l,  s],
-                [-2*s,  top, -s], [ 2*s,  top, -s], [ 2*s,  top,  s], [-2*s,  top,  s],
-                [-s_inf, -l,  s], [-s_inf, -l, -s], [-2*s,  top, -s], [-2*s,  top,  s],
-                [ s_inf, -l, -s], [ s_inf, -l,  s], [ 2*s,  top,  s], [ 2*s,  top, -s]
-            ]        
+            
+            nbv=24        
+            if ydir == False :
+                verts = [ # 6 faces with 4 corners each
+                    [-s, -l,  s_inf], [-s,  top,  2*s], [ s,  top,  2*s], [ s, -l,  s_inf],
+                    [-s,  top, -2*s], [-s, -l, -s_inf], [ s, -l, -s_inf], [ s,  top, -2*s],
+                    [ s, -l, -s_inf], [-s, -l, -s_inf], [-s, -l,  s_inf], [ s, -l,  s_inf],
+                    [-s,  top, -2*s], [ s,  top, -2*s], [ s,  top,  2*s], [-s,  top,  2*s],
+                    [-s, -l,  s_inf], [-s, -l, -s_inf], [-s,  top, -2*s], [-s,  top,  2*s],
+                    [ s, -l, -s_inf], [ s, -l,  s_inf], [ s,  top,  2*s], [ s,  top, -2*s]
+                ]
+            else:
+                verts = [ # 6 faces with 4 corners each
+                    [-s_inf, -l,  s], [-2*s,  top,  s], [ 2*s,  top,  s], [ s_inf, -l,  s],
+                    [-2*s,  top, -s], [-s_inf, -l, -s], [ s_inf, -l, -s], [ 2*s,  top, -s],
+                    [ s_inf, -l, -s], [-s_inf, -l, -s], [-s_inf, -l,  s], [ s_inf, -l,  s],
+                    [-2*s,  top, -s], [ 2*s,  top, -s], [ 2*s,  top,  s], [-2*s,  top,  s],
+                    [-s_inf, -l,  s], [-s_inf, -l, -s], [-2*s,  top, -s], [-2*s,  top,  s],
+                    [ s_inf, -l, -s], [ s_inf, -l,  s], [ 2*s,  top,  s], [ 2*s,  top, -s]
+                ]        
         mesh.setVertices(numpy.asarray(verts, dtype=numpy.float32))
 
         indices = []
-        for i in range(0, 24, 4): # All 6 quads (12 triangles)
+        for i in range(0, nbv, 4): # All 6 quads (12 triangles)
             indices.append([i, i+2, i+1])
             indices.append([i, i+3, i+2])
         mesh.setIndices(numpy.asarray(indices, dtype=numpy.int32))
@@ -378,41 +442,79 @@ class CustomSupportsCylinder(Tool):
         return mesh
         
     # Cylinder creation
-    def _createCylinder(self, size, nb , lg ,dep):
+    def _createCylinder(self, size, maxs, nb , lg ,dep):
         mesh = MeshBuilder()
         # Per-vertex normals require duplication of vertices
         r = size / 2
+        rm = maxs / 2
         # additionale length
         sup = size * 0.1
         l = -lg
         rng = int(360 / nb)
         ang = math.radians(nb)
         r_inf=math.tan(math.radians(dep))*lg+r
+        if rm>r and dep!=0 :
+            l_max=(rm-r) / math.tan(math.radians(dep))
+        else :
+            l_max=l
+            
+        #Logger.log('d', 'lg : ' + str(lg))
+        #Logger.log('d', 'l_max : ' + str(l_max)) 
         
         verts = []
-        for i in range(0, rng):
-            # Top
-            verts.append([0, sup, 0])
-            verts.append([r*math.cos((i+1)*ang), sup, r*math.sin((i+1)*ang)])
-            verts.append([r*math.cos(i*ang), sup, r*math.sin(i*ang)])
-            #Side 1a
-            verts.append([r*math.cos(i*ang), sup, r*math.sin(i*ang)])
-            verts.append([r*math.cos((i+1)*ang), sup, r*math.sin((i+1)*ang)])
-            verts.append([r_inf*math.cos((i+1)*ang), l, r_inf*math.sin((i+1)*ang)])
-            #Side 1b
-            verts.append([r_inf*math.cos((i+1)*ang), l, r_inf*math.sin((i+1)*ang)])
-            verts.append([r_inf*math.cos(i*ang), l, r_inf*math.sin(i*ang)])
-            verts.append([r*math.cos(i*ang), sup, r*math.sin(i*ang)])
-            #Bottom 
-            verts.append([0, l, 0])
-            verts.append([r_inf*math.cos(i*ang), l, r_inf*math.sin(i*ang)])
-            verts.append([r_inf*math.cos((i+1)*ang), l, r_inf*math.sin((i+1)*ang)]) 
-            
+        if l_max<lg and l_max>0:
+            nbv=18
+            for i in range(0, rng):
+                 # Top
+                verts.append([0, sup, 0])
+                verts.append([r*math.cos((i+1)*ang), sup, r*math.sin((i+1)*ang)])
+                verts.append([r*math.cos(i*ang), sup, r*math.sin(i*ang)])
+                #Side 1a
+                verts.append([r*math.cos(i*ang), sup, r*math.sin(i*ang)])
+                verts.append([r*math.cos((i+1)*ang), sup, r*math.sin((i+1)*ang)])
+                verts.append([rm*math.cos((i+1)*ang), -l_max, rm*math.sin((i+1)*ang)])
+                #Side 1b
+                verts.append([rm*math.cos((i+1)*ang), -l_max, rm*math.sin((i+1)*ang)])
+                verts.append([rm*math.cos(i*ang), -l_max, rm*math.sin(i*ang)])
+                verts.append([r*math.cos(i*ang), sup, r*math.sin(i*ang)])
+                #Side 2a
+                verts.append([rm*math.cos(i*ang), -l_max, rm*math.sin(i*ang)])
+                verts.append([rm*math.cos((i+1)*ang), -l_max, rm*math.sin((i+1)*ang)])
+                verts.append([rm*math.cos((i+1)*ang), l, rm*math.sin((i+1)*ang)])
+                #Side 2b
+                verts.append([rm*math.cos((i+1)*ang), l, rm*math.sin((i+1)*ang)])
+                verts.append([rm*math.cos(i*ang), l, rm*math.sin(i*ang)])
+                verts.append([rm*math.cos(i*ang), -l_max, rm*math.sin(i*ang)])
+                #Bottom 
+                verts.append([0, l, 0])
+                verts.append([rm*math.cos(i*ang), l, rm*math.sin(i*ang)])
+                verts.append([rm*math.cos((i+1)*ang), l, rm*math.sin((i+1)*ang)]) 
+                
+        else:
+            nbv=12
+            for i in range(0, rng):
+                # Top
+                verts.append([0, sup, 0])
+                verts.append([r*math.cos((i+1)*ang), sup, r*math.sin((i+1)*ang)])
+                verts.append([r*math.cos(i*ang), sup, r*math.sin(i*ang)])
+                #Side 1a
+                verts.append([r*math.cos(i*ang), sup, r*math.sin(i*ang)])
+                verts.append([r*math.cos((i+1)*ang), sup, r*math.sin((i+1)*ang)])
+                verts.append([r_inf*math.cos((i+1)*ang), l, r_inf*math.sin((i+1)*ang)])
+                #Side 1b
+                verts.append([r_inf*math.cos((i+1)*ang), l, r_inf*math.sin((i+1)*ang)])
+                verts.append([r_inf*math.cos(i*ang), l, r_inf*math.sin(i*ang)])
+                verts.append([r*math.cos(i*ang), sup, r*math.sin(i*ang)])
+                #Bottom 
+                verts.append([0, l, 0])
+                verts.append([r_inf*math.cos(i*ang), l, r_inf*math.sin(i*ang)])
+                verts.append([r_inf*math.cos((i+1)*ang), l, r_inf*math.sin((i+1)*ang)])
+        
         mesh.setVertices(numpy.asarray(verts, dtype=numpy.float32))
 
         indices = []
-        # for every angle increment 12 Vertices
-        tot = rng * 12
+        # for every angle increment nbv (12 or 18) Vertices
+        tot = rng * nbv
         for i in range(0, tot, 3): # 
             indices.append([i, i+1, i+2])
         mesh.setIndices(numpy.asarray(indices, dtype=numpy.int32))
@@ -421,64 +523,122 @@ class CustomSupportsCylinder(Tool):
         return mesh
  
    # Tube creation
-    def _createTube(self, size, isize, nb , lg ,dep):
+    def _createTube(self, size, maxs, isize, nb , lg ,dep):
         # Logger.log('d', 'isize : ' + str(isize)) 
         mesh = MeshBuilder()
         # Per-vertex normals require duplication of vertices
         r = size / 2
         ri = isize / 2
+        rm = maxs / 2
         # additionale length
         sup = size * 0.1
         l = -lg
         rng = int(360 / nb)
         ang = math.radians(nb)
         r_inf=math.tan(math.radians(dep))*lg+r
-        
+        if rm>r and dep!=0:
+            l_max=(rm-r) / math.tan(math.radians(dep))
+        else :
+            l_max=l
+            
         verts = []
-        for i in range(0, rng):
-            # Top
-            verts.append([ri*math.cos(i*ang), sup, ri*math.sin(i*ang)])
-            verts.append([r*math.cos((i+1)*ang), sup, r*math.sin((i+1)*ang)])
-            verts.append([r*math.cos(i*ang), sup, r*math.sin(i*ang)])
-            
-            verts.append([ri*math.cos((i+1)*ang), sup, ri*math.sin((i+1)*ang)])
-            verts.append([r*math.cos((i+1)*ang), sup, r*math.sin((i+1)*ang)])
-            verts.append([ri*math.cos(i*ang), sup, ri*math.sin(i*ang)])
-            
-            #Side 1a
-            verts.append([r*math.cos(i*ang), sup, r*math.sin(i*ang)])
-            verts.append([r*math.cos((i+1)*ang), sup, r*math.sin((i+1)*ang)])
-            verts.append([r_inf*math.cos((i+1)*ang), l, r_inf*math.sin((i+1)*ang)])
-            
-            #Side 1b
-            verts.append([r_inf*math.cos((i+1)*ang), l, r_inf*math.sin((i+1)*ang)])
-            verts.append([r_inf*math.cos(i*ang), l, r_inf*math.sin(i*ang)])
-            verts.append([r*math.cos(i*ang), sup, r*math.sin(i*ang)])
-            
-            #Bottom 
-            verts.append([ri*math.cos(i*ang), l, ri*math.sin(i*ang)])
-            verts.append([r_inf*math.cos(i*ang), l, r_inf*math.sin(i*ang)])
-            verts.append([r_inf*math.cos((i+1)*ang), l, r_inf*math.sin((i+1)*ang)]) 
-            
-            verts.append([ri*math.cos((i+1)*ang), l, ri*math.sin((i+1)*ang)])
-            verts.append([ri*math.cos(i*ang), l, ri*math.sin(i*ang)])
-            verts.append([r_inf*math.cos((i+1)*ang), l, r_inf*math.sin((i+1)*ang)]) 
-            
-            #Side Inta
-            verts.append([ri*math.cos(i*ang), sup, ri*math.sin(i*ang)])
-            verts.append([ri*math.cos((i+1)*ang), l, ri*math.sin((i+1)*ang)])
-            verts.append([ri*math.cos((i+1)*ang), sup, ri*math.sin((i+1)*ang)])
-            
-            #Side Intb
-            verts.append([ri*math.cos((i+1)*ang), l, ri*math.sin((i+1)*ang)])
-            verts.append([ri*math.cos(i*ang), sup, ri*math.sin(i*ang)])
-            verts.append([ri*math.cos(i*ang), l, ri*math.sin(i*ang)])
+        if l_max<lg and l_max>0:
+            nbv=30
+            for i in range(0, rng):
+                # Top
+                verts.append([ri*math.cos(i*ang), sup, ri*math.sin(i*ang)])
+                verts.append([r*math.cos((i+1)*ang), sup, r*math.sin((i+1)*ang)])
+                verts.append([r*math.cos(i*ang), sup, r*math.sin(i*ang)])
+                
+                verts.append([ri*math.cos((i+1)*ang), sup, ri*math.sin((i+1)*ang)])
+                verts.append([r*math.cos((i+1)*ang), sup, r*math.sin((i+1)*ang)])
+                verts.append([ri*math.cos(i*ang), sup, ri*math.sin(i*ang)])
+
+                #Side 1a
+                verts.append([r*math.cos(i*ang), sup, r*math.sin(i*ang)])
+                verts.append([r*math.cos((i+1)*ang), sup, r*math.sin((i+1)*ang)])
+                verts.append([rm*math.cos((i+1)*ang), -l_max, rm*math.sin((i+1)*ang)])
+                
+                #Side 1b
+                verts.append([rm*math.cos((i+1)*ang), -l_max, rm*math.sin((i+1)*ang)])
+                verts.append([rm*math.cos(i*ang), -l_max, rm*math.sin(i*ang)])
+                verts.append([r*math.cos(i*ang), sup, r*math.sin(i*ang)])
+                
+                #Side 2a
+                verts.append([rm*math.cos(i*ang), -l_max, rm*math.sin(i*ang)])
+                verts.append([rm*math.cos((i+1)*ang), -l_max, rm*math.sin((i+1)*ang)])
+                verts.append([rm*math.cos((i+1)*ang), l, rm*math.sin((i+1)*ang)])
+                
+                #Side 2b
+                verts.append([rm*math.cos((i+1)*ang), l, rm*math.sin((i+1)*ang)])
+                verts.append([rm*math.cos(i*ang), l, rm*math.sin(i*ang)])
+                verts.append([rm*math.cos(i*ang), -l_max, rm*math.sin(i*ang)])
+                
+                #Bottom 
+                verts.append([ri*math.cos(i*ang), l, ri*math.sin(i*ang)])
+                verts.append([rm*math.cos(i*ang), l, rm*math.sin(i*ang)])
+                verts.append([rm*math.cos((i+1)*ang), l, rm*math.sin((i+1)*ang)]) 
+                
+                verts.append([ri*math.cos((i+1)*ang), l, ri*math.sin((i+1)*ang)])
+                verts.append([ri*math.cos(i*ang), l, ri*math.sin(i*ang)])
+                verts.append([rm*math.cos((i+1)*ang), l, rm*math.sin((i+1)*ang)]) 
+                
+                #Side Inta
+                verts.append([ri*math.cos(i*ang), sup, ri*math.sin(i*ang)])
+                verts.append([ri*math.cos((i+1)*ang), l, ri*math.sin((i+1)*ang)])
+                verts.append([ri*math.cos((i+1)*ang), sup, ri*math.sin((i+1)*ang)])
+                
+                #Side Intb
+                verts.append([ri*math.cos((i+1)*ang), l, ri*math.sin((i+1)*ang)])
+                verts.append([ri*math.cos(i*ang), sup, ri*math.sin(i*ang)])
+                verts.append([ri*math.cos(i*ang), l, ri*math.sin(i*ang)])
+                
+        else:
+            nbv=24
+            for i in range(0, rng):
+                # Top
+                verts.append([ri*math.cos(i*ang), sup, ri*math.sin(i*ang)])
+                verts.append([r*math.cos((i+1)*ang), sup, r*math.sin((i+1)*ang)])
+                verts.append([r*math.cos(i*ang), sup, r*math.sin(i*ang)])
+                
+                verts.append([ri*math.cos((i+1)*ang), sup, ri*math.sin((i+1)*ang)])
+                verts.append([r*math.cos((i+1)*ang), sup, r*math.sin((i+1)*ang)])
+                verts.append([ri*math.cos(i*ang), sup, ri*math.sin(i*ang)])
+                
+                #Side 1a
+                verts.append([r*math.cos(i*ang), sup, r*math.sin(i*ang)])
+                verts.append([r*math.cos((i+1)*ang), sup, r*math.sin((i+1)*ang)])
+                verts.append([r_inf*math.cos((i+1)*ang), l, r_inf*math.sin((i+1)*ang)])
+                
+                #Side 1b
+                verts.append([r_inf*math.cos((i+1)*ang), l, r_inf*math.sin((i+1)*ang)])
+                verts.append([r_inf*math.cos(i*ang), l, r_inf*math.sin(i*ang)])
+                verts.append([r*math.cos(i*ang), sup, r*math.sin(i*ang)])
+                
+                #Bottom 
+                verts.append([ri*math.cos(i*ang), l, ri*math.sin(i*ang)])
+                verts.append([r_inf*math.cos(i*ang), l, r_inf*math.sin(i*ang)])
+                verts.append([r_inf*math.cos((i+1)*ang), l, r_inf*math.sin((i+1)*ang)]) 
+                
+                verts.append([ri*math.cos((i+1)*ang), l, ri*math.sin((i+1)*ang)])
+                verts.append([ri*math.cos(i*ang), l, ri*math.sin(i*ang)])
+                verts.append([r_inf*math.cos((i+1)*ang), l, r_inf*math.sin((i+1)*ang)]) 
+                
+                #Side Inta
+                verts.append([ri*math.cos(i*ang), sup, ri*math.sin(i*ang)])
+                verts.append([ri*math.cos((i+1)*ang), l, ri*math.sin((i+1)*ang)])
+                verts.append([ri*math.cos((i+1)*ang), sup, ri*math.sin((i+1)*ang)])
+                
+                #Side Intb
+                verts.append([ri*math.cos((i+1)*ang), l, ri*math.sin((i+1)*ang)])
+                verts.append([ri*math.cos(i*ang), sup, ri*math.sin(i*ang)])
+                verts.append([ri*math.cos(i*ang), l, ri*math.sin(i*ang)])
 
         mesh.setVertices(numpy.asarray(verts, dtype=numpy.float32))
 
         indices = []
-        # for every angle increment 24 Vertices
-        tot = rng * 24
+        # for every angle increment ( 24  or 30 ) Vertices
+        tot = rng * nbv
         for i in range(0, tot, 3): # 
             indices.append([i, i+1, i+2])
         mesh.setIndices(numpy.asarray(indices, dtype=numpy.int32))
@@ -487,7 +647,7 @@ class CustomSupportsCylinder(Tool):
         return mesh
         
     # Custom Support Creation
-    def _createCustom(self, size, pos1 , pos2, dep, ztop):
+    def _createCustom(self, size, maxs, pos1 , pos2, dep, ztop):
         mesh = MeshBuilder()
         # Init point
         Pt1 = Vector(pos1.x,pos1.z,pos1.y)
@@ -497,11 +657,19 @@ class CustomSupportsCylinder(Tool):
 
         # Calcul vecteur
         s = size / 2
+        sm = maxs / 2
         l_a = pos1.y 
         s_infa=math.tan(math.radians(dep))*l_a+s
         l_b = pos2.y 
         s_infb=math.tan(math.radians(dep))*l_b+s
-        
+ 
+        if sm>s and dep!=0:
+            l_max_a=(sm-s) / math.tan(math.radians(dep))
+            l_max_b=(sm-s) / math.tan(math.radians(dep))
+        else :
+            l_max_a=l_a
+            l_max_b=l_b
+ 
         Vtop = Vector(0,0,ztop)
         VZ = Vector(0,0,s)
         VZa = Vector(0,0,-l_a)
@@ -509,41 +677,95 @@ class CustomSupportsCylinder(Tool):
         
         Norm=Vector.cross(V_Dir,VZ).normalized()
         Dec = Vector(Norm.x*s,Norm.y*s,Norm.z*s)
-        Deca = Vector(Norm.x*s_infa,Norm.y*s_infa,Norm.z*s_infa)
-        Decb = Vector(Norm.x*s_infb,Norm.y*s_infb,Norm.z*s_infb)
+            
+        if l_max_a<l_a and l_max_b<l_b and l_max_a>0 and l_max_b>0: 
+            nbv=40
+            
+            Deca = Vector(Norm.x*sm,Norm.y*sm,Norm.z*sm)
+            Decb = Vector(Norm.x*sm,Norm.y*sm,Norm.z*sm)
 
-        # X Z Y
-        P_1t = Vtop+Dec
-        P_2t = Vtop-Dec
-        P_3t = V_Dir+Vtop+Dec
-        P_4t = V_Dir+Vtop-Dec
+            VZam = Vector(0,0,-l_max_a)
+            VZbm = Vector(0,0,-l_max_b)
+        
+            # X Z Y
+            P_1t = Vtop+Dec
+            P_2t = Vtop-Dec
+            P_3t = V_Dir+Vtop+Dec
+            P_4t = V_Dir+Vtop-Dec
  
-        P_1i = VZa+Deca
-        P_2i = VZa-Deca
-        P_3i = VZb+V_Dir+Decb
-        P_4i = VZb+V_Dir-Decb
-         
-        """
-        1) Top
-        2) Front
-        3) Left
-        4) Right
-        5) Back 
-        6) Bottom
-        """
-        verts = [ # 6 faces with 4 corners each
-            [P_1t.x, P_1t.z, P_1t.y], [P_2t.x, P_2t.z, P_2t.y], [P_4t.x, P_4t.z, P_4t.y], [P_3t.x, P_3t.z, P_3t.y],
-            [P_1t.x, P_1t.z, P_1t.y], [P_3t.x, P_3t.z, P_3t.y], [P_3i.x, P_3i.z, P_3i.y], [P_1i.x, P_1i.z, P_1i.y],
-            [P_2t.x, P_2t.z, P_2t.y], [P_1t.x, P_1t.z, P_1t.y], [P_1i.x, P_1i.z, P_1i.y], [P_2i.x, P_2i.z, P_2i.y],
-            [P_3t.x, P_3t.z, P_3t.y], [P_4t.x, P_4t.z, P_4t.y], [P_4i.x, P_4i.z, P_4i.y], [P_3i.x, P_3i.z, P_3i.y],
-            [P_4t.x, P_4t.z, P_4t.y], [P_2t.x, P_2t.z, P_2t.y], [P_2i.x, P_2i.z, P_2i.y], [P_4i.x, P_4i.z, P_4i.y],
-            [P_1i.x, P_1i.z, P_1i.y], [P_2i.x, P_2i.z, P_2i.y], [P_4i.x, P_4i.z, P_4i.y], [P_3i.x, P_3i.z, P_3i.y]
-        ]
+            P_1m = VZam+Deca
+            P_2m = VZam-Deca
+            P_3m = VZbm+V_Dir+Decb
+            P_4m = VZbm+V_Dir-Decb
+            
+            P_1i = VZa+Deca
+            P_2i = VZa-Deca
+            P_3i = VZb+V_Dir+Decb
+            P_4i = VZb+V_Dir-Decb
+             
+            """
+            1) Top
+            2) Front
+            3) Left
+            4) Right
+            5) Back 
+            6) Front inf
+            7) Left inf
+            8) Right inf
+            9) Back inf
+            10) Bottom
+            """
+            verts = [ # 10 faces with 4 corners each
+                [P_1t.x, P_1t.z, P_1t.y], [P_2t.x, P_2t.z, P_2t.y], [P_4t.x, P_4t.z, P_4t.y], [P_3t.x, P_3t.z, P_3t.y],              
+                [P_1t.x, P_1t.z, P_1t.y], [P_3t.x, P_3t.z, P_3t.y], [P_3m.x, P_3m.z, P_3m.y], [P_1m.x, P_1m.z, P_1m.y],
+                [P_2t.x, P_2t.z, P_2t.y], [P_1t.x, P_1t.z, P_1t.y], [P_1m.x, P_1m.z, P_1m.y], [P_2m.x, P_2m.z, P_2m.y],
+                [P_3t.x, P_3t.z, P_3t.y], [P_4t.x, P_4t.z, P_4t.y], [P_4m.x, P_4m.z, P_4m.y], [P_3m.x, P_3m.z, P_3m.y],
+                [P_4t.x, P_4t.z, P_4t.y], [P_2t.x, P_2t.z, P_2t.y], [P_2m.x, P_2m.z, P_2m.y], [P_4m.x, P_4m.z, P_4m.y],
+                [P_1m.x, P_1m.z, P_1m.y], [P_3m.x, P_3m.z, P_3m.y], [P_3i.x, P_3i.z, P_3i.y], [P_1i.x, P_1i.z, P_1i.y],
+                [P_2m.x, P_2m.z, P_2m.y], [P_1m.x, P_1m.z, P_1m.y], [P_1i.x, P_1i.z, P_1i.y], [P_2i.x, P_2i.z, P_2i.y],
+                [P_3m.x, P_3m.z, P_3m.y], [P_4m.x, P_4m.z, P_4m.y], [P_4i.x, P_4i.z, P_4i.y], [P_3i.x, P_3i.z, P_3i.y],
+                [P_4m.x, P_4m.z, P_4m.y], [P_2m.x, P_2m.z, P_2m.y], [P_2i.x, P_2i.z, P_2i.y], [P_4i.x, P_4i.z, P_4i.y],
+                [P_1i.x, P_1i.z, P_1i.y], [P_2i.x, P_2i.z, P_2i.y], [P_4i.x, P_4i.z, P_4i.y], [P_3i.x, P_3i.z, P_3i.y]
+            ]
+            
+        else:
+            nbv=24
+
+            Deca = Vector(Norm.x*s_infa,Norm.y*s_infa,Norm.z*s_infa)
+            Decb = Vector(Norm.x*s_infb,Norm.y*s_infb,Norm.z*s_infb)
+
+            # X Z Y
+            P_1t = Vtop+Dec
+            P_2t = Vtop-Dec
+            P_3t = V_Dir+Vtop+Dec
+            P_4t = V_Dir+Vtop-Dec
+     
+            P_1i = VZa+Deca
+            P_2i = VZa-Deca
+            P_3i = VZb+V_Dir+Decb
+            P_4i = VZb+V_Dir-Decb
+             
+            """
+            1) Top
+            2) Front
+            3) Left
+            4) Right
+            5) Back 
+            6) Bottom
+            """
+            verts = [ # 6 faces with 4 corners each
+                [P_1t.x, P_1t.z, P_1t.y], [P_2t.x, P_2t.z, P_2t.y], [P_4t.x, P_4t.z, P_4t.y], [P_3t.x, P_3t.z, P_3t.y],
+                [P_1t.x, P_1t.z, P_1t.y], [P_3t.x, P_3t.z, P_3t.y], [P_3i.x, P_3i.z, P_3i.y], [P_1i.x, P_1i.z, P_1i.y],
+                [P_2t.x, P_2t.z, P_2t.y], [P_1t.x, P_1t.z, P_1t.y], [P_1i.x, P_1i.z, P_1i.y], [P_2i.x, P_2i.z, P_2i.y],
+                [P_3t.x, P_3t.z, P_3t.y], [P_4t.x, P_4t.z, P_4t.y], [P_4i.x, P_4i.z, P_4i.y], [P_3i.x, P_3i.z, P_3i.y],
+                [P_4t.x, P_4t.z, P_4t.y], [P_2t.x, P_2t.z, P_2t.y], [P_2i.x, P_2i.z, P_2i.y], [P_4i.x, P_4i.z, P_4i.y],
+                [P_1i.x, P_1i.z, P_1i.y], [P_2i.x, P_2i.z, P_2i.y], [P_4i.x, P_4i.z, P_4i.y], [P_3i.x, P_3i.z, P_3i.y]
+            ]
         
         mesh.setVertices(numpy.asarray(verts, dtype=numpy.float32))
 
         indices = []
-        for i in range(0, 24, 4): # All 6 quads (12 triangles)
+        for i in range(0, nbv, 4): # All 6 quads (12 triangles)
             indices.append([i, i+2, i+1])
             indices.append([i, i+3, i+2])
         mesh.setIndices(numpy.asarray(indices, dtype=numpy.int32))
@@ -575,6 +797,29 @@ class CustomSupportsCylinder(Tool):
         self._UseSize = s_value
         self._preferences.setValue("customsupportcylinder/s_size", s_value)
 
+    def getMSize(self) -> float:
+        """ 
+            return: golabl _MaxSize  in mm.
+        """           
+        return self._MaxSize
+  
+    def setMSize(self, MSize: str) -> None:
+        """
+        param MSize: MaxSize in mm.
+        """
+ 
+        try:
+            s_value = float(MSize)
+        except ValueError:
+            return
+
+        if s_value < 0:
+            return
+        
+        #Logger.log('d', 's_value : ' + str(s_value))        
+        self._MaxSize = s_value
+        self._preferences.setValue("customsupportcylinder/m_size", s_value)
+        
     def getISize(self) -> float:
         """ 
             return: golabl _UseISize  in mm.

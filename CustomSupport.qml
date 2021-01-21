@@ -3,6 +3,7 @@
 // 
 // proterties values
 //   "SSize"       : Support Size in mm
+//   "MSize"       : Support Maximum Size in mm
 //   "ISize"       : Support Interior Size in mm
 //   "AAngle"      : Support Angle in °
 //   "YDirection"  : Support Y direction (Abutment)
@@ -22,7 +23,8 @@ Item
     height: childrenRect.height
     UM.I18nCatalog { id: catalog; name: "cura"}
 
-    property var maximum: UM.ActiveTool.properties.getValue("SSize")
+    property var s_size: UM.ActiveTool.properties.getValue("SSize")
+	property var m_size: UM.ActiveTool.properties.getValue("MSize")
     property var currentSType: UM.ActiveTool.properties.getValue("SType")
 
     function setSType(type)
@@ -135,7 +137,18 @@ Item
             renderType: Text.NativeRendering
             width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
         }
-        
+ 
+        Label
+        {
+            height: UM.Theme.getSize("setting_control").height;
+            text: catalog.i18nc("@label","Max Size");
+            font: UM.Theme.getFont("default");
+            color: UM.Theme.getColor("text");
+            verticalAlignment: Text.AlignVCenter;
+            renderType: Text.NativeRendering
+            width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
+        }
+		
 		Label
         {
             height: UM.Theme.getSize("setting_control").height;
@@ -183,6 +196,28 @@ Item
 
         TextField
         {
+            id: maxTextField
+            width: UM.Theme.getSize("setting_control").width;
+            height: UM.Theme.getSize("setting_control").height;
+            property string unit: "mm";
+            style: UM.Theme.styles.text_field;
+            text: UM.ActiveTool.properties.getValue("MSize")
+            validator: DoubleValidator
+            {
+                decimals: 2
+                bottom: 0
+                locale: "en_US"
+            }
+
+            onEditingFinished:
+            {
+                var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
+                UM.ActiveTool.setProperty("MSize", modified_text);
+            }
+        }
+		
+        TextField
+        {
             id: sizeInteriorTextField
             width: UM.Theme.getSize("setting_control").width;
             height: UM.Theme.getSize("setting_control").height;
@@ -193,7 +228,7 @@ Item
             validator: DoubleValidator
             {
                 decimals: 2
-				top: maximum
+				top: s_size
                 bottom: 0.1
                 locale: "en_US"
             }
@@ -201,7 +236,7 @@ Item
             onEditingFinished:
             {
 			    var cur_text = parseFloat(text)
-				if ( cur_text >= maximum )
+				if ( cur_text >= s_size )
 				{
 				}
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
