@@ -87,3 +87,7 @@ To create custom support you need to clic 2 points on the model.
 - Version 2.3.0 : For Abutment support possibility to create directly the Support on the Y direction and possibility to unify the supports heights
 
 ![Abutment Support](./images/AbutmentSupport.jpg)
+
+- Version 2.4.0 : Add Max Size Option in oder to limite the base size.
+
+![Conical Support with max base size](./images/cone.jpg)
