@@ -7,7 +7,7 @@
 #--------------------------------------------------------------------------------------------
 # All modification 5@xes
 #--------------------------------------------------------------------------------------------
-# First release 05-18-2020  to change the initial plugin into cylinder support
+# First release 05-18-2020  to change the initial plugin into cylindric support
 # Modif 0.01 : Cylinder length -> Pick Point to base plate height
 # Modif 0.02 : Using  support_tower_diameter as variable to define the cylinder
 # Modif 0.03 : Using a special parameter  diameter_custom_support as variable to define the cylinder
@@ -19,10 +19,11 @@
 # V1.0.1 06-20-2020 Add Angle for conical support
 # V2.0.0 07-04-2020 Add Button and custom support type
 # V2.0.1 
-# V2.1.0 04-10-2020 Add Abutment support type
-# V2.2.0 05-10-2020 Add Tube support type
-# V2.3.0 18-10-2020 Add Y direction and Equalize heights for Abutment support type
-# V2.3.1 21-01-2021 Generate as defaut a support_mesh_drop_down
+# V2.1.0 10-04-2020 Add Abutment support type
+# V2.2.0 10-05-2020 Add Tube support type
+# V2.3.0 10-18-2020 Add Y direction and Equalize heights for Abutment support type
+# V2.3.1 01-20-2021 Generate as defaut a support_mesh_drop_down
+# V2.4.0 01-21-2021 New option Max size to limit the size of the base
 #--------------------------------------------------------------------------------------------
 
 from PyQt5.QtCore import Qt, QTimer
