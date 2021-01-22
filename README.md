@@ -12,7 +12,11 @@ This plugin offer now much more possibilities :
 - Visualisation of the support on the total height
 - Possibility to add an angle to obtain conical support
 
-The initial version was tested on Cura 4.5
+**New 2.4.0**
+
+- Possibility to define a max size for the base of the support
+
+The initial version was tested on Cura 4.5 but last release tested from 4.0 to 4.8
 
 ![View plugin](./images/plugin.jpg)
 
@@ -32,6 +36,8 @@ Download & extract the repository as ZIP or clone it. Copy the files/plugins/Cus
 
 This plugin is now avalaible in the Cura marketplace. So you can install it automaticaly from this place:
 ![Automatic Install](./images/MarketPlace.JPG)
+
+[Cylindric Custom Support on Ultimaker Market place](https://marketplace.ultimaker.com/app/cura/plugins/5axes/CustomSupportCylinder)
 
 
 ## How to use
