@@ -10,13 +10,13 @@ This plugin offer now much more possibilities :
 - Possibility to define cylindrical / squarred / custom by 2 points / tube / abutment support style
 - Possibility to define the support size
 - Visualisation of the support on the total height
-- Possibility to add an angle to obtain conical support
+- Possibility to add an angle to obtain a conical support
 
 **New 2.4.0**
 
 - Possibility to define a max size for the base of the support
 
-The initial version was tested on Cura 4.5 but last release tested from 4.0 to 4.8
+The initial version was tested on Cura 4.5 but last release tested from 4.2 to 4.8
 
 ![View plugin](./images/plugin.jpg)
 
