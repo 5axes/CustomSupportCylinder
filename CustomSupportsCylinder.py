@@ -1,11 +1,11 @@
-# Initial Copyright (c) 2018 Ultimaker B.V.
+# Initial Copyright(c) 2018 Ultimaker B.V.
 #--------------------------------------------------------------------------------------------
 # Based on the SupportBlocker plugin by Ultimaker B.V., and licensed under LGPLv3 or higher.
 #
-#  https://github.com/5axes/Cura/tree/master/plugins/SupportEraser
+#  https://github.com/Ultimaker/Cura/tree/master/plugins/SupportEraser
 #
 #--------------------------------------------------------------------------------------------
-# All modification 5@xes
+# All modifications After 05-15-2020 Copyright(c) 5@xes 
 #--------------------------------------------------------------------------------------------
 # First release 05-18-2020  to change the initial plugin into cylindric support
 # Modif 0.01 : Cylinder length -> Pick Point to base plate height
@@ -22,7 +22,6 @@
 # V2.1.0 10-04-2020 Add Abutment support type
 # V2.2.0 10-05-2020 Add Tube support type
 # V2.3.0 10-18-2020 Add Y direction and Equalize heights for Abutment support type
-# V2.3.1 01-20-2021 Generate as defaut a support_mesh_drop_down
 # V2.4.0 01-21-2021 New option Max size to limit the size of the base
 #--------------------------------------------------------------------------------------------
 
@@ -259,6 +258,8 @@ class CustomSupportsCylinder(Tool):
         stack = node.callDecoration("getStack") # created by SettingOverrideDecorator that is automatically added to CuraSceneNode
         settings = stack.getTop()
 
+        # Define the new mesh as "support_mesh" or "support_mesh_drop_down"
+        # Must be set for this 2 types
         for key in ["support_mesh", "support_mesh_drop_down"]:
             definition = stack.getSettingDefinition(key)
             new_instance = SettingInstance(definition, settings)
@@ -319,6 +320,7 @@ class CustomSupportsCylinder(Tool):
     def _createCube(self, size, maxs, height, dep):
         mesh = MeshBuilder()
 
+        # Intial Comment from Ultimaker B.V. I have never try to verify this point
         # Can't use MeshBuilder.addCube() because that does not get per-vertex normals
         # Per-vertex normals require duplication of vertices
         s = size / 2
@@ -331,6 +333,7 @@ class CustomSupportsCylinder(Tool):
         else :
             l_max=l
         
+        # Difference between Cone and Cone + max base size
         if l_max<l and l_max>0:
             nbv=40        
             verts = [ # 10 faces with 4 corners each
@@ -382,6 +385,7 @@ class CustomSupportsCylinder(Tool):
         else :
             l_max=l
         
+        # Difference between Standart Abutment and Abutment + max base size
         if l_max<l and l_max>0:
             nbv=40  
             if ydir == False :
@@ -411,7 +415,6 @@ class CustomSupportsCylinder(Tool):
                     [ sm, -l, -s], [ sm, -l,  s], [ sm,  -l_max,  s], [ sm,  -l_max, -s]
                 ]             
         else:
-            
             nbv=24        
             if ydir == False :
                 verts = [ # 6 faces with 4 corners each
