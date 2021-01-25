@@ -32,6 +32,7 @@ from PyQt5.QtWidgets import QApplication
 from cura.CuraApplication import CuraApplication
 
 from UM.Logger import Logger
+from UM.Message import Message
 from UM.Math.Matrix import Matrix
 from UM.Math.Vector import Vector
 
@@ -55,7 +56,8 @@ from cura.Scene.CuraSceneNode import CuraSceneNode
 from UM.Scene.ToolHandle import ToolHandle
 from UM.Tool import Tool
 
-
+from UM.i18n import i18nCatalog
+catalog = i18nCatalog("cura")
 
 import math
 import numpy
@@ -293,6 +295,17 @@ class CustomSupportsCylinder(Tool):
         new_instance.resetState()  # Ensure that the state is not seen as a user state.
         settings.addInstance(new_instance)
 
+
+        global_container_stack = CuraApplication.getInstance().getGlobalContainerStack()    
+        
+        s_p = global_container_stack.getProperty("support_type", "value")
+        if s_p ==  'buildplate' :
+            Message(text = "Info modification support_type :\nNew value : everywhere", title = catalog.i18nc("@info:title", "Custom Supports Cylinder")).show()
+            Logger.log('d', 'support_type different : ' + str(s_p))
+            # Define support_type=everywhere
+            global_container_stack.setProperty("support_type", "value", 'everywhere')
+  
+            
         op = GroupedOperation()
         # First add node to the scene at the correct position/scale, before parenting, so the support mesh does not get scaled with the parent
         op.addOperation(AddSceneNodeOperation(node, self._controller.getScene().getRoot()))
