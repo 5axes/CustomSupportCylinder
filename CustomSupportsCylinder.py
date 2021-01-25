@@ -23,6 +23,7 @@
 # V2.2.0 10-05-2020 Add Tube support type
 # V2.3.0 10-18-2020 Add Y direction and Equalize heights for Abutment support type
 # V2.4.0 01-21-2021 New option Max size to limit the size of the base
+# V2.4.1 01-24-2021 By default support are not define with the property support_mesh_drop_down
 #--------------------------------------------------------------------------------------------
 
 from PyQt5.QtCore import Qt, QTimer
@@ -260,13 +261,20 @@ class CustomSupportsCylinder(Tool):
 
         # Define the new mesh as "support_mesh" or "support_mesh_drop_down"
         # Must be set for this 2 types
-        for key in ["support_mesh", "support_mesh_drop_down"]:
-            definition = stack.getSettingDefinition(key)
-            new_instance = SettingInstance(definition, settings)
-            new_instance.setProperty("value", True)
-            new_instance.resetState()  # Ensure that the state is not seen as a user state.
-            settings.addInstance(new_instance)
+        # for key in ["support_mesh", "support_mesh_drop_down"]:
+        # Don't fix
+        
+        definition = stack.getSettingDefinition("support_mesh")
+        new_instance = SettingInstance(definition, settings)
+        new_instance.setProperty("value", True)
+        new_instance.resetState()  # Ensure that the state is not seen as a user state.
+        settings.addInstance(new_instance)
 
+        definition = stack.getSettingDefinition("support_mesh_drop_down")
+        new_instance = SettingInstance(definition, settings)
+        new_instance.setProperty("value", False)
+        new_instance.resetState()  # Ensure that the state is not seen as a user state.
+        settings.addInstance(new_instance)
 
         op = GroupedOperation()
         # First add node to the scene at the correct position/scale, before parenting, so the support mesh does not get scaled with the parent
