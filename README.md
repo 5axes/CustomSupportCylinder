@@ -97,3 +97,6 @@ To create custom support you need to clic 2 points on the model.
 - Version 2.4.0 : Add Max Size Option in oder to limite the base size.
 
 ![Conical Support with max base size](./images/cone.jpg)
+
+- Version 2.4.1 : By default Support Mesh are not define as Drop Down Support Mesh. This option will offer the possibility to define new shape for the mesh. But this modification must be validated by the users before going further in the development.
+
