@@ -23,7 +23,7 @@
 # V2.2.0 10-05-2020 Add Tube support type
 # V2.3.0 10-18-2020 Add Y direction and Equalize heights for Abutment support type
 # V2.4.0 01-21-2021 New option Max size to limit the size of the base
-# V2.4.1 01-24-2021 By default support are not define with the property support_mesh_drop_down
+# V2.4.1 01-24-2021 By default support are not define with the property support_mesh_drop_down = True
 #--------------------------------------------------------------------------------------------
 
 from PyQt5.QtCore import Qt, QTimer
@@ -32,6 +32,7 @@ from PyQt5.QtWidgets import QApplication
 from cura.CuraApplication import CuraApplication
 
 from UM.Logger import Logger
+from UM.Math.Matrix import Matrix
 from UM.Math.Vector import Vector
 
 from UM.Tool import Tool
@@ -53,6 +54,8 @@ from cura.Scene.BuildPlateDecorator import BuildPlateDecorator
 from cura.Scene.CuraSceneNode import CuraSceneNode
 from UM.Scene.ToolHandle import ToolHandle
 from UM.Tool import Tool
+
+
 
 import math
 import numpy
@@ -249,14 +252,28 @@ class CustomSupportsCylinder(Tool):
             extruder_stack = self._application.getExtruderManager().getActiveExtruderStacks()[0]
             extra_top=extruder_stack.getProperty("support_interface_height", "value")            
             mesh =  self._createCustom(self._UseSize,self._MaxSize,position,position2,self._UseAngle,extra_top)
-            
+
         node.setMeshData(mesh.build())
 
+        # test for init position
+        node_transform = Matrix()
+        node_transform.setToIdentity()
+        node.setTransformation(node_transform)
+        
         active_build_plate = CuraApplication.getInstance().getMultiBuildPlateModel().activeBuildPlate
         node.addDecorator(BuildPlateDecorator(active_build_plate))
         node.addDecorator(SliceableObjectDecorator())
 
+        # z_fight_distance = 0.2  # Distance between buildplate and disallowed area meshes to prevent z-fighting
+        # buildplate_transform = Matrix()
+        # buildplate_transform.setToIdentity()
+        # buildplate_transform.translate(Vector(0, z_fight_distance, 0))
+        # buildplate_mesh = CuraApplication.getInstance().getBuildVolume()._grid_mesh
+        # node.setMeshData(buildplate_mesh)
+        # node.setTransformation(buildplate_transform)
+              
         stack = node.callDecoration("getStack") # created by SettingOverrideDecorator that is automatically added to CuraSceneNode
+
         settings = stack.getTop()
 
         # Define the new mesh as "support_mesh" or "support_mesh_drop_down"
