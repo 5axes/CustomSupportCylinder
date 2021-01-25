@@ -300,11 +300,11 @@ class CustomSupportsCylinder(Tool):
         
         s_p = global_container_stack.getProperty("support_type", "value")
         if s_p ==  'buildplate' :
-            Message(text = "Info modification support_type :\nNew value : everywhere", title = catalog.i18nc("@info:title", "Custom Supports Cylinder")).show()
+            Message(text = "Info modification support_type new value : everywhere", title = catalog.i18nc("@info:title", "Custom Supports Cylinder")).show()
             Logger.log('d', 'support_type different : ' + str(s_p))
             # Define support_type=everywhere
             global_container_stack.setProperty("support_type", "value", 'everywhere')
-  
+
             
         op = GroupedOperation()
         # First add node to the scene at the correct position/scale, before parenting, so the support mesh does not get scaled with the parent
