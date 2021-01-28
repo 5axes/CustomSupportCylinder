@@ -265,14 +265,6 @@ class CustomSupportsCylinder(Tool):
         active_build_plate = CuraApplication.getInstance().getMultiBuildPlateModel().activeBuildPlate
         node.addDecorator(BuildPlateDecorator(active_build_plate))
         node.addDecorator(SliceableObjectDecorator())
-
-        # z_fight_distance = 0.2  # Distance between buildplate and disallowed area meshes to prevent z-fighting
-        # buildplate_transform = Matrix()
-        # buildplate_transform.setToIdentity()
-        # buildplate_transform.translate(Vector(0, z_fight_distance, 0))
-        # buildplate_mesh = CuraApplication.getInstance().getBuildVolume()._grid_mesh
-        # node.setMeshData(buildplate_mesh)
-        # node.setTransformation(buildplate_transform)
               
         stack = node.callDecoration("getStack") # created by SettingOverrideDecorator that is automatically added to CuraSceneNode
 
