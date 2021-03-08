@@ -9,6 +9,7 @@
 //   "YDirection"  : Support Y direction (Abutment)
 //   "EHeights"    : Equalize heights (Abutment)
 //   "SType"       : Support Type ( Cylinder/Tube/Cube/Abutment/Freeform/Custom ) 
+//   "SubType"     : Support Freeform Type ( Cross/Pilar/Custom ) 
 //-----------------------------------------------------------------------------
 
 import QtQuick 2.2
@@ -26,6 +27,9 @@ Item
     property var s_size: UM.ActiveTool.properties.getValue("SSize")
 	property var m_size: UM.ActiveTool.properties.getValue("MSize")
     property var currentSType: UM.ActiveTool.properties.getValue("SType")
+	property var subType: UM.ActiveTool.properties.getValue("SubType")
+	
+	property var cId: setSubType(UM.ActiveTool.properties.getValue("SubType"))
 
     function setSType(type)
     {
@@ -37,6 +41,26 @@ Item
 		customButton.checked = type === 'custom';
 		freeformButton.checked = type === 'freeform';
         UM.ActiveTool.setProperty("SType", type);
+    }
+
+    function setSubType(s_type)
+    {
+		if (s_type == "cross")
+		{
+			cId=0;
+		}
+		if (s_type == "section")
+		{
+			cId=1;
+		}				
+		if (s_type == "pilar")
+		{
+			cId=2;
+		}	
+		if (s_type == "custom")
+		{
+			cId=3;
+		}
     }
 	
     Column
@@ -163,7 +187,20 @@ Item
             renderType: Text.NativeRendering
             width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
         }
-		
+
+        Label
+        {
+            height: UM.Theme.getSize("setting_control").height;
+            text: catalog.i18nc("@label","Type");
+            font: UM.Theme.getFont("default");
+            color: UM.Theme.getColor("text");
+            verticalAlignment: Text.AlignVCenter;
+			visible: freeformButton.checked;
+            renderType: Text.NativeRendering
+            width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
+        }
+
+	
 		Label
         {
             height: UM.Theme.getSize("setting_control").height;
@@ -232,7 +269,36 @@ Item
                 UM.ActiveTool.setProperty("MSize", modified_text);
             }
         }
-		
+
+		ComboBox {
+			id: supportComboType
+			objectName: "Support_Type"
+			model: [ "Cross", "Section", "Pilar", "Custom" ]
+			width: UM.Theme.getSize("setting_control").width
+			height: UM.Theme.getSize("setting_control").height
+			visible: freeformButton.checked
+			currentIndex: cId
+			onCurrentIndexChanged: 
+			{ 
+				if (currentIndex == 0)
+				{
+					UM.ActiveTool.setProperty("SubType", "cross");
+				}
+				if (currentIndex == 1)
+				{
+					UM.ActiveTool.setProperty("SubType", "section");
+				}				
+				if (currentIndex == 2)
+				{
+					UM.ActiveTool.setProperty("SubType", "pilar");
+				}	
+				if (currentIndex == 3)
+				{
+					UM.ActiveTool.setProperty("SubType", "custom");
+				}					
+			}
+		}	
+				
         TextField
         {
             id: sizeInteriorTextField

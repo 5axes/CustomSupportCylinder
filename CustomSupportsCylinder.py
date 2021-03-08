@@ -93,7 +93,7 @@ class CustomSupportsCylinder(Tool):
 
         self._i18n_catalog = None
         
-        self.setExposedProperties("SSize", "MSize", "ISize", "AAngle", "SType" , "YDirection" , "EHeights" )
+        self.setExposedProperties("SSize", "MSize", "ISize", "AAngle", "SType" , "YDirection" , "EHeights" , "SubType" )
         
         self._application = CuraApplication.getInstance()
         
@@ -122,6 +122,7 @@ class CustomSupportsCylinder(Tool):
         self._preferences.addPreference("customsupportcylinder/y_direction", True)
         self._preferences.addPreference("customsupportcylinder/e_heights", True)
         self._preferences.addPreference("customsupportcylinder/t_type", "cylinder")
+        self._preferences.addPreference("customsupportcylinder/s_type", "cross")
         
         # convert as float to avoid further issue
         self._UseSize = float(self._preferences.getValue("customsupportcylinder/s_size"))
@@ -133,6 +134,7 @@ class CustomSupportsCylinder(Tool):
         self._EqualizeHeights = bool(self._preferences.getValue("customsupportcylinder/e_heights"))
         # convert as string to avoid further issue
         self._SType = str(self._preferences.getValue("customsupportcylinder/t_type"))
+        self._SubType = str(self._preferences.getValue("customsupportcylinder/s_type"))
         
 
         
@@ -245,7 +247,8 @@ class CustomSupportsCylinder(Tool):
         elif self._SType == 'freeform':
             # Cube creation Size , length
             mesh = MeshBuilder()  
-            model_definition_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "models", "support.stl")
+            MName = self._SubType + ".stl"
+            model_definition_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "models", MName)
             # Logger.log('d', 'Model_definition_path : ' + str(model_definition_path)) 
             load_mesh = trimesh.load(model_definition_path)
             origin = [0, 0, 0]
@@ -968,6 +971,21 @@ class CustomSupportsCylinder(Tool):
         self._SType = SType
         #Logger.log('d', 'SType : ' + str(SType))   
         self._preferences.setValue("customsupportcylinder/t_type", SType)
+ 
+    def getSubType(self) -> bool:
+        """ 
+            return: golabl _SubType  as text paramater.
+        """ 
+        Logger.log('d', 'Set SubType : ' + str(self._SubType))  
+        return self._SubType
+    
+    def setSubType(self, SubType: str) -> None:
+        """
+        param SubType: SubType as text paramater.
+        """
+        self._SubType = SubType
+        Logger.log('d', 'Get SubType : ' + str(SubType))   
+        self._preferences.setValue("customsupportcylinder/s_type", SubType)
         
     def getYDirection(self) -> bool:
         """ 
