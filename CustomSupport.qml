@@ -8,7 +8,7 @@
 //   "AAngle"      : Support Angle in °
 //   "YDirection"  : Support Y direction (Abutment)
 //   "EHeights"    : Equalize heights (Abutment)
-//   "SType"       : Support Type ( Cylinder/Tube/Cube/Abutment/Custom ) 
+//   "SType"       : Support Type ( Cylinder/Tube/Cube/Abutment/Freeform/Custom ) 
 //-----------------------------------------------------------------------------
 
 import QtQuick 2.2
@@ -35,6 +35,7 @@ Item
         cubeButton.checked = type === 'cube';  
 		abutmentButton.checked = type === 'abutment';
 		customButton.checked = type === 'custom';
+		freeformButton.checked = type === 'freeform';
         UM.ActiveTool.setProperty("SType", type);
     }
 	
@@ -86,7 +87,7 @@ Item
                 onClicked: setSType('cube');
                 style: UM.Theme.styles.tool_button;
                 checked: UM.ActiveTool.properties.getValue("SType") === 'cube';
-                z: 3; // Profondeur
+                z: 4; // Profondeur
             }
 
             Button
@@ -99,6 +100,19 @@ Item
                 onClicked: setSType('abutment');
                 style: UM.Theme.styles.tool_button;
                 checked: UM.ActiveTool.properties.getValue("SType") === 'abutment';
+                z: 3; // Profondeur
+            }
+
+            Button
+            {
+                id: freeformButton;
+                text: catalog.i18nc("@label", "Freeform");
+                iconSource: "type_freeform.svg";
+                property bool needBorder: true;
+                checkable:true;
+                onClicked: setSType('freeform');
+                style: UM.Theme.styles.tool_button;
+                checked: UM.ActiveTool.properties.getValue("SType") === 'freeform';
                 z: 2; // Profondeur
             }
 			
@@ -145,6 +159,7 @@ Item
             font: UM.Theme.getFont("default");
             color: UM.Theme.getColor("text");
             verticalAlignment: Text.AlignVCenter;
+			visible: !freeformButton.checked;
             renderType: Text.NativeRendering
             width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
         }
@@ -168,6 +183,7 @@ Item
             font: UM.Theme.getFont("default");
             color: UM.Theme.getColor("text");
             verticalAlignment: Text.AlignVCenter;
+			visible: !freeformButton.checked;
             renderType: Text.NativeRendering
             width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
         }
@@ -201,6 +217,7 @@ Item
             height: UM.Theme.getSize("setting_control").height;
             property string unit: "mm";
             style: UM.Theme.styles.text_field;
+			visible: !freeformButton.checked;
             text: UM.ActiveTool.properties.getValue("MSize")
             validator: DoubleValidator
             {
@@ -251,6 +268,7 @@ Item
             height: UM.Theme.getSize("setting_control").height;
             property string unit: "°";
             style: UM.Theme.styles.text_field;
+			visible: !freeformButton.checked;
             text: UM.ActiveTool.properties.getValue("AAngle")
             validator: DoubleValidator
             {

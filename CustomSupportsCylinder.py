@@ -24,12 +24,15 @@
 # V2.3.0 10-18-2020 Add Y direction and Equalize heights for Abutment support type
 # V2.4.0 01-21-2021 New option Max size to limit the size of the base
 # V2.4.1 01-24-2021 By default support are not define with the property support_mesh_drop_down = True
+# V2.5.0 03-07-2021 freeform
 #--------------------------------------------------------------------------------------------
 
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtWidgets import QApplication
 
 from cura.CuraApplication import CuraApplication
+
+from UM.Mesh.MeshData import MeshData, calculateNormalsFromIndexedVertices
 
 from UM.Logger import Logger
 from UM.Message import Message
@@ -61,6 +64,8 @@ catalog = i18nCatalog("cura")
 
 import math
 import numpy
+import os
+import trimesh
 
 
 class CustomSupportsCylinder(Tool):
@@ -201,6 +206,7 @@ class CustomSupportsCylinder(Tool):
                 picked_position =  picking_pass.getPickedPosition(event.x, event.y)
                 picked_position_b = picking_pass.getPickedPosition(event.x, event.y)
                 self._Svg_Position = picked_position_b
+                    
                 # Add the support_mesh cube at the picked location
                 self._createSupportMesh(picked_node, picked_position,picked_position_b)
 
@@ -216,6 +222,8 @@ class CustomSupportsCylinder(Tool):
             node.setName("CustomSupportCube")
         elif self._SType == 'abutment':
             node.setName("CustomSupportAbutment")
+        elif self._SType == 'freeform':
+            node.setName("CustomSupportFreeForm")            
         else:
             node.setName("CustomSupportCustom")
             
@@ -234,6 +242,21 @@ class CustomSupportsCylinder(Tool):
         elif self._SType == 'cube':
             # Cube creation Size , length
             mesh =  self._createCube(self._UseSize,self._MaxSize,long,self._UseAngle)
+        elif self._SType == 'freeform':
+            # Cube creation Size , length
+            mesh = MeshBuilder()  
+            model_definition_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "models", "support.stl")
+            # Logger.log('d', 'Model_definition_path : ' + str(model_definition_path)) 
+            load_mesh = trimesh.load(model_definition_path)
+            origin = [0, 0, 0]
+            DirX = [1, 0, 0]
+            DirY = [0, 1, 0]
+            DirZ = [0, 0, 1]
+            load_mesh.apply_transform(trimesh.transformations.scale_matrix(self._UseSize, origin, DirX))
+            load_mesh.apply_transform(trimesh.transformations.scale_matrix(self._UseSize, origin, DirY))   
+            load_mesh.apply_transform(trimesh.transformations.scale_matrix(long, origin, DirZ))            
+            mesh =  self._toMeshData(load_mesh)
+            
         elif self._SType == 'abutment':
             # Abutement creation Size , length , top
             if self._EqualizeHeights == True :
@@ -255,7 +278,10 @@ class CustomSupportsCylinder(Tool):
             extra_top=extruder_stack.getProperty("support_interface_height", "value")            
             mesh =  self._createCustom(self._UseSize,self._MaxSize,position,position2,self._UseAngle,extra_top)
 
-        node.setMeshData(mesh.build())
+        if self._SType != 'freeform':
+            node.setMeshData(mesh.build())
+        else:
+            node.setMeshData(mesh)
 
         # test for init position
         node_transform = Matrix()
@@ -345,7 +371,36 @@ class CustomSupportsCylinder(Tool):
             self._skip_press = False
 
         self._had_selection = has_selection
-    
+ 
+    # Initial Source code from  fieldOfView
+    def _toMeshData(self, tri_node: trimesh.base.Trimesh) -> MeshData:
+        # Rotate the part to laydown on the build plate
+        tri_node.apply_transform(trimesh.transformations.rotation_matrix(math.radians(90), [-1, 0, 0]))
+        tri_faces = tri_node.faces
+        tri_vertices = tri_node.vertices
+
+        indices = []
+        vertices = []
+
+        index_count = 0
+        face_count = 0
+        for tri_face in tri_faces:
+            face = []
+            for tri_index in tri_face:
+                vertices.append(tri_vertices[tri_index])
+                face.append(index_count)
+                index_count += 1
+            indices.append(face)
+            face_count += 1
+
+        vertices = numpy.asarray(vertices, dtype=numpy.float32)
+        indices = numpy.asarray(indices, dtype=numpy.int32)
+        normals = calculateNormalsFromIndexedVertices(vertices, indices, face_count)
+
+        mesh_data = MeshData(vertices=vertices, indices=indices, normals=normals)
+
+        return mesh_data
+        
     # Cube Creation
     def _createCube(self, size, maxs, height, dep):
         mesh = MeshBuilder()
@@ -398,7 +453,7 @@ class CustomSupportsCylinder(Tool):
 
         mesh.calculateNormals()
         return mesh
-    
+        
     # Abutment Creation
     def _createAbutment(self, size, maxs, height, top, dep, ydir):
     

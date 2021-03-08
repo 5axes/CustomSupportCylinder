@@ -1,8 +1,8 @@
 {
     "name": "Custom Supports Cylinder",
     "author": "5@xes",
-    "version": "2.4.1",
-    "description": "Create 5 types of custom supports",
+    "version": "2.5.0",
+    "description": "Create 6 types of custom supports",
     "i18n-catalog": "cura",
     "api": 7,
     "supported_sdk_versions": ["6.0.0", "7.0.0", "7.1.0", "7.2.0", "7.3.0", "7.4.0"]
