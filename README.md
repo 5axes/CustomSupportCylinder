@@ -22,19 +22,7 @@ The initial version was tested on Cura 4.5 but last release tested from 4.2 to 4
 
 ## Installation
 
-First, make sure your Cura version is 4.5 or newer. 
-
-### Manual Install
-
-Download & extract the repository as ZIP or clone it. Copy the files/plugins/CustomSupportCylinder directory to:
-- on Windows: [Cura installation folder]/plugins/CustomSupportCylinder
-- on Linux: ~/.local/share/cura/[YOUR CURA VERSION]/plugins/CustomSupportCylinder (e.g. ~/.local/share/cura/4.6/plugins/CustomSupportCylinder)
-- on Mac: ~/Library/Application Support/cura/[YOUR CURA VERSION]/plugins/CustomSupportCylinder
-
-
-### Automatic Install
-
-This plugin is now avalaible in the Cura marketplace. So you can install it automaticaly from this place:
+First, make sure your Cura version is 4.5 or newer. This plugin is now avalaible in the Cura marketplace. So you can install it automaticaly from this place:
 ![Automatic Install](./images/MarketPlace.JPG)
 
 [Cylindric Custom Support on Ultimaker Market place](https://marketplace.ultimaker.com/app/cura/plugins/5axes/CustomSupportCylinder)
@@ -100,3 +88,4 @@ To create custom support you need to clic 2 points on the model.
 
 - Version 2.4.1 : By default Support Mesh are not define as Drop Down Support Mesh. This option will offer the possibility to define new shape for the mesh. But this modification must be validated by the users before going further in the development.
 
+- Version 2.5.0 : New option for Freeform Support : Can add a support with a form freely defined by an STL file ( Model must have the size 1x1x1 bo be modified according to the Size value and the height )
