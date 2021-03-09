@@ -25,6 +25,7 @@
 # V2.4.0 01-21-2021 New option Max size to limit the size of the base
 # V2.4.1 01-24-2021 By default support are not define with the property support_mesh_drop_down = True
 # V2.5.0 03-07-2021 freeform
+# V2.5.1 03-07-2021 Mirror freeform support
 #--------------------------------------------------------------------------------------------
 
 from PyQt5.QtCore import Qt, QTimer
@@ -93,7 +94,7 @@ class CustomSupportsCylinder(Tool):
 
         self._i18n_catalog = None
         
-        self.setExposedProperties("SSize", "MSize", "ISize", "AAngle", "SType" , "YDirection" , "EHeights" , "SubType" )
+        self.setExposedProperties("SSize", "MSize", "ISize", "AAngle", "SType" , "YDirection" , "EHeights" , "SubType" , "SMirror")
         
         self._application = CuraApplication.getInstance()
         
@@ -121,6 +122,7 @@ class CustomSupportsCylinder(Tool):
         self._preferences.addPreference("customsupportcylinder/a_angle", 0)
         self._preferences.addPreference("customsupportcylinder/y_direction", True)
         self._preferences.addPreference("customsupportcylinder/e_heights", True)
+        self._preferences.addPreference("customsupportcylinder/s_mirror", False)
         self._preferences.addPreference("customsupportcylinder/t_type", "cylinder")
         self._preferences.addPreference("customsupportcylinder/s_type", "cross")
         
@@ -132,6 +134,7 @@ class CustomSupportsCylinder(Tool):
         # convert as boolean to avoid further issue
         self._UseYDirection = bool(self._preferences.getValue("customsupportcylinder/y_direction"))
         self._EqualizeHeights = bool(self._preferences.getValue("customsupportcylinder/e_heights"))
+        self._MirrorSupport = bool(self._preferences.getValue("customsupportcylinder/s_mirror"))
         # convert as string to avoid further issue
         self._SType = str(self._preferences.getValue("customsupportcylinder/t_type"))
         self._SubType = str(self._preferences.getValue("customsupportcylinder/s_type"))
@@ -257,7 +260,12 @@ class CustomSupportsCylinder(Tool):
             DirZ = [0, 0, 1]
             load_mesh.apply_transform(trimesh.transformations.scale_matrix(self._UseSize, origin, DirX))
             load_mesh.apply_transform(trimesh.transformations.scale_matrix(self._UseSize, origin, DirY))   
-            load_mesh.apply_transform(trimesh.transformations.scale_matrix(long, origin, DirZ))            
+            load_mesh.apply_transform(trimesh.transformations.scale_matrix(long, origin, DirZ)) 
+            if self._MirrorSupport == True :   
+                load_mesh.apply_transform(trimesh.transformations.rotation_matrix(math.radians(180), [0, 0, 1]))
+            if self._UseYDirection == True :
+                load_mesh.apply_transform(trimesh.transformations.rotation_matrix(math.radians(90), [0, 0, 1]))
+
             mesh =  self._toMeshData(load_mesh)
             
         elif self._SType == 'abutment':
@@ -999,7 +1007,7 @@ class CustomSupportsCylinder(Tool):
         """
         self._UseYDirection = YDirection
         self._preferences.setValue("customsupportcylinder/y_direction", YDirection)
-        
+ 
     def getEHeights(self) -> bool:
         """ 
             return: golabl _EqualizeHeights  as boolean.
@@ -1012,3 +1020,16 @@ class CustomSupportsCylinder(Tool):
         """
         self._EqualizeHeights = EHeights
         self._preferences.setValue("customsupportcylinder/e_heights", EHeights)
+        
+    def getSMirror(self) -> bool:
+        """ 
+            return: golabl _MirrorSupport  as boolean.
+        """ 
+        return self._MirrorSupport
+  
+    def setSMirror(self, SMirror: bool) -> None:
+        """
+        param SMirror: as boolean.
+        """
+        self._MirrorSupport = SMirror
+        self._preferences.setValue("customsupportcylinder/s_mirror", SMirror)

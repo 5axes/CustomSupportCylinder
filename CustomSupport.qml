@@ -10,6 +10,7 @@
 //   "EHeights"    : Equalize heights (Abutment)
 //   "SType"       : Support Type ( Cylinder/Tube/Cube/Abutment/Freeform/Custom ) 
 //   "SubType"     : Support Freeform Type ( Cross/Pilar/Custom ) 
+//   "SMirror"     : Support Mirror for Freeform Type
 //-----------------------------------------------------------------------------
 
 import QtQuick 2.2
@@ -28,7 +29,7 @@ Item
 	property var m_size: UM.ActiveTool.properties.getValue("MSize")
     property var currentSType: UM.ActiveTool.properties.getValue("SType")
 	property var subType: UM.ActiveTool.properties.getValue("SubType")
-	
+
 	property var cId: setSubType(UM.ActiveTool.properties.getValue("SubType"))
 
     function setSType(type)
@@ -358,12 +359,26 @@ Item
         anchors.left: parent.left;
         text: catalog.i18nc("@option:check","Set on Y direction");
         style: UM.Theme.styles.partially_checkbox;
-		visible: abutmentButton.checked;
+		visible: abutmentButton.checked || freeformButton.checked;
 
         checked: UM.ActiveTool.properties.getValue("YDirection");
         onClicked: UM.ActiveTool.setProperty("YDirection", checked);
 		
     }
+    CheckBox
+    {
+        id: mirrorCheckbox;
+        anchors.top: useYDirectionCheckbox.bottom;
+        anchors.topMargin: UM.Theme.getSize("default_margin").height;
+        anchors.left: parent.left;
+        text: catalog.i18nc("@option:check","Mirror support");
+        style: UM.Theme.styles.partially_checkbox;
+		visible: freeformButton.checked;
+
+        checked: UM.ActiveTool.properties.getValue("SMirror");
+        onClicked: UM.ActiveTool.setProperty("SMirror", checked);
+		
+    }	
     CheckBox
     {
         id: equalizeHeightsCheckbox;

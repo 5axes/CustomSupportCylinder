@@ -5,6 +5,6 @@ $fn=10;
 
 translate([-0.5,-0.5,-0.5]) 
 union() {
-    translate([0.5,0.5,0.0]) cube([0.2,1,1], center = true);
-    translate([0.5,0.5,0.0]) cube([1,0.2,1], center = true);
+    translate([0.5,0.5,0.0]) cube([0.1,1,1], center = true);
+    translate([0.5,0.5,0.0]) cube([1,0.1,1], center = true);
 }
