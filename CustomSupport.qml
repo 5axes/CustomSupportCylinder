@@ -58,9 +58,13 @@ Item
 		{
 			cId=2;
 		}	
-		if (s_type == "custom")
+		if (s_type == "bridge")
 		{
 			cId=3;
+		}		
+		if (s_type == "custom")
+		{
+			cId=4;
 		}
     }
 	
@@ -274,7 +278,7 @@ Item
 		ComboBox {
 			id: supportComboType
 			objectName: "Support_Type"
-			model: [ "Cross", "Section", "Pilar", "Custom" ]
+			model: [ "Cross", "Section", "Pilar", "Bridge", "Custom" ]
 			width: UM.Theme.getSize("setting_control").width
 			height: UM.Theme.getSize("setting_control").height
 			visible: freeformButton.checked
@@ -294,6 +298,10 @@ Item
 					UM.ActiveTool.setProperty("SubType", "pilar");
 				}	
 				if (currentIndex == 3)
+				{
+					UM.ActiveTool.setProperty("SubType", "bridge");
+				}				
+				if (currentIndex == 4)
 				{
 					UM.ActiveTool.setProperty("SubType", "custom");
 				}					
