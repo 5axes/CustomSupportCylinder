@@ -24,9 +24,9 @@
 # V2.3.0 10-18-2020 Add Y direction and Equalize heights for Abutment support type
 # V2.4.0 01-21-2021 New option Max size to limit the size of the base
 # V2.4.1 01-24-2021 By default support are not define with the property support_mesh_drop_down = True
-# V2.5.0 03-07-2021 freeform
-# V2.5.1 03-08-2021 Mirror & rotate freeform support
-# V2.5.2 03-09-2021 Bridge freeform support
+# V2.5.0 03-07-2021 freeform (Cross/Section/Pillar/Custom)
+# V2.5.1 03-08-2021 Mirror & Rotate freeform support
+# V2.5.2 03-09-2021 Bridge freeform support Bridge and rename Pillar
 #--------------------------------------------------------------------------------------------
 
 from PyQt5.QtCore import Qt, QTimer
