@@ -88,6 +88,6 @@ To create custom support you need to clic 2 points on the model.
 
 - Version 2.4.1 : By default Support Mesh are not define as Drop Down Support Mesh. This option will offer the possibility to define new shape for the mesh. But this modification must be validated by the users before going further in the development.
 
-- Version 2.5.2 : New option for Freeform Support : Can add a support with a form freely defined by an STL file ( Model must have the size 1x1x1 bo be modified according to the Size value and the height ) : [Short Youtube video](https://www.youtube.com/watch?v=lCSbLjEbc-E)
+- Version 2.5.2 : New option for Freeform Support : Can add a support with a form freely defined by an STL file ( Model must have the size 1x1x1 bo be modified according to the Size value and the height ) :
 
 [![Version 2.5.2](http://img.youtube.com/vi/lCSbLjEbc-E/0.jpg)](http://www.youtube.com/watch?v=lCSbLjEbc-E)
