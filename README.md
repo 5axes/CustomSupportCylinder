@@ -7,7 +7,7 @@ Source code on Github : [https://github.com/Ultimaker/Cura/tree/master/plugins/S
 This plugin offer now much more possibilities :
 ----
 
-- Possibility to define cylindrical / squarred / custom by 2 points / tube / abutment support style
+- Possibility to define cylindrical / squarred / custom by 2 points / tube / abutment support style / Freeform Support
 - Possibility to define the support size
 - Visualisation of the support on the total height
 - Possibility to add an angle to obtain a conical support
@@ -15,6 +15,11 @@ This plugin offer now much more possibilities :
 **New 2.4.0**
 
 - Possibility to define a max size for the base of the support
+
+
+**New 2.5.X**
+
+- Possibility to define freeform support via STL File
 
 The initial version was tested on Cura 4.5 but last release tested from 4.2 to 4.8
 
@@ -33,7 +38,7 @@ First, make sure your Cura version is 4.5 or newer. This plugin is now avalaible
 * Load a model in Cura and select it
 
 * Click on the "Custom Supports Cylinder" button on the left toolbar
-* With the 5 buttons in the plugin windows, it's possible to switch the geometry between a cylinder, a tube, a cubic, an abutment or a custom support.
+* With the 6 buttons in the plugin windows, it's possible to switch the geometry between a cylinder, a tube, a cubic, an abutment , a freeform or a custom support.
 * Change the value for the support *Size* in numeric input field in the tool panel if necessary
 * Change the value for the support *Angle* in numeric input field in the tool panel if necessary **(Version 1.0.03)**
 * Change the value for the support *Interior size* in numeric input field in the tool panel if necessary **(Version 2.2.0 for Tube support)**
@@ -88,6 +93,7 @@ To create custom support you need to clic 2 points on the model.
 
 - Version 2.4.1 : By default Support Mesh are not define as Drop Down Support Mesh. This option will offer the possibility to define new shape for the mesh. But this modification must be validated by the users before going further in the development.
 
-- Version 2.5.2 : New option for Freeform Support : Can add a support with a form freely defined by an STL file ( Model must have the size 1x1x1 bo be modified according to the Size value and the height ) :
+- Version 2.5.X : New option for Freeform Support : Can add a support with a form freely defined by an STL file ( Model must have the size 1x1x1 bo be modified according to the Size value and the height ) :
 
 [![Version 2.5.2](http://img.youtube.com/vi/lCSbLjEbc-E/0.jpg)](http://www.youtube.com/watch?v=lCSbLjEbc-E)
+[![Version 2.5.5](http://img.youtube.com/vi/fMwHHQumd3o/0.jpg)](http://www.youtube.com/watch?v=fMwHHQumd3o)
