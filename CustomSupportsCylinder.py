@@ -24,7 +24,7 @@
 # V2.3.0 10-18-2020 Add Y direction and Equalize heights for Abutment support type
 # V2.4.0 01-21-2021 New option Max size to limit the size of the base
 # V2.4.1 01-24-2021 By default support are not define with the property support_mesh_drop_down = True
-# V2.5.0 03-07-2021 freeform (Cross/Section/Pillar/Custom)
+# V2.5.0 03-07-2021 Freeform (Cross/Section/Pillar/Custom)
 # V2.5.1 03-08-2021 Mirror & Rotate freeform support
 # V2.5.2 03-09-2021 Bridge freeform support Bridge and rename Pillar
 # V2.5.3 03-10-2021 Add "arch-buttress" type
@@ -139,9 +139,8 @@ class CustomSupportsCylinder(Tool):
         self._MirrorSupport = bool(self._preferences.getValue("customsupportcylinder/s_mirror"))
         # convert as string to avoid further issue
         self._SType = str(self._preferences.getValue("customsupportcylinder/t_type"))
+        # Sub type for Free Form support
         self._SubType = str(self._preferences.getValue("customsupportcylinder/s_type"))
-        
-
         
                 
     def event(self, event):
@@ -385,12 +384,15 @@ class CustomSupportsCylinder(Tool):
 
         self._had_selection = has_selection
  
-    # Initial Source code from  fieldOfView
+    # Initial Source code from fieldOfView
     def _toMeshData(self, tri_node: trimesh.base.Trimesh) -> MeshData:
         # Rotate the part to laydown on the build plate
+        # Modification from 5@xes
         tri_node.apply_transform(trimesh.transformations.rotation_matrix(math.radians(90), [-1, 0, 0]))
         tri_faces = tri_node.faces
         tri_vertices = tri_node.vertices
+        # Following code from fieldOfView
+        # https://github.com/fieldOfView/Cura-SimpleShapes/blob/bac9133a2ddfbf1ca6a3c27aca1cfdd26e847221/SimpleShapes.py#L45
 
         indices = []
         vertices = []
