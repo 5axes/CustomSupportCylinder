@@ -966,7 +966,7 @@ class CustomSupportsCylinder(Tool):
         if s_value < 0:
             return
         
-        #Logger.log('d', 's_value : ' + str(s_value))        
+        # Logger.log('d', 's_value : ' + str(s_value))        
         self._UseAngle = s_value
         self._preferences.setValue("customsupportcylinder/a_angle", s_value)
     
@@ -981,14 +981,14 @@ class CustomSupportsCylinder(Tool):
         param SType: SType as text paramater.
         """
         self._SType = SType
-        #Logger.log('d', 'SType : ' + str(SType))   
+        # Logger.log('d', 'SType : ' + str(SType))   
         self._preferences.setValue("customsupportcylinder/t_type", SType)
  
     def getSubType(self) -> bool:
         """ 
             return: golabl _SubType  as text paramater.
         """ 
-        Logger.log('d', 'Set SubType : ' + str(self._SubType))  
+        # Logger.log('d', 'Set SubType : ' + str(self._SubType))  
         return self._SubType
     
     def setSubType(self, SubType: str) -> None:
@@ -996,7 +996,7 @@ class CustomSupportsCylinder(Tool):
         param SubType: SubType as text paramater.
         """
         self._SubType = SubType
-        Logger.log('d', 'Get SubType : ' + str(SubType))   
+        # Logger.log('d', 'Get SubType : ' + str(SubType))   
         self._preferences.setValue("customsupportcylinder/s_type", SubType)
         
     def getYDirection(self) -> bool:
