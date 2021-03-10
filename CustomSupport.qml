@@ -9,7 +9,7 @@
 //   "YDirection"  : Support Y direction (Abutment)
 //   "EHeights"    : Equalize heights (Abutment)
 //   "SType"       : Support Type ( Cylinder/Tube/Cube/Abutment/Freeform/Custom ) 
-//   "SubType"     : Support Freeform Type ( Cross/Pilar/Custom ) 
+//   "SubType"     : Support Freeform Type ( Cross/Section/Pillar/Bridge/Custom ) 
 //   "SMirror"     : Support Mirror for Freeform Type
 //-----------------------------------------------------------------------------
 
@@ -54,17 +54,21 @@ Item
 		{
 			cId=1;
 		}				
-		if (s_type == "pilar")
+		if (s_type == "pillar")
 		{
 			cId=2;
 		}	
 		if (s_type == "bridge")
 		{
 			cId=3;
-		}		
-		if (s_type == "custom")
+		}
+		if (s_type == "arch-buttress")
 		{
 			cId=4;
+		}
+		if (s_type == "custom")
+		{
+			cId=5;
 		}
     }
 	
@@ -278,7 +282,7 @@ Item
 		ComboBox {
 			id: supportComboType
 			objectName: "Support_Type"
-			model: [ "Cross", "Section", "Pilar", "Bridge", "Custom" ]
+			model: [ "Cross", "Section", "Pillar", "Bridge", "Arch buttress", "Custom" ]
 			width: UM.Theme.getSize("setting_control").width
 			height: UM.Theme.getSize("setting_control").height
 			visible: freeformButton.checked
@@ -295,13 +299,17 @@ Item
 				}				
 				if (currentIndex == 2)
 				{
-					UM.ActiveTool.setProperty("SubType", "pilar");
+					UM.ActiveTool.setProperty("SubType", "pillar");
 				}	
 				if (currentIndex == 3)
 				{
 					UM.ActiveTool.setProperty("SubType", "bridge");
-				}				
+				}	
 				if (currentIndex == 4)
+				{
+					UM.ActiveTool.setProperty("SubType", "arch-buttress");
+				}	
+				if (currentIndex == 5)
 				{
 					UM.ActiveTool.setProperty("SubType", "custom");
 				}					

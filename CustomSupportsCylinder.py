@@ -27,6 +27,7 @@
 # V2.5.0 03-07-2021 freeform (Cross/Section/Pillar/Custom)
 # V2.5.1 03-08-2021 Mirror & Rotate freeform support
 # V2.5.2 03-09-2021 Bridge freeform support Bridge and rename Pillar
+# V2.5.3 03-10-2021 Add "arch-buttress" type
 #--------------------------------------------------------------------------------------------
 
 from PyQt5.QtCore import Qt, QTimer
