@@ -66,9 +66,13 @@ Item
 		{
 			cId=4;
 		}
-		if (s_type == "custom")
+		if (s_type == "t-support")
 		{
 			cId=5;
+		}		
+		if (s_type == "custom")
+		{
+			cId=6;
 		}
     }
 	
@@ -282,7 +286,7 @@ Item
 		ComboBox {
 			id: supportComboType
 			objectName: "Support_Type"
-			model: [ "Cross", "Section", "Pillar", "Bridge", "Arch buttress", "Custom" ]
+			model: [ "Cross", "Section", "Pillar", "Bridge", "Arch buttress", "T Support", "Custom" ]
 			width: UM.Theme.getSize("setting_control").width
 			height: UM.Theme.getSize("setting_control").height
 			visible: freeformButton.checked
@@ -310,6 +314,10 @@ Item
 					UM.ActiveTool.setProperty("SubType", "arch-buttress");
 				}	
 				if (currentIndex == 5)
+				{
+					UM.ActiveTool.setProperty("SubType", "t-support");
+				}					
+				if (currentIndex == 6)
 				{
 					UM.ActiveTool.setProperty("SubType", "custom");
 				}					
