@@ -28,6 +28,7 @@
 # V2.5.1 03-08-2021 Mirror & Rotate freeform support
 # V2.5.2 03-09-2021 Bridge freeform support Bridge and rename Pillar
 # V2.5.3 03-10-2021 Add "arch-buttress" type
+# V2.5.4 03-11-2021 Minor modification on freeform design
 #--------------------------------------------------------------------------------------------
 
 from PyQt5.QtCore import Qt, QTimer
@@ -85,7 +86,9 @@ class CustomSupportsCylinder(Tool):
         self._UseAngle = 0.0
         self._UseYDirection = False
         self._EqualizeHeights = True
+        self._MirrorSupport = False
         self._SType = 'cylinder'
+        self._SubType = 'cross'
         
         # Shortcut
         self._shortcut_key = Qt.Key_F
@@ -122,7 +125,7 @@ class CustomSupportsCylinder(Tool):
         self._preferences.addPreference("customsupportcylinder/m_size", 10)
         self._preferences.addPreference("customsupportcylinder/i_size", 2)
         self._preferences.addPreference("customsupportcylinder/a_angle", 0)
-        self._preferences.addPreference("customsupportcylinder/y_direction", True)
+        self._preferences.addPreference("customsupportcylinder/y_direction", False)
         self._preferences.addPreference("customsupportcylinder/e_heights", True)
         self._preferences.addPreference("customsupportcylinder/s_mirror", False)
         self._preferences.addPreference("customsupportcylinder/t_type", "cylinder")
@@ -290,6 +293,7 @@ class CustomSupportsCylinder(Tool):
             extra_top=extruder_stack.getProperty("support_interface_height", "value")            
             mesh =  self._createCustom(self._UseSize,self._MaxSize,position,position2,self._UseAngle,extra_top)
 
+        # Mesh Freeform are loaded via trimesh doesn't aheve the Build method
         if self._SType != 'freeform':
             node.setMeshData(mesh.build())
         else:
@@ -324,7 +328,6 @@ class CustomSupportsCylinder(Tool):
         new_instance.setProperty("value", False)
         new_instance.resetState()  # Ensure that the state is not seen as a user state.
         settings.addInstance(new_instance)
-
 
         global_container_stack = CuraApplication.getInstance().getGlobalContainerStack()    
         
