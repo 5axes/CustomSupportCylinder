@@ -266,7 +266,7 @@ Item
 			
 			onCurrentIndexChanged: 
 			{ 
-				UM.ActiveTool.setProperty("SubType",cbItems.get(currentIndex).text);				
+				UM.ActiveTool.setProperty("SubType",cbItems.get(currentIndex).text);
 			}
 		}	
 				
