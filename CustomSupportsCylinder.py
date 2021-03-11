@@ -28,7 +28,7 @@
 # V2.5.1 03-08-2021 Mirror & Rotate freeform support
 # V2.5.2 03-09-2021 Bridge freeform support Bridge and rename Pillar
 # V2.5.3 03-10-2021 Add "arch-buttress" type
-# V2.5.4 03-11-2021 Minor modification on freeform design
+# V2.5.5 03-11-2021 Minor modification on freeform design
 #--------------------------------------------------------------------------------------------
 
 from PyQt5.QtCore import Qt, QTimer
@@ -159,9 +159,9 @@ class CustomSupportsCylinder(Tool):
                 self._controller.setActiveTool("TranslateTool")
                 return
 
-            if shift_is_active:
-                self._controller.setActiveTool("RotateTool")
-                return
+            # if alt_is_active:
+            # self._controller.setActiveTool("RotateTool")
+            # return
                 
             if self._skip_press:
                 # The selection was previously cleared, do not add/remove an support mesh but
@@ -183,7 +183,7 @@ class CustomSupportsCylinder(Tool):
 
             node_stack = picked_node.callDecoration("getStack")
             if node_stack:
-                if node_stack.getProperty("support_mesh", "value"):
+                if node_stack.getProperty("support_mesh", "value") and not alt_is_active:
                     self._removeSupportMesh(picked_node)
                     self._SHeights=0
                     return
