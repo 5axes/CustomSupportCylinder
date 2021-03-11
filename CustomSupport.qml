@@ -26,11 +26,6 @@ Item
     UM.I18nCatalog { id: catalog; name: "cura"}
 
     property var s_size: UM.ActiveTool.properties.getValue("SSize")
-	property var m_size: UM.ActiveTool.properties.getValue("MSize")
-    property var currentSType: UM.ActiveTool.properties.getValue("SType")
-	property var subType: UM.ActiveTool.properties.getValue("SubType")
-
-	property var cId: setSubType(UM.ActiveTool.properties.getValue("SubType"))
 
     function setSType(type)
     {
@@ -42,38 +37,6 @@ Item
 		customButton.checked = type === 'custom';
 		freeformButton.checked = type === 'freeform';
         UM.ActiveTool.setProperty("SType", type);
-    }
-
-    function setSubType(s_type)
-    {
-		if (s_type == "cross")
-		{
-			cId=0;
-		}
-		if (s_type == "section")
-		{
-			cId=1;
-		}				
-		if (s_type == "pillar")
-		{
-			cId=2;
-		}	
-		if (s_type == "bridge")
-		{
-			cId=3;
-		}
-		if (s_type == "arch-buttress")
-		{
-			cId=4;
-		}
-		if (s_type == "t-support")
-		{
-			cId=5;
-		}		
-		if (s_type == "custom")
-		{
-			cId=6;
-		}
     }
 	
     Column
@@ -286,41 +249,24 @@ Item
 		ComboBox {
 			id: supportComboType
 			objectName: "Support_Type"
-			model: [ "Cross", "Section", "Pillar", "Bridge", "Arch buttress", "T Support", "Custom" ]
+			model: ListModel {
+               id: cbItems
+               ListElement { text: "cross"}
+               ListElement { text: "section"}
+               ListElement { text: "pillar"}
+			   ListElement { text: "bridge"}
+			   ListElement { text: "arch-buttress"}
+			   ListElement { text: "t-support"}
+			   ListElement { text: "custom"}
+			}
 			width: UM.Theme.getSize("setting_control").width
 			height: UM.Theme.getSize("setting_control").height
 			visible: freeformButton.checked
-			currentIndex: cId
+			Component.onCompleted: currentIndex = find(UM.ActiveTool.properties.getValue("SubType"))
+			
 			onCurrentIndexChanged: 
 			{ 
-				if (currentIndex == 0)
-				{
-					UM.ActiveTool.setProperty("SubType", "cross");
-				}
-				if (currentIndex == 1)
-				{
-					UM.ActiveTool.setProperty("SubType", "section");
-				}				
-				if (currentIndex == 2)
-				{
-					UM.ActiveTool.setProperty("SubType", "pillar");
-				}	
-				if (currentIndex == 3)
-				{
-					UM.ActiveTool.setProperty("SubType", "bridge");
-				}	
-				if (currentIndex == 4)
-				{
-					UM.ActiveTool.setProperty("SubType", "arch-buttress");
-				}	
-				if (currentIndex == 5)
-				{
-					UM.ActiveTool.setProperty("SubType", "t-support");
-				}					
-				if (currentIndex == 6)
-				{
-					UM.ActiveTool.setProperty("SubType", "custom");
-				}					
+				UM.ActiveTool.setProperty("SubType",cbItems.get(currentIndex).text);				
 			}
 		}	
 				
@@ -395,7 +341,7 @@ Item
         anchors.top: useYDirectionCheckbox.bottom;
         anchors.topMargin: UM.Theme.getSize("default_margin").height;
         anchors.left: parent.left;
-        text: catalog.i18nc("@option:check","Mirror support");
+        text: catalog.i18nc("@option:check","Rotate 180°");
         style: UM.Theme.styles.partially_checkbox;
 		visible: freeformButton.checked;
 
