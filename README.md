@@ -56,7 +56,7 @@ Select the type of support to create with the buttons in the support plugin inte
 
 - **Clicking existing support + Ctrl** switch automaticaly to the Translate Tool to modify the position of the support.
 
-- **Clicking existing support + Shift** switch automaticaly to the Rotate Tool to modify the orientation of the support.
+- **Clicking existing support + Alt** this shorcut allow to add a support on a existing support.
 
 - Before to slice your model, uncheck the "Generate Support" checkbox in the right panel **(if you want to use ONLY custom supports)**
 
