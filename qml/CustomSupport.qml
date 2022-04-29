@@ -219,12 +219,12 @@ Item
             width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
         }
 		
-        TextField
+        UM.TextFieldWithUnit
         {
             id: sizeTextField
             width: UM.Theme.getSize("setting_control").width;
             height: UM.Theme.getSize("setting_control").height;
-            property string unit: "mm";
+            unit: "mm";
             // style: UM.Theme.styles.text_field;
             text: UM.ActiveTool.properties.getValue("SSize")
             validator: DoubleValidator
@@ -241,12 +241,12 @@ Item
             }
         }
 
-        TextField
+        UM.TextFieldWithUnit
         {
             id: maxTextField
             width: UM.Theme.getSize("setting_control").width;
             height: UM.Theme.getSize("setting_control").height;
-            property string unit: "mm";
+            unit: "mm";
             // style: UM.Theme.styles.text_field;
 			visible: !freeformButton.checked;
             text: UM.ActiveTool.properties.getValue("MSize")
@@ -288,12 +288,12 @@ Item
 			}
 		}	
 				
-        TextField
+        UM.TextFieldWithUnit
         {
             id: sizeInteriorTextField
             width: UM.Theme.getSize("setting_control").width;
             height: UM.Theme.getSize("setting_control").height;
-            property string unit: "mm";
+            unit: "mm";
             // style: UM.Theme.styles.text_field;
 			visible: tubeButton.checked;
             text: UM.ActiveTool.properties.getValue("ISize")
@@ -316,12 +316,12 @@ Item
             }
         }
 		
-		TextField
+		UM.TextFieldWithUnit
         {
             id: angleTextField
             width: UM.Theme.getSize("setting_control").width;
             height: UM.Theme.getSize("setting_control").height;
-            property string unit: "°";
+            unit: "°";
             // style: UM.Theme.styles.text_field;
 			visible: !freeformButton.checked;
             text: UM.ActiveTool.properties.getValue("AAngle")
