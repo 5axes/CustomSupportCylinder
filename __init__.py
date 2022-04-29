@@ -1,4 +1,4 @@
-# Copyright (c) 2021 5axes
+# Copyright (c) 2022 5axes
 # Based on the SupportBlocker plugin by Ultimaker B.V., and licensed under LGPLv3 or higher.
 
 from . import CustomSupportsCylinder
@@ -12,7 +12,7 @@ def getMetaData():
             "name": i18n_catalog.i18nc("@label", "Custom Supports Cylinder"),
             "description": i18n_catalog.i18nc("@info:tooltip", "Add 6 types of custom support"),
             "icon": "tool_icon.svg",
-            "tool_panel": "CustomSupport.qml",
+            "tool_panel": "qml/CustomSupport.qml",
             "weight": 8
         }
     }

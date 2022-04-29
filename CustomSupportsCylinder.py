@@ -31,8 +31,14 @@
 # V2.5.5 03-11-2021 Minor modification on freeform design
 #--------------------------------------------------------------------------------------------
 
-from PyQt5.QtCore import Qt, QTimer
-from PyQt5.QtWidgets import QApplication
+USE_QT5 = False
+try:
+    from PyQt6.QtCore import Qt, QTimer
+    from PyQt6.QtWidgets import QApplication
+except ImportError:
+    from PyQt5.QtCore import Qt, QTimer
+    from PyQt5.QtWidgets import QApplication
+    USE_QT5 = True
 
 from cura.CuraApplication import CuraApplication
 
@@ -63,6 +69,7 @@ from cura.Scene.CuraSceneNode import CuraSceneNode
 from UM.Scene.ToolHandle import ToolHandle
 from UM.Tool import Tool
 
+
 from UM.i18n import i18nCatalog
 catalog = i18nCatalog("cura")
 
@@ -75,6 +82,7 @@ import trimesh
 class CustomSupportsCylinder(Tool):
     def __init__(self):
         super().__init__()
+        
         
         self._Nb_Point = 0  
         self._SHeights = 0
@@ -91,7 +99,16 @@ class CustomSupportsCylinder(Tool):
         self._SubType = 'cross'
         
         # Shortcut
-        self._shortcut_key = Qt.Key_F
+        if not USE_QT5:
+            self._shortcut_key = Qt.Key.Key_F
+            self._qml_folder = "qml" 
+        else:
+            self._shortcut_key = Qt.Key_F
+            self._qml_folder = "qml_qt5" 
+
+        qml_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), self._qml_folder, "CustomSupport.qml")
+
+            
         self._controller = self.getController()
 
         self._Svg_Position = Vector
@@ -99,10 +116,16 @@ class CustomSupportsCylinder(Tool):
 
         self._i18n_catalog = None
         
-        self.setExposedProperties("SSize", "MSize", "ISize", "AAngle", "SType" , "YDirection" , "EHeights" , "SubType" , "SMirror")
+        
         
         self._application = CuraApplication.getInstance()
+ 
+        Logger.log("d", "Inserting item in context menu")
+        self._additional_components = self._application.createQmlComponent(qml_path, {'manager': self})
+        if not self._additional_components:
+            Logger.log("d", "Not QmlComponent")
         
+        self.setExposedProperties("SSize", "MSize", "ISize", "AAngle", "SType" , "YDirection" , "EHeights" , "SubType" , "SMirror")
         
         CuraApplication.getInstance().globalContainerStackChanged.connect(self._updateEnabled)
         
@@ -144,15 +167,20 @@ class CustomSupportsCylinder(Tool):
         self._SType = str(self._preferences.getValue("customsupportcylinder/t_type"))
         # Sub type for Free Form support
         self._SubType = str(self._preferences.getValue("customsupportcylinder/s_type"))
-        
+ 
                 
     def event(self, event):
         super().event(event)
         modifiers = QApplication.keyboardModifiers()
-        ctrl_is_active = modifiers & Qt.ControlModifier
-        shift_is_active = modifiers & Qt.ShiftModifier
-        alt_is_active = modifiers & Qt.AltModifier
-        
+        if not USE_QT5:
+            ctrl_is_active = modifiers & Qt.KeyboardModifier.ControlModifier
+            shift_is_active = modifiers & Qt.KeyboardModifier.ShiftModifier
+            alt_is_active = modifiers & Qt.KeyboardModifier.AltModifier
+        else:
+            ctrl_is_active = modifiers & Qt.ControlModifier
+            shift_is_active = modifiers & Qt.ShiftModifier
+            alt_is_active = modifiers & Qt.AltModifier
+
         
         if event.type == Event.MousePressEvent and MouseEvent.LeftButton in event.buttons and self._controller.getToolsEnabled():
             if ctrl_is_active:
