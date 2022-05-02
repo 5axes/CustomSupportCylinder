@@ -121,7 +121,7 @@ class CustomSupportsCylinder(Tool):
         self._application = CuraApplication.getInstance()
  
         Logger.log("d", "Inserting item in context menu")
-        self._additional_components = self._application.createQmlComponent(qml_path, {'manager': self})
+        self._additional_components = self._application.createQmlComponent(qml_path, {'tool_panel': self})
         if not self._additional_components:
             Logger.log("d", "Not QmlComponent")
         
