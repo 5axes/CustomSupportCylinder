@@ -106,13 +106,8 @@ class CustomSupportsCylinder(Tool):
         # Shortcut
         if not VERSION_QT5:
             self._shortcut_key = Qt.Key.Key_F
-            self._qml_folder = "qml_qt6" 
         else:
             self._shortcut_key = Qt.Key_F
-            self._qml_folder = "qml_qt5" 
-
-        qml_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), self._qml_folder, "CustomSupport.qml")
-
             
         self._controller = self.getController()
 
