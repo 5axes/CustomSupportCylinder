@@ -260,18 +260,18 @@ class CustomSupportsCylinder(Tool):
         node.setSelectable(True)
         
         # long=Support Height
-        long=position.y
+        self._long=position.y
                 
                 
         if self._SType == 'cylinder':
             # Cylinder creation Diameter , Increment angle 2°, length
-            mesh = self._createCylinder(self._UseSize,self._MaxSize,2,long,self._UseAngle)
+            mesh = self._createCylinder(self._UseSize,self._MaxSize,2,self._long,self._UseAngle)
         elif self._SType == 'tube':
             # Tube creation Diameter , Diameter Int, Increment angle 2°, length
-            mesh =  self._createTube(self._UseSize,self._MaxSize,self._UseISize,2,long,self._UseAngle)
+            mesh =  self._createTube(self._UseSize,self._MaxSize,self._UseISize,2,self._long,self._UseAngle)
         elif self._SType == 'cube':
             # Cube creation Size , length
-            mesh =  self._createCube(self._UseSize,self._MaxSize,long,self._UseAngle)
+            mesh =  self._createCube(self._UseSize,self._MaxSize,self._long,self._UseAngle)
         elif self._SType == 'freeform':
             # Cube creation Size , length
             mesh = MeshBuilder()  
@@ -285,7 +285,7 @@ class CustomSupportsCylinder(Tool):
             DirZ = [0, 0, 1]
             load_mesh.apply_transform(trimesh.transformations.scale_matrix(self._UseSize, origin, DirX))
             load_mesh.apply_transform(trimesh.transformations.scale_matrix(self._UseSize, origin, DirY))   
-            load_mesh.apply_transform(trimesh.transformations.scale_matrix(long, origin, DirZ)) 
+            load_mesh.apply_transform(trimesh.transformations.scale_matrix(self._long, origin, DirZ)) 
             if self._MirrorSupport == True :   
                 load_mesh.apply_transform(trimesh.transformations.rotation_matrix(math.radians(180), [0, 0, 1]))
             if self._UseYDirection == True :
@@ -298,15 +298,19 @@ class CustomSupportsCylinder(Tool):
             if self._EqualizeHeights == True :
                 # Logger.log('d', 'SHeights : ' + str(self._SHeights)) 
                 if self._SHeights==0 :
-                    self._SHeights=position.y 
-                top=self._UseSize+(self._SHeights-position.y)
+                    self._SHeights=position.y
 
+                self._top=self._UseSize+(self._SHeights-position.y)
+                
             else:
-                top=self._UseSize
+                self._top=self._UseSize
                 self._SHeights=0
             
-            # Logger.log('d', 'top : ' + str(top))
-            mesh =  self._createAbutment(self._UseSize,self._MaxSize,long,top,self._UseAngle,self._UseYDirection)
+            # 
+            Logger.log('d', 'top : ' + str(self._top))
+            # Logger.log('d', 'MaxSize : ' + str(self._MaxSize))
+            
+            mesh =  self._createAbutment(self._UseSize,self._MaxSize,self._long,self._top,self._UseAngle,self._UseYDirection)
         else:           
             # Custom creation Size , P1 as vector P2 as vector
             # Get support_interface_height as extra distance 
@@ -508,6 +512,10 @@ class CustomSupportsCylinder(Tool):
         else :
             l_max=l
         
+        
+        Logger.log('d', 's_inf : ' + str(s_inf))
+        Logger.log('d', 'l_max : ' + str(l_max)) 
+        Logger.log('d', 'l : ' + str(l))
         # Difference between Standart Abutment and Abutment + max base size
         if l_max<l and l_max>0:
             nbv=40  
@@ -592,7 +600,7 @@ class CustomSupportsCylinder(Tool):
         if l_max<lg and l_max>0:
             nbv=18
             for i in range(0, rng):
-                 # Top
+                # Top
                 verts.append([0, sup, 0])
                 verts.append([r*math.cos((i+1)*ang), sup, r*math.sin((i+1)*ang)])
                 verts.append([r*math.cos(i*ang), sup, r*math.sin(i*ang)])
