@@ -1,4 +1,6 @@
+#--------------------------------------------------------------------------------------------
 # Initial Copyright(c) 2018 Ultimaker B.V.
+# Copyright (c) 2022 5axes
 #--------------------------------------------------------------------------------------------
 # Based on the SupportBlocker plugin by Ultimaker B.V., and licensed under LGPLv3 or higher.
 #
@@ -29,16 +31,18 @@
 # V2.5.2 03-09-2021 Bridge freeform support Bridge and rename Pillar
 # V2.5.3 03-10-2021 Add "arch-buttress" type
 # V2.5.5 03-11-2021 Minor modification on freeform design
+#
+# V2.6.0 03-05-2022 Update for Cura 5.0
 #--------------------------------------------------------------------------------------------
 
-USE_QT5 = False
+VERSION_QT5 = False
 try:
     from PyQt6.QtCore import Qt, QTimer
     from PyQt6.QtWidgets import QApplication
 except ImportError:
     from PyQt5.QtCore import Qt, QTimer
     from PyQt5.QtWidgets import QApplication
-    USE_QT5 = True
+    VERSION_QT5 = True
 
 from cura.CuraApplication import CuraApplication
 
@@ -81,6 +85,7 @@ import trimesh
 
 class CustomSupportsCylinder(Tool):
     def __init__(self):
+       
         super().__init__()
         
         
@@ -99,9 +104,9 @@ class CustomSupportsCylinder(Tool):
         self._SubType = 'cross'
         
         # Shortcut
-        if not USE_QT5:
+        if not VERSION_QT5:
             self._shortcut_key = Qt.Key.Key_F
-            self._qml_folder = "qml" 
+            self._qml_folder = "qml_qt6" 
         else:
             self._shortcut_key = Qt.Key_F
             self._qml_folder = "qml_qt5" 
@@ -116,14 +121,7 @@ class CustomSupportsCylinder(Tool):
 
         self._i18n_catalog = None
         
-        
-        
         self._application = CuraApplication.getInstance()
- 
-        Logger.log("d", "Inserting item in context menu")
-        self._additional_components = self._application.createQmlComponent(qml_path, {'tool_panel': self})
-        if not self._additional_components:
-            Logger.log("d", "Not QmlComponent")
         
         self.setExposedProperties("SSize", "MSize", "ISize", "AAngle", "SType" , "YDirection" , "EHeights" , "SubType" , "SMirror")
         
@@ -172,7 +170,7 @@ class CustomSupportsCylinder(Tool):
     def event(self, event):
         super().event(event)
         modifiers = QApplication.keyboardModifiers()
-        if not USE_QT5:
+        if not VERSION_QT5:
             ctrl_is_active = modifiers & Qt.KeyboardModifier.ControlModifier
             shift_is_active = modifiers & Qt.KeyboardModifier.ShiftModifier
             alt_is_active = modifiers & Qt.KeyboardModifier.AltModifier
