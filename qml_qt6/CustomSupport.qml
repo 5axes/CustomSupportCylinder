@@ -42,9 +42,9 @@ Item
     Column
     {
         id: sTypeItems
-        anchors.top: parent.top;
-        anchors.left: parent.left;
-        spacing: UM.Theme.getSize("default_margin").height;
+        anchors.top: parent.top
+        anchors.left: parent.left
+        spacing: UM.Theme.getSize("default_margin").height
 
         Row // Mesh type buttons
         {
@@ -56,51 +56,51 @@ Item
                 id: cylinderButton
                 text: catalog.i18nc("@label", "Cylinder")
 				display: AbstractButton.IconOnly
-                width: UM.Theme.getSize("button").width;
-                height: UM.Theme.getSize("button").height;				
+                width: UM.Theme.getSize("button").width
+                height: UM.Theme.getSize("button").height				
                 icon.source: "type_cylinder.svg"
                 // property bool needBorder: true
-                checkable:true;
+                checkable:true
                 onClicked: setSType('cylinder')
-                checked: UM.ActiveTool.properties.getValue("SType") === 'cylinder';
+                checked: UM.ActiveTool.properties.getValue("SType") === 'cylinder'
 				ToolTip.delay: 1000
 				ToolTip.timeout: 5000
 				ToolTip.visible: hovered
 				ToolTip.text: qsTr("Cylinder as custom support")
-                z: 5; // Profondeur
+                z: 6 // Profondeur
             }
 
             Button
             {
                 id: tubeButton;
-                text: catalog.i18nc("@label", "Tube");
+                text: catalog.i18nc("@label", "Tube")
 				display: AbstractButton.IconOnly
-				width: UM.Theme.getSize("button").width;
-                height: UM.Theme.getSize("button").height;	
-                icon.source: "type_tube.svg";
-                // property bool needBorder: true;
-                checkable:true;
-                onClicked: setSType('tube');
-                checked: UM.ActiveTool.properties.getValue("SType") === 'tube';
+				width: UM.Theme.getSize("button").width
+                height: UM.Theme.getSize("button").height	
+                icon.source: "type_tube.svg"
+                // property bool needBorder: true
+                checkable:true
+                onClicked: setSType('tube')
+                checked: UM.ActiveTool.properties.getValue("SType") === 'tube'
 				ToolTip.delay: 500
 				ToolTip.timeout: 5000
 				ToolTip.visible: hovered
 				ToolTip.text: qsTr("Tube as custom support")
-                z: 4; // Profondeur
+                z: 5 // Profondeur
             }
 			
             Button
             {
                 id: cubeButton;
-                text: catalog.i18nc("@label", "Cube");
+                text: catalog.i18nc("@label", "Cube")
 				display: AbstractButton.IconOnly
-				width: UM.Theme.getSize("button").width;
-                height: UM.Theme.getSize("button").height;	
-                icon.source: "type_cube.svg";
-                // property bool needBorder: true;
-                checkable: true;
-                onClicked: setSType('cube');
-                checked: UM.ActiveTool.properties.getValue("SType") === 'cube';
+				width: UM.Theme.getSize("button").width
+                height: UM.Theme.getSize("button").height
+                icon.source: "type_cube.svg"
+                // property bool needBorder: true
+                checkable: true
+                onClicked: setSType('cube')
+                checked: UM.ActiveTool.properties.getValue("SType") === 'cube'
 				ToolTip.delay: 1000
 				ToolTip.timeout: 5000
 				ToolTip.visible: hovered
@@ -165,6 +165,11 @@ Item
                 z: 1; // Profondeur
             }
         }
+		Row // CheckBox Row
+        {
+            id: sTypeCheckBox
+            spacing: UM.Theme.getSize("default_margin").width
+		}
     }
     Grid
     {
@@ -202,12 +207,12 @@ Item
 
         Label
         {
-            height: UM.Theme.getSize("setting_control").height;
-            text: catalog.i18nc("@label","Type");
-            font: UM.Theme.getFont("default");
-            color: UM.Theme.getColor("text");
-            verticalAlignment: Text.AlignVCenter;
-			visible: freeformButton.checked;
+            height: UM.Theme.getSize("setting_control").height
+            text: catalog.i18nc("@label","Type")
+            font: UM.Theme.getFont("default")
+            color: UM.Theme.getColor("text")
+            verticalAlignment: Text.AlignVCenter
+			visible: freeformButton.checked
             renderType: Text.NativeRendering
             width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
         }
@@ -215,24 +220,24 @@ Item
 	
 		Label
         {
-            height: UM.Theme.getSize("setting_control").height;
-            text: catalog.i18nc("@label","Interior size");
-            font: UM.Theme.getFont("default");
-            color: UM.Theme.getColor("text");
-            verticalAlignment: Text.AlignVCenter;
+            height: UM.Theme.getSize("setting_control").height
+            text: catalog.i18nc("@label","Interior size")
+            font: UM.Theme.getFont("default")
+            color: UM.Theme.getColor("text")
+            verticalAlignment: Text.AlignVCenter
             renderType: Text.NativeRendering
-			visible: tubeButton.checked;
+			visible: tubeButton.checked
             width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
         }
 		
         Label
         {
-            height: UM.Theme.getSize("setting_control").height;
-            text: catalog.i18nc("@label","Angle");
-            font: UM.Theme.getFont("default");
-            color: UM.Theme.getColor("text");
-            verticalAlignment: Text.AlignVCenter;
-			visible: !freeformButton.checked;
+            height: UM.Theme.getSize("setting_control").height
+            text: catalog.i18nc("@label","Angle")
+            font: UM.Theme.getFont("default")
+            color: UM.Theme.getColor("text")
+            verticalAlignment: Text.AlignVCenter
+			visible: !freeformButton.checked
             renderType: Text.NativeRendering
             width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
         }
@@ -240,9 +245,9 @@ Item
         UM.TextFieldWithUnit
         {
             id: sizeTextField
-            width: UM.Theme.getSize("setting_control").width;
-            height: UM.Theme.getSize("setting_control").height;
-            unit: "mm";
+            width: UM.Theme.getSize("setting_control").width
+            height: UM.Theme.getSize("setting_control").height
+            unit: "mm"
             text: UM.ActiveTool.properties.getValue("SSize")
             validator: DoubleValidator
             {
@@ -254,17 +259,17 @@ Item
             onEditingFinished:
             {
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.ActiveTool.setProperty("SSize", modified_text);
+                UM.ActiveTool.setProperty("SSize", modified_text)
             }
         }
 
         UM.TextFieldWithUnit
         {
             id: maxTextField
-            width: UM.Theme.getSize("setting_control").width;
-            height: UM.Theme.getSize("setting_control").height;
-            unit: "mm";
-			visible: !freeformButton.checked;
+            width: UM.Theme.getSize("setting_control").width
+            height: UM.Theme.getSize("setting_control").height
+            unit: "mm"
+			visible: !freeformButton.checked
             text: UM.ActiveTool.properties.getValue("MSize")
             validator: DoubleValidator
             {
@@ -307,10 +312,9 @@ Item
         UM.TextFieldWithUnit
         {
             id: sizeInteriorTextField
-            width: UM.Theme.getSize("setting_control").width;
-            height: UM.Theme.getSize("setting_control").height;
-            unit: "mm";
-            // style: UM.Theme.styles.text_field;
+            width: UM.Theme.getSize("setting_control").width
+            height: UM.Theme.getSize("setting_control").height
+            unit: "mm"
 			visible: tubeButton.checked;
             text: UM.ActiveTool.properties.getValue("ISize")
             validator: DoubleValidator
@@ -328,18 +332,18 @@ Item
 				{
 				}
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.ActiveTool.setProperty("ISize", modified_text);
+                UM.ActiveTool.setProperty("ISize", modified_text)
             }
         }
 		
 		UM.TextFieldWithUnit
         {
             id: angleTextField
-            width: UM.Theme.getSize("setting_control").width;
-            height: UM.Theme.getSize("setting_control").height;
-            unit: "°";
-            // style: UM.Theme.styles.text_field;
-			visible: !freeformButton.checked;
+            width: UM.Theme.getSize("setting_control").width
+            height: UM.Theme.getSize("setting_control").height
+            unit: "°"
+            // style: UM.Theme.styles.text_field
+			visible: !freeformButton.checked
             text: UM.ActiveTool.properties.getValue("AAngle")
             validator: DoubleValidator
             {
@@ -351,49 +355,46 @@ Item
             onEditingFinished:
             {
                 var modified_angle_text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.ActiveTool.setProperty("AAngle", modified_angle_text);
+                UM.ActiveTool.setProperty("AAngle", modified_angle_text)
             }
         }
     }
 	UM.CheckBox
     {
-        id: useYDirectionCheckbox;
-        anchors.top: textfields.bottom;
-        anchors.topMargin: UM.Theme.getSize("default_margin").height;
-        anchors.left: parent.left;
-        text: catalog.i18nc("@option:check","Set on Y direction");
-        // style: UM.Theme.styles.partially_checkbox;
-		visible: abutmentButton.checked || freeformButton.checked;
+        id: useYDirectionCheckbox
+        anchors.top: textfields.bottom
+        anchors.topMargin: UM.Theme.getSize("default_margin").height
+        anchors.left: parent.left
+        text: catalog.i18nc("@option:check","Set on Y direction")
+		visible: abutmentButton.checked || freeformButton.checked
 
-        checked: UM.ActiveTool.properties.getValue("YDirection");
-        onClicked: UM.ActiveTool.setProperty("YDirection", checked);
+        checked: UM.ActiveTool.properties.getValue("YDirection")
+        onClicked: UM.ActiveTool.setProperty("YDirection", checked)
 		
     }
     UM.CheckBox
     {
-        id: mirrorCheckbox;
-        anchors.top: useYDirectionCheckbox.bottom;
-        anchors.topMargin: UM.Theme.getSize("default_margin").height;
-        anchors.left: parent.left;
-        text: catalog.i18nc("@option:check","Rotate 180°");
-		visible: freeformButton.checked;
+        id: mirrorCheckbox
+        anchors.top: useYDirectionCheckbox.bottom
+        anchors.topMargin: UM.Theme.getSize("default_margin").height
+        anchors.left: parent.left
+        text: catalog.i18nc("@option:check","Rotate 180°")
+		visible: freeformButton.checked
 
-        checked: UM.ActiveTool.properties.getValue("SMirror");
-        onClicked: UM.ActiveTool.setProperty("SMirror", checked);
+        checked: UM.ActiveTool.properties.getValue("SMirror")
+        onClicked: UM.ActiveTool.setProperty("SMirror", checked)
 		
     }	
     UM.CheckBox
     {
-        id: equalizeHeightsCheckbox;
-        anchors.top: useYDirectionCheckbox.bottom;
-        anchors.topMargin: UM.Theme.getSize("default_margin").height;
-        anchors.left: parent.left;
-        text: catalog.i18nc("@option:check","Equalize heights");
-		visible: abutmentButton.checked;
+        id: equalizeHeightsCheckbox
+        anchors.top: useYDirectionCheckbox.bottom
+        anchors.topMargin: UM.Theme.getSize("default_margin").height
+        anchors.left: parent.left
+        text: catalog.i18nc("@option:check","Equalize heights")
+		visible: abutmentButton.checked
 
-        checked: UM.ActiveTool.properties.getValue("EHeights");
-        onClicked: UM.ActiveTool.setProperty("EHeights", checked);
-		
+        checked: UM.ActiveTool.properties.getValue("EHeights")
+        onClicked: UM.ActiveTool.setProperty("EHeights", checked)
     }
-
 }

@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// Copyright (c) 2020 5@xes
+// Copyright (c) 2022 5@xes
 // 
 // proterties values
 //   "SSize"       : Support Size in mm
@@ -22,7 +22,7 @@ Item
 {
     id: base
     width: childrenRect.width
-    height: childrenRect.height
+    Height: childrenRect.height
     UM.I18nCatalog { id: catalog; name: "cura"}
 
     property var s_size: UM.ActiveTool.properties.getValue("SSize")
@@ -61,7 +61,7 @@ Item
                 onClicked: setSType('cylinder');
                 style: UM.Theme.styles.tool_button;
                 checked: UM.ActiveTool.properties.getValue("SType") === 'cylinder';
-                z: 5; // Profondeur
+                z: 6; // Profondeur
             }
 
             Button
@@ -74,7 +74,7 @@ Item
                 onClicked: setSType('tube');
                 style: UM.Theme.styles.tool_button;
                 checked: UM.ActiveTool.properties.getValue("SType") === 'tube';
-                z: 4; // Profondeur
+                z: 5; // Profondeur
             }
 			
             Button

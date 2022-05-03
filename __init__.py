@@ -7,7 +7,6 @@ try:
 except ImportError:
     VERSION_QT5 = True
     
-    
 from . import CustomSupportsCylinder
 
 from UM.i18n import i18nCatalog
