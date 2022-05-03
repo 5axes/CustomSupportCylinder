@@ -355,7 +355,7 @@ Item
             }
         }
     }
-	CheckBox
+	UM.CheckBox
     {
         id: useYDirectionCheckbox;
         anchors.top: textfields.bottom;
@@ -369,7 +369,7 @@ Item
         onClicked: UM.ActiveTool.setProperty("YDirection", checked);
 		
     }
-    CheckBox
+    UM.CheckBox
     {
         id: mirrorCheckbox;
         anchors.top: useYDirectionCheckbox.bottom;
@@ -382,7 +382,7 @@ Item
         onClicked: UM.ActiveTool.setProperty("SMirror", checked);
 		
     }	
-    CheckBox
+    UM.CheckBox
     {
         id: equalizeHeightsCheckbox;
         anchors.top: useYDirectionCheckbox.bottom;
