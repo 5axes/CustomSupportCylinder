@@ -5,7 +5,7 @@ VERSION_QT5 = False
 try:
     from PyQt6.QtCore import Qt
 except ImportError:
-    from PyQt5.QtCore import Qt
+    # from PyQt5.QtCore import Qt
     VERSION_QT5 = True
     
     
@@ -19,7 +19,6 @@ def getMetaData():
         QmlFile="qml_qt6/CustomSupport.qml"
     else:
         QmlFile="qml_qt5/CustomSupport.qml"
-    
 
     return {
         "tool": {
