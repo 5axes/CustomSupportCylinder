@@ -185,9 +185,9 @@ class CustomSupportsCylinder(Tool):
                 self._controller.setActiveTool("TranslateTool")
                 return
 
-            # if alt_is_active:
-            # self._controller.setActiveTool("RotateTool")
-            # return
+            if alt_is_active:
+                self._controller.setActiveTool("RotateTool")
+                return
                 
             if self._skip_press:
                 # The selection was previously cleared, do not add/remove an support mesh but
@@ -301,7 +301,7 @@ class CustomSupportsCylinder(Tool):
         elif self._SType == 'abutment':
             # Abutement creation Size , length , top
             if self._EqualizeHeights == True :
-                Logger.log('d', 'SHeights : ' + str(self._SHeights)) 
+                # Logger.log('d', 'SHeights : ' + str(self._SHeights)) 
                 if self._SHeights==0 :
                     self._SHeights=position.y 
                 top=self._UseSize+(self._SHeights-position.y)
