@@ -9,14 +9,14 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   version="1.0"
-   width="348.000000pt"
-   height="349.000000pt"
-   viewBox="0 0 348.000000 349.000000"
-   preserveAspectRatio="xMidYMid meet"
+   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+   sodipodi:docname="tool_icon.svg"
    id="svg6"
-   sodipodi:docname="type_cylinder.svg"
-   inkscape:version="1.0 (4035a4fb49, 2020-05-01)">
+   preserveAspectRatio="xMidYMid meet"
+   viewBox="0 0 348.000000 349.000000"
+   height="349.000000pt"
+   width="348.000000pt"
+   version="1.0">
   <metadata
      id="metadata12">
     <rdf:RDF>
@@ -31,55 +31,55 @@
   <defs
      id="defs10">
     <linearGradient
-       osb:paint="solid"
-       id="linearGradient1793">
+       id="linearGradient1793"
+       osb:paint="solid">
       <stop
-         id="stop1791"
+         style="stop-color:#0000d8;stop-opacity:1;"
          offset="0"
-         style="stop-color:#000000;stop-opacity:1;" />
+         id="stop1791" />
     </linearGradient>
     <linearGradient
-       gradientUnits="userSpaceOnUse"
-       y2="232.28418"
-       x2="349.19141"
-       y1="232.28418"
-       x1="114.80859"
-       id="linearGradient1795"
+       inkscape:collect="always"
        xlink:href="#linearGradient1793"
-       inkscape:collect="always" />
+       id="linearGradient1795"
+       x1="114.80859"
+       y1="232.28418"
+       x2="349.19141"
+       y2="232.28418"
+       gradientUnits="userSpaceOnUse" />
   </defs>
   <sodipodi:namedview
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1"
-     objecttolerance="10"
-     gridtolerance="10"
-     guidetolerance="10"
-     inkscape:pageopacity="0"
-     inkscape:pageshadow="2"
-     inkscape:window-width="1600"
-     inkscape:window-height="837"
-     id="namedview8"
-     showgrid="false"
-     inkscape:snap-smooth-nodes="true"
-     inkscape:snap-global="true"
-     inkscape:zoom="1.0143266"
-     inkscape:cx="-11.296414"
-     inkscape:cy="222.06516"
-     inkscape:window-x="-8"
-     inkscape:window-y="-8"
-     inkscape:window-maximized="1"
+     inkscape:document-rotation="0"
      inkscape:current-layer="g4"
-     inkscape:document-rotation="0" />
+     inkscape:window-maximized="1"
+     inkscape:window-y="-8"
+     inkscape:window-x="1592"
+     inkscape:cy="222.06516"
+     inkscape:cx="-11.296414"
+     inkscape:zoom="1.0143266"
+     inkscape:snap-global="true"
+     inkscape:snap-smooth-nodes="true"
+     showgrid="false"
+     id="namedview8"
+     inkscape:window-height="1017"
+     inkscape:window-width="1920"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0"
+     guidetolerance="10"
+     gridtolerance="10"
+     objecttolerance="10"
+     borderopacity="1"
+     bordercolor="#666666"
+     pagecolor="#ffffff" />
   <g
-     transform="translate(0.000000,349.000000) scale(0.100000,-0.100000)"
-     fill="#000000"
+     id="g4"
      stroke="none"
-     id="g4">
+     fill="#000000"
+     transform="matrix(0.1,0,0,-0.1,0,349)">
     <path
-       style="color:#000000;overflow:visible;opacity:0.99500002;fill:url(#linearGradient1795);fill-opacity:1;stroke:none;stroke-width:1.88976407;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 232 53.943359 A 117.19111 42.341312 0 0 0 114.80859 96.285156 L 114.80859 368.28516 A 117.19111 42.341312 0 0 0 232 410.625 A 117.19111 42.341312 0 0 0 349.19141 368.28516 L 349.19141 96.285156 A 117.19111 42.341312 0 0 0 232 53.943359 z M 232 63.353516 A 104.99152 32.930203 0 0 1 336.99219 96.285156 A 104.99152 32.930203 0 0 1 232 129.21484 A 104.99152 32.930203 0 0 1 127.00781 96.285156 A 104.99152 32.930203 0 0 1 232 63.353516 z "
+       id="path4526"
        transform="matrix(7.4999999,0,0,-7.4999999,0,3490)"
-       id="path4526" />
+       d="M 232,53.943359 A 117.19111,42.341312 0 0 0 114.80859,96.285156 V 368.28516 A 117.19111,42.341312 0 0 0 232,410.625 117.19111,42.341312 0 0 0 349.19141,368.28516 V 96.285156 A 117.19111,42.341312 0 0 0 232,53.943359 Z m 0,9.410157 A 104.99152,32.930203 0 0 1 336.99219,96.285156 104.99152,32.930203 0 0 1 232,129.21484 104.99152,32.930203 0 0 1 127.00781,96.285156 104.99152,32.930203 0 0 1 232,63.353516 Z"
+       style="color:#000000;overflow:visible;opacity:0.995;fill:url(#linearGradient1795);fill-opacity:1;stroke:none;stroke-width:1.88976;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
   </g>
 </svg>
