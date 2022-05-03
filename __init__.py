@@ -1,11 +1,10 @@
-# Copyright (c) 2022 5axes
+# Copyright (c) 2022 5@xes
 # Initialy Based on the SupportBlocker plugin by Ultimaker B.V., and licensed under LGPLv3 or higher.
 
 VERSION_QT5 = False
 try:
-    from PyQt6.QtCore import Qt
+    from PyQt6.QtCore import QT_VERSION_STR
 except ImportError:
-    # from PyQt5.QtCore import Qt
     VERSION_QT5 = True
     
     
