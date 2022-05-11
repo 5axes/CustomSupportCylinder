@@ -176,7 +176,6 @@ Item
             width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
         }
 
-	
 		Label
         {
             height: UM.Theme.getSize("setting_control").height;
