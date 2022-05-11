@@ -1,4 +1,6 @@
+#--------------------------------------------------------------------------------------------
 # Initial Copyright(c) 2018 Ultimaker B.V.
+# Copyright (c) 2022 5axes
 #--------------------------------------------------------------------------------------------
 # Based on the SupportBlocker plugin by Ultimaker B.V., and licensed under LGPLv3 or higher.
 #
@@ -29,10 +31,18 @@
 # V2.5.2 03-09-2021 Bridge freeform support Bridge and rename Pillar
 # V2.5.3 03-10-2021 Add "arch-buttress" type
 # V2.5.5 03-11-2021 Minor modification on freeform design
+#
+# V2.6.0 03-05-2022 Update for Cura 5.0
 #--------------------------------------------------------------------------------------------
 
-from PyQt5.QtCore import Qt, QTimer
-from PyQt5.QtWidgets import QApplication
+VERSION_QT5 = False
+try:
+    from PyQt6.QtCore import Qt, QTimer
+    from PyQt6.QtWidgets import QApplication
+except ImportError:
+    from PyQt5.QtCore import Qt, QTimer
+    from PyQt5.QtWidgets import QApplication
+    VERSION_QT5 = True
 
 from cura.CuraApplication import CuraApplication
 
@@ -63,6 +73,7 @@ from cura.Scene.CuraSceneNode import CuraSceneNode
 from UM.Scene.ToolHandle import ToolHandle
 from UM.Tool import Tool
 
+
 from UM.i18n import i18nCatalog
 catalog = i18nCatalog("cura")
 
@@ -74,7 +85,9 @@ import trimesh
 
 class CustomSupportsCylinder(Tool):
     def __init__(self):
+       
         super().__init__()
+        
         
         self._Nb_Point = 0  
         self._SHeights = 0
@@ -91,7 +104,11 @@ class CustomSupportsCylinder(Tool):
         self._SubType = 'cross'
         
         # Shortcut
-        self._shortcut_key = Qt.Key_F
+        if not VERSION_QT5:
+            self._shortcut_key = Qt.Key.Key_F
+        else:
+            self._shortcut_key = Qt.Key_F
+            
         self._controller = self.getController()
 
         self._Svg_Position = Vector
@@ -99,10 +116,9 @@ class CustomSupportsCylinder(Tool):
 
         self._i18n_catalog = None
         
-        self.setExposedProperties("SSize", "MSize", "ISize", "AAngle", "SType" , "YDirection" , "EHeights" , "SubType" , "SMirror")
-        
         self._application = CuraApplication.getInstance()
         
+        self.setExposedProperties("SSize", "MSize", "ISize", "AAngle", "SType" , "YDirection" , "EHeights" , "SubType" , "SMirror")
         
         CuraApplication.getInstance().globalContainerStackChanged.connect(self._updateEnabled)
         
@@ -144,24 +160,29 @@ class CustomSupportsCylinder(Tool):
         self._SType = str(self._preferences.getValue("customsupportcylinder/t_type"))
         # Sub type for Free Form support
         self._SubType = str(self._preferences.getValue("customsupportcylinder/s_type"))
-        
+ 
                 
     def event(self, event):
         super().event(event)
         modifiers = QApplication.keyboardModifiers()
-        ctrl_is_active = modifiers & Qt.ControlModifier
-        shift_is_active = modifiers & Qt.ShiftModifier
-        alt_is_active = modifiers & Qt.AltModifier
-        
+        if not VERSION_QT5:
+            ctrl_is_active = modifiers & Qt.KeyboardModifier.ControlModifier
+            shift_is_active = modifiers & Qt.KeyboardModifier.ShiftModifier
+            alt_is_active = modifiers & Qt.KeyboardModifier.AltModifier
+        else:
+            ctrl_is_active = modifiers & Qt.ControlModifier
+            shift_is_active = modifiers & Qt.ShiftModifier
+            alt_is_active = modifiers & Qt.AltModifier
+
         
         if event.type == Event.MousePressEvent and MouseEvent.LeftButton in event.buttons and self._controller.getToolsEnabled():
             if ctrl_is_active:
                 self._controller.setActiveTool("TranslateTool")
                 return
 
-            # if alt_is_active:
-            # self._controller.setActiveTool("RotateTool")
-            # return
+            if alt_is_active:
+                self._controller.setActiveTool("RotateTool")
+                return
                 
             if self._skip_press:
                 # The selection was previously cleared, do not add/remove an support mesh but
@@ -239,18 +260,18 @@ class CustomSupportsCylinder(Tool):
         node.setSelectable(True)
         
         # long=Support Height
-        long=position.y
+        self._long=position.y
                 
                 
         if self._SType == 'cylinder':
             # Cylinder creation Diameter , Increment angle 2°, length
-            mesh = self._createCylinder(self._UseSize,self._MaxSize,2,long,self._UseAngle)
+            mesh = self._createCylinder(self._UseSize,self._MaxSize,2,self._long,self._UseAngle)
         elif self._SType == 'tube':
             # Tube creation Diameter , Diameter Int, Increment angle 2°, length
-            mesh =  self._createTube(self._UseSize,self._MaxSize,self._UseISize,2,long,self._UseAngle)
+            mesh =  self._createTube(self._UseSize,self._MaxSize,self._UseISize,2,self._long,self._UseAngle)
         elif self._SType == 'cube':
             # Cube creation Size , length
-            mesh =  self._createCube(self._UseSize,self._MaxSize,long,self._UseAngle)
+            mesh =  self._createCube(self._UseSize,self._MaxSize,self._long,self._UseAngle)
         elif self._SType == 'freeform':
             # Cube creation Size , length
             mesh = MeshBuilder()  
@@ -264,7 +285,7 @@ class CustomSupportsCylinder(Tool):
             DirZ = [0, 0, 1]
             load_mesh.apply_transform(trimesh.transformations.scale_matrix(self._UseSize, origin, DirX))
             load_mesh.apply_transform(trimesh.transformations.scale_matrix(self._UseSize, origin, DirY))   
-            load_mesh.apply_transform(trimesh.transformations.scale_matrix(long, origin, DirZ)) 
+            load_mesh.apply_transform(trimesh.transformations.scale_matrix(self._long, origin, DirZ)) 
             if self._MirrorSupport == True :   
                 load_mesh.apply_transform(trimesh.transformations.rotation_matrix(math.radians(180), [0, 0, 1]))
             if self._UseYDirection == True :
@@ -275,17 +296,21 @@ class CustomSupportsCylinder(Tool):
         elif self._SType == 'abutment':
             # Abutement creation Size , length , top
             if self._EqualizeHeights == True :
-                Logger.log('d', 'SHeights : ' + str(self._SHeights)) 
+                # Logger.log('d', 'SHeights : ' + str(self._SHeights)) 
                 if self._SHeights==0 :
-                    self._SHeights=position.y 
-                top=self._UseSize+(self._SHeights-position.y)
+                    self._SHeights=position.y
 
+                self._top=self._UseSize+(self._SHeights-position.y)
+                
             else:
-                top=self._UseSize
+                self._top=self._UseSize
                 self._SHeights=0
             
-            # Logger.log('d', 'top : ' + str(top))
-            mesh =  self._createAbutment(self._UseSize,self._MaxSize,long,top,self._UseAngle,self._UseYDirection)
+            # 
+            Logger.log('d', 'top : ' + str(self._top))
+            # Logger.log('d', 'MaxSize : ' + str(self._MaxSize))
+            
+            mesh =  self._createAbutment(self._UseSize,self._MaxSize,self._long,self._top,self._UseAngle,self._UseYDirection)
         else:           
             # Custom creation Size , P1 as vector P2 as vector
             # Get support_interface_height as extra distance 
@@ -487,6 +512,10 @@ class CustomSupportsCylinder(Tool):
         else :
             l_max=l
         
+        
+        Logger.log('d', 's_inf : ' + str(s_inf))
+        Logger.log('d', 'l_max : ' + str(l_max)) 
+        Logger.log('d', 'l : ' + str(l))
         # Difference between Standart Abutment and Abutment + max base size
         if l_max<l and l_max>0:
             nbv=40  
@@ -571,7 +600,7 @@ class CustomSupportsCylinder(Tool):
         if l_max<lg and l_max>0:
             nbv=18
             for i in range(0, rng):
-                 # Top
+                # Top
                 verts.append([0, sup, 0])
                 verts.append([r*math.cos((i+1)*ang), sup, r*math.sin((i+1)*ang)])
                 verts.append([r*math.cos(i*ang), sup, r*math.sin(i*ang)])
