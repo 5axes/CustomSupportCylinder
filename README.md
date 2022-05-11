@@ -27,6 +27,16 @@ The initial version was tested on Cura 4.5 but last release tested from 4.2 to 4
 
 ## Installation
 
+### Manual Installation  (Cura 5.0) 
+
+Download the latest release from this [repository](https://github.com/5axes/CustomSupportCylinder/releases)
+
+Drop the curapackage according to your Cura release in the 3d viewport in Cura as if you were opening a 3d model. You will then be prompted to restart Cura.
+
+![Manual Install](./images/Restart.JPG)
+
+### Automatic installation for Cura 4.X
+
 First, make sure your Cura version is 4.5 or newer. This plugin is now avalaible in the Cura marketplace. So you can install it automaticaly from this place:
 ![Automatic Install](./images/MarketPlace.JPG)
 
