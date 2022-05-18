@@ -51,117 +51,99 @@ Item
             id: sTypeButtons
             spacing: UM.Theme.getSize("default_margin").width
 
-            Button
+            UM.ToolbarButton
             {
                 id: cylinderButton
                 text: catalog.i18nc("@label", "Cylinder")
-				display: AbstractButton.IconOnly
-                width: UM.Theme.getSize("button").width
-                height: UM.Theme.getSize("button").height				
-                icon.source: "type_cylinder.svg"
-                // property bool needBorder: true
+				toolItem: UM.ColorImage
+				{
+					source: Qt.resolvedUrl("type_cylinder.svg")
+					color: UM.Theme.getColor("icon")
+				}
+                property bool needBorder: true
                 checkable:true
                 onClicked: setSType('cylinder')
                 checked: UM.ActiveTool.properties.getValue("SType") === 'cylinder'
-				ToolTip.delay: 1000
-				ToolTip.timeout: 5000
-				ToolTip.visible: hovered
-				ToolTip.text: qsTr("Cylinder as custom support")
                 z: 6 // Profondeur
             }
 
-            Button
+            UM.ToolbarButton
             {
                 id: tubeButton;
                 text: catalog.i18nc("@label", "Tube")
-				display: AbstractButton.IconOnly
-				width: UM.Theme.getSize("button").width
-                height: UM.Theme.getSize("button").height	
-                icon.source: "type_tube.svg"
-                // property bool needBorder: true
+				toolItem: UM.ColorImage
+				{
+					source: Qt.resolvedUrl("type_tube.svg")
+					color: UM.Theme.getColor("icon")
+				}
+                property bool needBorder: true
                 checkable:true
                 onClicked: setSType('tube')
                 checked: UM.ActiveTool.properties.getValue("SType") === 'tube'
-				ToolTip.delay: 500
-				ToolTip.timeout: 5000
-				ToolTip.visible: hovered
-				ToolTip.text: qsTr("Tube as custom support")
                 z: 5 // Profondeur
             }
 			
-            Button
+            UM.ToolbarButton
             {
                 id: cubeButton;
                 text: catalog.i18nc("@label", "Cube")
-				display: AbstractButton.IconOnly
-				width: UM.Theme.getSize("button").width
-                height: UM.Theme.getSize("button").height
-                icon.source: "type_cube.svg"
-                // property bool needBorder: true
+				toolItem: UM.ColorImage
+				{
+					source: Qt.resolvedUrl("type_cube.svg")
+					color: UM.Theme.getColor("icon")
+				}
+                property bool needBorder: true
                 checkable: true
                 onClicked: setSType('cube')
                 checked: UM.ActiveTool.properties.getValue("SType") === 'cube'
-				ToolTip.delay: 1000
-				ToolTip.timeout: 5000
-				ToolTip.visible: hovered
-				ToolTip.text: qsTr("Cube as custom support")
                 z: 4; // Profondeur
             }
 
-            Button
+            UM.ToolbarButton
             {
                 id: abutmentButton;
                 text: catalog.i18nc("@label", "Abutment");
-				display: AbstractButton.IconOnly
-				width: UM.Theme.getSize("button").width;
-                height: UM.Theme.getSize("button").height;	
-                icon.source: "type_abutment.svg";
+				toolItem: UM.ColorImage
+				{
+					source: Qt.resolvedUrl("type_abutment.svg")
+					color: UM.Theme.getColor("icon")
+				}
                 property bool needBorder: true;
                 checkable: true;
                 onClicked: setSType('abutment');
                 checked: UM.ActiveTool.properties.getValue("SType") === 'abutment';
-				ToolTip.delay: 1000
-				ToolTip.timeout: 5000
-				ToolTip.visible: hovered
-				ToolTip.text: qsTr("Abutment style as custom support")
                 z: 3; // Profondeur
             }
 
-            Button
+            UM.ToolbarButton
             {
                 id: freeformButton;
                 text: catalog.i18nc("@label", "Freeshape");
-				display: AbstractButton.IconOnly
-				width: UM.Theme.getSize("button").width;
-                height: UM.Theme.getSize("button").height;	
-                icon.source: "type_freeform.svg";
+				toolItem: UM.ColorImage
+				{
+					source: Qt.resolvedUrl("type_freeform.svg")
+					color: UM.Theme.getColor("icon")
+				}
                 // property bool needBorder: true;
                 checkable:true;
                 onClicked: setSType('freeform');
                 checked: UM.ActiveTool.properties.getValue("SType") === 'freeform';
-				ToolTip.delay: 1000
-				ToolTip.timeout: 5000
-				ToolTip.visible: hovered
-				ToolTip.text: qsTr("Freeform custom support")
                 z: 2; // Profondeur
             }
 			
-            Button
+            UM.ToolbarButton
             {
                 id: customButton;
                 text: catalog.i18nc("@label", "custom");
-				display: AbstractButton.IconOnly
-				width: UM.Theme.getSize("button").width;
-                height: UM.Theme.getSize("button").height;	
-                icon.source: "type_custom.svg";
-                // property bool needBorder: true;
+				toolItem: UM.ColorImage
+				{
+					source: Qt.resolvedUrl("type_custom.svg")
+					color: UM.Theme.getColor("icon")
+				}
+                property bool needBorder: true;
                 checkable:true;
                 onClicked: setSType('custom');
                 checked: UM.ActiveTool.properties.getValue("SType") === 'custom';
-				ToolTip.delay: 1000
-				ToolTip.timeout: 5000
-				ToolTip.visible: hovered
-				ToolTip.text: qsTr("Custom support by 2 points")
                 z: 1; // Profondeur
             }
         }
