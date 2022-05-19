@@ -147,11 +147,6 @@ Item
                 z: 1 // Profondeur
             }
         }
-		Row // CheckBox Row
-        {
-            id: sTypeCheckBox
-            spacing: UM.Theme.getSize("default_margin").width
-		}
     }
     Grid
     {
