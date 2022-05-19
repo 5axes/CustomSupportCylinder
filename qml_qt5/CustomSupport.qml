@@ -355,7 +355,7 @@ Item
         anchors.left: parent.left
         text: catalog.i18nc("@option:check","Scale also in Main Direction")
         style: UM.Theme.styles.partially_checkbox
-		visible: abutmentButton.checked
+		visible: freeformButton.checked
 
         checked: UM.ActiveTool.properties.getValue("SMain")
         onClicked: UM.ActiveTool.setProperty("SMain", checked)
