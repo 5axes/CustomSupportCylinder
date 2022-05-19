@@ -330,11 +330,9 @@ Item
             // style: UM.Theme.styles.text_field
 			visible: !freeformButton.checked
             text: UM.ActiveTool.properties.getValue("AAngle")
-            validator: DoubleValidator
+            validator: IntValidator
             {
-                decimals: 0
                 bottom: 0
-                locale: "en_US"
             }
 
             onEditingFinished:
