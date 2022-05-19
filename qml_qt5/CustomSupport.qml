@@ -353,7 +353,7 @@ Item
         anchors.top: mirrorCheckbox.bottom
         anchors.topMargin: UM.Theme.getSize("default_margin").height
         anchors.left: parent.left
-        text: catalog.i18nc("@option:check","Scale also in Main Direction")
+        text: catalog.i18nc("@option:check","Scale also in main Directions")
         style: UM.Theme.styles.partially_checkbox
 		visible: freeformButton.checked
 
