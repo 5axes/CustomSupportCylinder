@@ -34,7 +34,7 @@
 #
 # V2.6.0 03-05-2022 Update for Cura 5.0
 # V2.6.1 18-05-2022 Update for Cura 5.0 QML with UM.ToolbarButton
-# V2.6.2 20-05-2022 -----
+# V2.6.2 20-05-2022 Scale Main direction
 #
 #--------------------------------------------------------------------------------------------
 
@@ -102,6 +102,7 @@ class CustomSupportsCylinder(Tool):
         self._UseAngle = 0.0
         self._UseYDirection = False
         self._EqualizeHeights = True
+        self._ScaleMainDirection = True
         self._MirrorSupport = False
         self._SType = 'cylinder'
         self._SubType = 'cross'
@@ -121,7 +122,7 @@ class CustomSupportsCylinder(Tool):
         
         self._application = CuraApplication.getInstance()
         
-        self.setExposedProperties("SSize", "MSize", "ISize", "AAngle", "SType" , "YDirection" , "EHeights" , "SubType" , "SMirror")
+        self.setExposedProperties("SSize", "MSize", "ISize", "AAngle", "SType" , "YDirection" , "EHeights" , "SMain" , "SubType" , "SMirror")
         
         CuraApplication.getInstance().globalContainerStackChanged.connect(self._updateEnabled)
         
@@ -146,6 +147,7 @@ class CustomSupportsCylinder(Tool):
         self._preferences.addPreference("customsupportcylinder/a_angle", 0)
         self._preferences.addPreference("customsupportcylinder/y_direction", False)
         self._preferences.addPreference("customsupportcylinder/e_heights", True)
+        self._preferences.addPreference("customsupportcylinder/scale_main_direction", True)
         self._preferences.addPreference("customsupportcylinder/s_mirror", False)
         self._preferences.addPreference("customsupportcylinder/t_type", "cylinder")
         self._preferences.addPreference("customsupportcylinder/s_type", "cross")
@@ -158,6 +160,7 @@ class CustomSupportsCylinder(Tool):
         # convert as boolean to avoid further issue
         self._UseYDirection = bool(self._preferences.getValue("customsupportcylinder/y_direction"))
         self._EqualizeHeights = bool(self._preferences.getValue("customsupportcylinder/e_heights"))
+        self._ScaleMainDirection = bool(self._preferences.getValue("customsupportcylinder/scale_main_direction"))
         self._MirrorSupport = bool(self._preferences.getValue("customsupportcylinder/s_mirror"))
         # convert as string to avoid further issue
         self._SType = str(self._preferences.getValue("customsupportcylinder/t_type"))
@@ -286,8 +289,11 @@ class CustomSupportsCylinder(Tool):
             DirX = [1, 0, 0]
             DirY = [0, 1, 0]
             DirZ = [0, 0, 1]
-            load_mesh.apply_transform(trimesh.transformations.scale_matrix(self._UseSize, origin, DirX))
-            load_mesh.apply_transform(trimesh.transformations.scale_matrix(self._UseSize, origin, DirY))   
+            if self._ScaleMainDirection :
+                load_mesh.apply_transform(trimesh.transformations.scale_matrix(self._long * 0.5, origin, DirX))
+            else :
+                load_mesh.apply_transform(trimesh.transformations.scale_matrix(self._UseSize, origin, DirX))
+            load_mesh.apply_transform(trimesh.transformations.scale_matrix(self._UseSize, origin, DirY))
             load_mesh.apply_transform(trimesh.transformations.scale_matrix(self._long, origin, DirZ)) 
             if self._MirrorSupport == True :   
                 load_mesh.apply_transform(trimesh.transformations.rotation_matrix(math.radians(180), [0, 0, 1]))
@@ -1058,6 +1064,19 @@ class CustomSupportsCylinder(Tool):
         """
         self._EqualizeHeights = EHeights
         self._preferences.setValue("customsupportcylinder/e_heights", EHeights)
+ 
+    def getSMain(self) -> bool:
+        """ 
+            return: golabl _ScaleMainDirection  as boolean.
+        """ 
+        return self._ScaleMainDirection
+  
+    def setSMain(self, SMain: bool) -> None:
+        """
+        param SMain: as boolean.
+        """
+        self._ScaleMainDirection = SMain
+        self._preferences.setValue("customsupportcylinder/scale_main_direction", SMain)
         
     def getSMirror(self) -> bool:
         """ 

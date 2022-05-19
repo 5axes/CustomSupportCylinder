@@ -8,6 +8,7 @@
 //   "AAngle"      : Support Angle in °
 //   "YDirection"  : Support Y direction (Abutment)
 //   "EHeights"    : Equalize heights (Abutment)
+//   "SMain"       : Scale Main direction (Freeform)
 //   "SType"       : Support Type ( Cylinder/Tube/Cube/Abutment/Freeform/Custom ) 
 //   "SubType"     : Support Freeform Type ( Cross/Section/Pillar/Bridge/Custom ) 
 //   "SMirror"     : Support Mirror for Freeform Type
@@ -368,6 +369,18 @@ Item
         onClicked: UM.ActiveTool.setProperty("SMirror", checked)
 		
     }	
+	UM.CheckBox
+    {
+        id: scaleMainDirectionCheckbox
+        anchors.top: mirrorCheckbox.bottom
+        anchors.topMargin: UM.Theme.getSize("default_margin").height
+        anchors.left: parent.left
+        text: catalog.i18nc("@option:check","Scale also in Main Direction")
+		visible: freeformButton.checked
+
+        checked: UM.ActiveTool.properties.getValue("SMain")
+        onClicked: UM.ActiveTool.setProperty("SMain", checked)
+    }	
     UM.CheckBox
     {
         id: equalizeHeightsCheckbox
@@ -380,4 +393,5 @@ Item
         checked: UM.ActiveTool.properties.getValue("EHeights")
         onClicked: UM.ActiveTool.setProperty("EHeights", checked)
     }
+
 }
