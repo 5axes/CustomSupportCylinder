@@ -34,7 +34,9 @@
 #
 # V2.6.0 03-05-2022 Update for Cura 5.0
 # V2.6.1 18-05-2022 Update for Cura 5.0 QML with UM.ToolbarButton
-# V2.6.2 20-05-2022 Scale Main direction
+# V2.6.2 19-05-2022 Scale Also in Main direction
+# V2.6.3 20-05-2022 ---
+#
 #
 #--------------------------------------------------------------------------------------------
 
@@ -289,11 +291,17 @@ class CustomSupportsCylinder(Tool):
             DirX = [1, 0, 0]
             DirY = [0, 1, 0]
             DirZ = [0, 0, 1]
+            
+            # Solution must be tested ( other solution just on the X Axis)
             if self._ScaleMainDirection :
                 load_mesh.apply_transform(trimesh.transformations.scale_matrix(self._long * 0.5, origin, DirX))
+                load_mesh.apply_transform(trimesh.transformations.scale_matrix(self._long * 0.5, origin, DirY))
             else :
                 load_mesh.apply_transform(trimesh.transformations.scale_matrix(self._UseSize, origin, DirX))
-            load_mesh.apply_transform(trimesh.transformations.scale_matrix(self._UseSize, origin, DirY))
+                load_mesh.apply_transform(trimesh.transformations.scale_matrix(self._UseSize, origin, DirY))
+                
+            #load_mesh.apply_transform(trimesh.transformations.scale_matrix(self._UseSize, origin, DirY))
+ 
             load_mesh.apply_transform(trimesh.transformations.scale_matrix(self._long, origin, DirZ)) 
             if self._MirrorSupport == True :   
                 load_mesh.apply_transform(trimesh.transformations.rotation_matrix(math.radians(180), [0, 0, 1]))
