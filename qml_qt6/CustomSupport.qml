@@ -96,55 +96,55 @@ Item
                 checkable: true
                 onClicked: setSType('cube')
                 checked: UM.ActiveTool.properties.getValue("SType") === 'cube'
-                z: 4; // Profondeur
+                z: 4 // Profondeur
             }
 
             UM.ToolbarButton
             {
-                id: abutmentButton;
-                text: catalog.i18nc("@label", "Abutment");
+                id: abutmentButton
+                text: catalog.i18nc("@label", "Abutment")
 				toolItem: UM.ColorImage
 				{
 					source: Qt.resolvedUrl("type_abutment.svg")
 					color: UM.Theme.getColor("icon")
 				}
-                property bool needBorder: true;
-                checkable: true;
-                onClicked: setSType('abutment');
-                checked: UM.ActiveTool.properties.getValue("SType") === 'abutment';
-                z: 3; // Profondeur
+                property bool needBorder: true
+                checkable: true
+                onClicked: setSType('abutment')
+                checked: UM.ActiveTool.properties.getValue("SType") === 'abutment'
+                z: 3 // Profondeur
             }
 
             UM.ToolbarButton
             {
-                id: freeformButton;
-                text: catalog.i18nc("@label", "Freeshape");
+                id: freeformButton
+                text: catalog.i18nc("@label", "Freeshape")
 				toolItem: UM.ColorImage
 				{
 					source: Qt.resolvedUrl("type_freeform.svg")
 					color: UM.Theme.getColor("icon")
 				}
-                // property bool needBorder: true;
-                checkable:true;
-                onClicked: setSType('freeform');
-                checked: UM.ActiveTool.properties.getValue("SType") === 'freeform';
-                z: 2; // Profondeur
+                property bool needBorder: true
+                checkable:true
+                onClicked: setSType('freeform')
+                checked: UM.ActiveTool.properties.getValue("SType") === 'freeform'
+                z: 2 // Profondeur
             }
 			
             UM.ToolbarButton
             {
-                id: customButton;
-                text: catalog.i18nc("@label", "custom");
+                id: customButton
+                text: catalog.i18nc("@label", "custom")
 				toolItem: UM.ColorImage
 				{
 					source: Qt.resolvedUrl("type_custom.svg")
 					color: UM.Theme.getColor("icon")
 				}
-                property bool needBorder: true;
-                checkable:true;
-                onClicked: setSType('custom');
-                checked: UM.ActiveTool.properties.getValue("SType") === 'custom';
-                z: 1; // Profondeur
+                property bool needBorder: true
+                checkable:true
+                onClicked: setSType('custom')
+                checked: UM.ActiveTool.properties.getValue("SType") === 'custom'
+                z: 1 // Profondeur
             }
         }
 		Row // CheckBox Row
