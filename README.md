@@ -17,12 +17,16 @@ This plugin offer now much more possibilities :
 
 - Possibility to define a max size for the base of the support
 
-
 **New 2.5.X**
 
 - Possibility to define freeform support via STL File
 
-The initial version was tested on Cura 4.5 but last release tested from 4.2 to 4.8
+
+**New 2.6.X**
+
+Updated for Cura 5.0
+
+The initial version was tested on Cura 4.5 but last release tested from 4.5 to 5.0
 
 ![View plugin](./images/plugin.jpg)
 
