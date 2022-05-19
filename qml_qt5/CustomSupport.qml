@@ -31,13 +31,13 @@ Item
     function setSType(type)
     {
         // set checked state of mesh type buttons
-		cylinderButton.checked = type === 'cylinder';
-		tubeButton.checked = type === 'tube';
-        cubeButton.checked = type === 'cube';  
-		abutmentButton.checked = type === 'abutment';
-		customButton.checked = type === 'custom';
-		freeformButton.checked = type === 'freeform';
-        UM.ActiveTool.setProperty("SType", type);
+		cylinderButton.checked = type === 'cylinder'
+		tubeButton.checked = type === 'tube'
+        cubeButton.checked = type === 'cube'
+		abutmentButton.checked = type === 'abutment'
+		customButton.checked = type === 'custom'
+		freeformButton.checked = type === 'freeform'
+        UM.ActiveTool.setProperty("SType", type)
     }
 	
     Column
@@ -54,20 +54,20 @@ Item
 
             Button
             {
-                id: cylinderButton;
-                text: catalog.i18nc("@label", "Cylinder");
-                iconSource: "type_cylinder.svg";
-                property bool needBorder: true;
-                checkable:true;
-                onClicked: setSType('cylinder');
-                style: UM.Theme.styles.tool_button;
-                checked: UM.ActiveTool.properties.getValue("SType") === 'cylinder';
-                z: 6; // Profondeur
+                id: cylinderButton
+                text: catalog.i18nc("@label", "Cylinder")
+                iconSource: "type_cylinder.svg"
+                property bool needBorder: true
+                checkable:true
+                onClicked: setSType('cylinder')
+                style: UM.Theme.styles.tool_button
+                checked: UM.ActiveTool.properties.getValue("SType") === 'cylinder'
+                z: 6; // Depth position 
             }
 
             Button
             {
-                id: tubeButton;
+                id: tubeButton
                 text: catalog.i18nc("@label", "Tube");
                 iconSource: "type_tube.svg";
                 property bool needBorder: true;
@@ -75,104 +75,104 @@ Item
                 onClicked: setSType('tube');
                 style: UM.Theme.styles.tool_button;
                 checked: UM.ActiveTool.properties.getValue("SType") === 'tube';
-                z: 5; // Profondeur
+                z: 5; // Depth position 
             }
 			
             Button
             {
                 id: cubeButton;
-                text: catalog.i18nc("@label", "Cube");
-                iconSource: "type_cube.svg";
-                property bool needBorder: true;
-                checkable: true;
-                onClicked: setSType('cube');
-                style: UM.Theme.styles.tool_button;
-                checked: UM.ActiveTool.properties.getValue("SType") === 'cube';
-                z: 4; // Profondeur
+                text: catalog.i18nc("@label", "Cube")
+                iconSource: "type_cube.svg"
+                property bool needBorder: true
+                checkable: true
+                onClicked: setSType('cube')
+                style: UM.Theme.styles.tool_button
+                checked: UM.ActiveTool.properties.getValue("SType") === 'cube'
+                z: 4; // Depth position 
             }
 
             Button
             {
-                id: abutmentButton;
-                text: catalog.i18nc("@label", "Abutment");
-                iconSource: "type_abutment.svg";
-                property bool needBorder: true;
-                checkable: true;
-                onClicked: setSType('abutment');
-                style: UM.Theme.styles.tool_button;
-                checked: UM.ActiveTool.properties.getValue("SType") === 'abutment';
-                z: 3; // Profondeur
+                id: abutmentButton
+                text: catalog.i18nc("@label", "Abutment")
+                iconSource: "type_abutment.svg"
+                property bool needBorder: true
+                checkable: true
+                onClicked: setSType('abutment')
+                style: UM.Theme.styles.tool_button
+                checked: UM.ActiveTool.properties.getValue("SType") === 'abutment'
+                z: 3; // Depth position 
             }
 
             Button
             {
-                id: freeformButton;
-                text: catalog.i18nc("@label", "Freeform");
-                iconSource: "type_freeform.svg";
-                property bool needBorder: true;
-                checkable:true;
-                onClicked: setSType('freeform');
-                style: UM.Theme.styles.tool_button;
-                checked: UM.ActiveTool.properties.getValue("SType") === 'freeform';
-                z: 2; // Profondeur
+                id: freeformButton
+                text: catalog.i18nc("@label", "Freeform")
+                iconSource: "type_freeform.svg"
+                property bool needBorder: true
+                checkable:true
+                onClicked: setSType('freeform')
+                style: UM.Theme.styles.tool_button
+                checked: UM.ActiveTool.properties.getValue("SType") === 'freeform'
+                z: 2; // Depth position 
             }
 			
             Button
             {
-                id: customButton;
-                text: catalog.i18nc("@label", "Custom");
-                iconSource: "type_custom.svg";
-                property bool needBorder: true;
-                checkable:true;
-                onClicked: setSType('custom');
-                style: UM.Theme.styles.tool_button;
-                checked: UM.ActiveTool.properties.getValue("SType") === 'custom';
-                z: 1; // Profondeur
+                id: customButton
+                text: catalog.i18nc("@label", "Custom")
+                iconSource: "type_custom.svg"
+                property bool needBorder: true
+                checkable:true
+                onClicked: setSType('custom')
+                style: UM.Theme.styles.tool_button
+                checked: UM.ActiveTool.properties.getValue("SType") === 'custom'
+                z: 1; // Depth position 
             }
         }
     }
     Grid
     {
         id: textfields;
-        anchors.leftMargin: UM.Theme.getSize("default_margin").width;
-        anchors.top: sTypeItems.bottom;
-		anchors.topMargin: UM.Theme.getSize("default_margin").height;
+        anchors.leftMargin: UM.Theme.getSize("default_margin").width
+        anchors.top: sTypeItems.bottom
+		anchors.topMargin: UM.Theme.getSize("default_margin").height
 
-        columns: 2;
-        flow: Grid.TopToBottom;
-        spacing: Math.round(UM.Theme.getSize("default_margin").width / 2);
+        columns: 2
+        flow: Grid.TopToBottom
+        spacing: Math.round(UM.Theme.getSize("default_margin").width / 2)
 
         Label
         {
-            height: UM.Theme.getSize("setting_control").height;
-            text: catalog.i18nc("@label","Size");
-            font: UM.Theme.getFont("default");
-            color: UM.Theme.getColor("text");
-            verticalAlignment: Text.AlignVCenter;
+            height: UM.Theme.getSize("setting_control").height
+            text: catalog.i18nc("@label","Size")
+            font: UM.Theme.getFont("default")
+            color: UM.Theme.getColor("text")
+            verticalAlignment: Text.AlignVCenter
             renderType: Text.NativeRendering
             width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
         }
  
         Label
         {
-            height: UM.Theme.getSize("setting_control").height;
-            text: catalog.i18nc("@label","Max Size");
-            font: UM.Theme.getFont("default");
-            color: UM.Theme.getColor("text");
-            verticalAlignment: Text.AlignVCenter;
-			visible: !freeformButton.checked;
+            height: UM.Theme.getSize("setting_control").height
+            text: catalog.i18nc("@label","Max Size")
+            font: UM.Theme.getFont("default")
+            color: UM.Theme.getColor("text")
+            verticalAlignment: Text.AlignVCenter
+			visible: !freeformButton.checked
             renderType: Text.NativeRendering
             width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
         }
 
         Label
         {
-            height: UM.Theme.getSize("setting_control").height;
-            text: catalog.i18nc("@label","Type");
-            font: UM.Theme.getFont("default");
-            color: UM.Theme.getColor("text");
-            verticalAlignment: Text.AlignVCenter;
-			visible: freeformButton.checked;
+            height: UM.Theme.getSize("setting_control").height
+            text: catalog.i18nc("@label","Type")
+            font: UM.Theme.getFont("default")
+            color: UM.Theme.getColor("text")
+            verticalAlignment: Text.AlignVCenter
+			visible: freeformButton.checked
             renderType: Text.NativeRendering
             width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
         }
