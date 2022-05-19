@@ -294,8 +294,12 @@ class CustomSupportsCylinder(Tool):
             
             # Solution must be tested ( other solution just on the X Axis)
             if self._ScaleMainDirection :
-                load_mesh.apply_transform(trimesh.transformations.scale_matrix(self._long * 0.5, origin, DirX))
-                load_mesh.apply_transform(trimesh.transformations.scale_matrix(self._long * 0.5, origin, DirY))
+                if (self._long * 0.5 ) < self._UseSize :
+                    Scale = self._UseSize
+                else :
+                    Scale = self._long * 0.5
+                load_mesh.apply_transform(trimesh.transformations.scale_matrix(Scale, origin, DirX))
+                load_mesh.apply_transform(trimesh.transformations.scale_matrix(Scale, origin, DirY))
             else :
                 load_mesh.apply_transform(trimesh.transformations.scale_matrix(self._UseSize, origin, DirX))
                 load_mesh.apply_transform(trimesh.transformations.scale_matrix(self._UseSize, origin, DirY))
