@@ -33,7 +33,8 @@
 # V2.5.5 03-11-2021 Minor modification on freeform design
 #
 # V2.6.0 03-05-2022 Update for Cura 5.0
-# V2.6.0 18-05-2022 Update for Cura 5.0 QML with UM.ToolbarButton
+# V2.6.1 18-05-2022 Update for Cura 5.0 QML with UM.ToolbarButton
+# V2.6.2 20-05-2022 -----
 #
 #--------------------------------------------------------------------------------------------
 

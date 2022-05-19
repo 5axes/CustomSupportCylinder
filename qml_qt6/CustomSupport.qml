@@ -48,7 +48,7 @@ Item
 
         Row // Mesh type buttons
         {
-            id: sTypeButtons
+            id: sTypeButtonsSup
             spacing: UM.Theme.getSize("default_margin").width
 
             UM.ToolbarButton
@@ -64,7 +64,7 @@ Item
                 checkable:true
                 onClicked: setSType('cylinder')
                 checked: UM.ActiveTool.properties.getValue("SType") === 'cylinder'
-                z: 6 // Profondeur
+                z: 3 // Profondeur
             }
 
             UM.ToolbarButton
@@ -80,7 +80,7 @@ Item
                 checkable:true
                 onClicked: setSType('tube')
                 checked: UM.ActiveTool.properties.getValue("SType") === 'tube'
-                z: 5 // Profondeur
+                z: 2 // Profondeur
             }
 			
             UM.ToolbarButton
@@ -96,9 +96,17 @@ Item
                 checkable: true
                 onClicked: setSType('cube')
                 checked: UM.ActiveTool.properties.getValue("SType") === 'cube'
-                z: 4 // Profondeur
+                z: 1 // Profondeur
             }
 
+
+        }
+		Row // Mesh type buttons
+        {
+			id: sTypeButtons
+			anchors.top: sTypeItems.Bottom
+			spacing: UM.Theme.getSize("default_margin").height
+			
             UM.ToolbarButton
             {
                 id: abutmentButton
@@ -145,8 +153,8 @@ Item
                 onClicked: setSType('custom')
                 checked: UM.ActiveTool.properties.getValue("SType") === 'custom'
                 z: 1 // Profondeur
-            }
-        }
+            }		
+		}
     }
     Grid
     {
