@@ -65,7 +65,7 @@ Item
                 checkable:true
                 onClicked: setSType('cylinder')
                 checked: UM.ActiveTool.properties.getValue("SType") === 'cylinder'
-                z: 3 // Profondeur
+                z: 3 // Depth position 
             }
 
             UM.ToolbarButton
@@ -81,7 +81,7 @@ Item
                 checkable:true
                 onClicked: setSType('tube')
                 checked: UM.ActiveTool.properties.getValue("SType") === 'tube'
-                z: 2 // Profondeur
+                z: 2 // Depth position 
             }
 			
             UM.ToolbarButton
@@ -97,7 +97,7 @@ Item
                 checkable: true
                 onClicked: setSType('cube')
                 checked: UM.ActiveTool.properties.getValue("SType") === 'cube'
-                z: 1 // Profondeur
+                z: 1 // Depth position 
             }
 
 
@@ -121,7 +121,7 @@ Item
                 checkable: true
                 onClicked: setSType('abutment')
                 checked: UM.ActiveTool.properties.getValue("SType") === 'abutment'
-                z: 3 // Profondeur
+                z: 3 // Depth position 
             }
 
             UM.ToolbarButton
@@ -137,7 +137,7 @@ Item
                 checkable:true
                 onClicked: setSType('freeform')
                 checked: UM.ActiveTool.properties.getValue("SType") === 'freeform'
-                z: 2 // Profondeur
+                z: 2 // Depth position 
             }
 			
             UM.ToolbarButton
@@ -153,7 +153,7 @@ Item
                 checkable:true
                 onClicked: setSType('custom')
                 checked: UM.ActiveTool.properties.getValue("SType") === 'custom'
-                z: 1 // Profondeur
+                z: 1 // Depth position 
             }		
 		}
     }
@@ -353,10 +353,9 @@ Item
 		visible: abutmentButton.checked || freeformButton.checked
 
         checked: UM.ActiveTool.properties.getValue("YDirection")
-        onClicked: UM.ActiveTool.setProperty("YDirection", checked)
-		
+        onClicked: UM.ActiveTool.setProperty("YDirection", checked)	
     }
-    UM.CheckBox
+	UM.CheckBox
     {
         id: mirrorCheckbox
         anchors.top: useYDirectionCheckbox.bottom
@@ -381,7 +380,7 @@ Item
         checked: UM.ActiveTool.properties.getValue("SMain")
         onClicked: UM.ActiveTool.setProperty("SMain", checked)
     }	
-    UM.CheckBox
+	UM.CheckBox
     {
         id: equalizeHeightsCheckbox
         anchors.top: useYDirectionCheckbox.bottom
