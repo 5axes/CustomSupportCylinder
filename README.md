@@ -32,7 +32,7 @@ The initial version was tested on Cura 4.5 but last release tested from 4.5 to 5
 
 ## Installation
 
-### Manual Installation  (Cura 5.0) 
+### Manual Installation
 
 Download the latest release from this [repository](https://github.com/5axes/CustomSupportCylinder/releases)
 
@@ -40,10 +40,11 @@ Drop the curapackage according to your Cura release in the 3d viewport in Cura a
 
 ![Manual Install](./images/Restart.JPG)
 
-### Automatic installation for Cura 4.X
+### Automatic installation for Cura 4.X and Cura 5.X
 
 First, make sure your Cura version is 4.5 or newer. This plugin is now avalaible in the Cura marketplace. So you can install it automaticaly from this place:
-![Automatic Install](./images/MarketPlace.JPG)
+
+![Automatic Install](./images/MarketPlace.png)
 
 [Cylindric Custom Support on Ultimaker Market place](https://marketplace.ultimaker.com/app/cura/plugins/5axes/CustomSupportCylinder)
 
