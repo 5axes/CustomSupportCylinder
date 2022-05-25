@@ -35,8 +35,7 @@
 # V2.6.0 03-05-2022 Update for Cura 5.0
 # V2.6.1 18-05-2022 Update for Cura 5.0 QML with UM.ToolbarButton
 # V2.6.2 19-05-2022 Scale Also in Main direction
-# V2.6.3 20-05-2022 ---
-#
+# V2.6.3 25-05-2022 Temporary ? solution for the Toolbar height in QT6
 #
 #--------------------------------------------------------------------------------------------
 
