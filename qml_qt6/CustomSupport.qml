@@ -25,21 +25,19 @@ Item
     width: childrenRect.width
     height: childrenRect.height
     UM.I18nCatalog { id: catalog; name: "cura"}
-
-	Component.onCompleted: print(childrenRect)
 	
     property var s_size: UM.ActiveTool.properties.getValue("SSize")
 
     function setSType(type)
     {
         // set checked state of mesh type buttons
-		cylinderButton.checked = type === 'cylinder';
-		tubeButton.checked = type === 'tube';
-        cubeButton.checked = type === 'cube';  
-		abutmentButton.checked = type === 'abutment';
-		customButton.checked = type === 'custom';
-		freeformButton.checked = type === 'freeform';
-        UM.ActiveTool.setProperty("SType", type);
+		cylinderButton.checked = type === 'cylinder'
+		tubeButton.checked = type === 'tube'
+        cubeButton.checked = type === 'cube'  
+		abutmentButton.checked = type === 'abutment'
+		customButton.checked = type === 'custom'
+		freeformButton.checked = type === 'freeform'
+        UM.ActiveTool.setProperty("SType", type)
     }
 	
     Column
@@ -72,7 +70,7 @@ Item
 
             UM.ToolbarButton
             {
-                id: tubeButton;
+                id: tubeButton
                 text: catalog.i18nc("@label", "Tube")
 				toolItem: UM.ColorImage
 				{
@@ -88,7 +86,7 @@ Item
 			
             UM.ToolbarButton
             {
-                id: cubeButton;
+                id: cubeButton
                 text: catalog.i18nc("@label", "Cube")
 				toolItem: UM.ColorImage
 				{
@@ -173,23 +171,23 @@ Item
 
         Label
         {
-            height: UM.Theme.getSize("setting_control").height;
-            text: catalog.i18nc("@label","Size");
-            font: UM.Theme.getFont("default");
-            color: UM.Theme.getColor("text");
-            verticalAlignment: Text.AlignVCenter;
+            height: UM.Theme.getSize("setting_control").height
+            text: catalog.i18nc("@label","Size")
+            font: UM.Theme.getFont("default")
+            color: UM.Theme.getColor("text")
+            verticalAlignment: Text.AlignVCenter
             renderType: Text.NativeRendering
             width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
         }
  
         Label
         {
-            height: UM.Theme.getSize("setting_control").height;
-            text: catalog.i18nc("@label","Max Size");
-            font: UM.Theme.getFont("default");
-            color: UM.Theme.getColor("text");
-            verticalAlignment: Text.AlignVCenter;
-			visible: !freeformButton.checked;
+            height: UM.Theme.getSize("setting_control").height
+            text: catalog.i18nc("@label","Max Size")
+            font: UM.Theme.getFont("default")
+            color: UM.Theme.getColor("text")
+            verticalAlignment: Text.AlignVCenter
+			visible: !freeformButton.checked
             renderType: Text.NativeRendering
             width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
         }
@@ -270,7 +268,7 @@ Item
             onEditingFinished:
             {
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.ActiveTool.setProperty("MSize", modified_text);
+                UM.ActiveTool.setProperty("MSize", modified_text)
             }
         }
 
@@ -294,7 +292,7 @@ Item
 			
 			onCurrentIndexChanged: 
 			{ 
-				UM.ActiveTool.setProperty("SubType",cbItems.get(currentIndex).text);
+				UM.ActiveTool.setProperty("SubType",cbItems.get(currentIndex).text)
 			}
 		}	
 				
@@ -304,7 +302,7 @@ Item
             width: UM.Theme.getSize("setting_control").width
             height: UM.Theme.getSize("setting_control").height
             unit: "mm"
-			visible: tubeButton.checked;
+			visible: tubeButton.checked
             text: UM.ActiveTool.properties.getValue("ISize")
             validator: DoubleValidator
             {
@@ -331,7 +329,6 @@ Item
             width: UM.Theme.getSize("setting_control").width
             height: UM.Theme.getSize("setting_control").height
             unit: "°"
-            // style: UM.Theme.styles.text_field
 			visible: !freeformButton.checked
             text: UM.ActiveTool.properties.getValue("AAngle")
             validator: IntValidator
@@ -359,8 +356,8 @@ Item
 		UM.CheckBox
 		{
 			id: useYDirectionCheckbox
-			anchors.top: textfields.bottom
-			anchors.topMargin: UM.Theme.getSize("default_margin").height
+			anchors.top: baseCheckBox.top
+			// anchors.topMargin: UM.Theme.getSize("default_margin").height
 			anchors.left: parent.left
 			text: catalog.i18nc("@option:check","Set on Y direction")
 			visible: abutmentButton.checked || freeformButton.checked
