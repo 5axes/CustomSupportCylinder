@@ -319,60 +319,69 @@ Item
             }
         }
     }
-	CheckBox
-    {
-        id: useYDirectionCheckbox
-        anchors.top: textfields.bottom
-        anchors.topMargin: UM.Theme.getSize("default_margin").height
-        anchors.left: parent.left
-        text: catalog.i18nc("@option:check","Set on Y direction")
-        style: UM.Theme.styles.partially_checkbox
-		visible: abutmentButton.checked || freeformButton.checked
-
-        checked: UM.ActiveTool.properties.getValue("YDirection")
-        onClicked: UM.ActiveTool.setProperty("YDirection", checked)
+	Item
+	{
+		id: baseCheckBox
+		width: childrenRect.width
+		height: !freeformButton.checked && !abutmentButton.checked  ? 0 : (abutmentButton.checked ? (UM.Theme.getSize("setting_control").height*2+UM.Theme.getSize("default_margin").height): childrenRect.height)
+		anchors.leftMargin: UM.Theme.getSize("default_margin").width
+		anchors.top: textfields.bottom
+		anchors.topMargin: UM.Theme.getSize("default_margin").height
 		
-    }
-    CheckBox
-    {
-        id: mirrorCheckbox
-        anchors.top: useYDirectionCheckbox.bottom
-        anchors.topMargin: UM.Theme.getSize("default_margin").height
-        anchors.left: parent.left
-        text: catalog.i18nc("@option:check","Rotate 180°")
-        style: UM.Theme.styles.partially_checkbox
-		visible: freeformButton.checked
+		CheckBox
+		{
+			id: useYDirectionCheckbox
+			anchors.top: baseCheckBox.top
+			// anchors.topMargin: UM.Theme.getSize("default_margin").height
+			anchors.left: parent.left
+			text: catalog.i18nc("@option:check","Set on Y direction")
+			style: UM.Theme.styles.partially_checkbox
+			visible: abutmentButton.checked || freeformButton.checked
 
-        checked: UM.ActiveTool.properties.getValue("SMirror")
-        onClicked: UM.ActiveTool.setProperty("SMirror", checked)
-		
-    }	
-    CheckBox
-    {
-        id: scaleMainDirectionCheckbox
-        anchors.top: mirrorCheckbox.bottom
-        anchors.topMargin: UM.Theme.getSize("default_margin").height
-        anchors.left: parent.left
-        text: catalog.i18nc("@option:check","Scaling also in main Directions")
-        style: UM.Theme.styles.partially_checkbox
-		visible: freeformButton.checked
+			checked: UM.ActiveTool.properties.getValue("YDirection")
+			onClicked: UM.ActiveTool.setProperty("YDirection", checked)
+			
+		}
+		CheckBox
+		{
+			id: mirrorCheckbox
+			anchors.top: useYDirectionCheckbox.bottom
+			anchors.topMargin: UM.Theme.getSize("default_margin").height
+			anchors.left: parent.left
+			text: catalog.i18nc("@option:check","Rotate 180°")
+			style: UM.Theme.styles.partially_checkbox
+			visible: freeformButton.checked
 
-        checked: UM.ActiveTool.properties.getValue("SMain")
-        onClicked: UM.ActiveTool.setProperty("SMain", checked)
-		
-    }	
-    CheckBox
-    {
-        id: equalizeHeightsCheckbox
-        anchors.top: useYDirectionCheckbox.bottom
-        anchors.topMargin: UM.Theme.getSize("default_margin").height
-        anchors.left: parent.left
-        text: catalog.i18nc("@option:check","Equalize heights")
-        style: UM.Theme.styles.partially_checkbox
-		visible: abutmentButton.checked
+			checked: UM.ActiveTool.properties.getValue("SMirror")
+			onClicked: UM.ActiveTool.setProperty("SMirror", checked)
+			
+		}	
+		CheckBox
+		{
+			id: scaleMainDirectionCheckbox
+			anchors.top: mirrorCheckbox.bottom
+			anchors.topMargin: UM.Theme.getSize("default_margin").height
+			anchors.left: parent.left
+			text: catalog.i18nc("@option:check","Scaling also in main Directions")
+			style: UM.Theme.styles.partially_checkbox
+			visible: freeformButton.checked
 
-        checked: UM.ActiveTool.properties.getValue("EHeights")
-        onClicked: UM.ActiveTool.setProperty("EHeights", checked)
-    }
+			checked: UM.ActiveTool.properties.getValue("SMain")
+			onClicked: UM.ActiveTool.setProperty("SMain", checked)
+			
+		}	
+		CheckBox
+		{
+			id: equalizeHeightsCheckbox
+			anchors.top: useYDirectionCheckbox.bottom
+			anchors.topMargin: UM.Theme.getSize("default_margin").height
+			anchors.left: parent.left
+			text: catalog.i18nc("@option:check","Equalize heights")
+			style: UM.Theme.styles.partially_checkbox
+			visible: abutmentButton.checked
 
+			checked: UM.ActiveTool.properties.getValue("EHeights")
+			onClicked: UM.ActiveTool.setProperty("EHeights", checked)
+		}
+	}
 }
