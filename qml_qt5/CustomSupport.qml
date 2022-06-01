@@ -384,4 +384,27 @@ Item
 			onClicked: UM.ActiveTool.setProperty("EHeights", checked)
 		}
 	}
+	
+	Rectangle {
+        id: rightRect
+        anchors.top: baseCheckBox.bottom
+		//color: UM.Theme.getColor("toolbar_background")
+		color: "#00000000"
+		width: UM.Theme.getSize("setting_control").width * 1.3
+		height: UM.Theme.getSize("setting_control").height 
+        anchors.left: parent.left
+		anchors.topMargin: UM.Theme.getSize("default_margin").height
+    }
+	
+	Button
+	{
+		id: removeAllButton
+		anchors.centerIn: rightRect
+		spacing: UM.Theme.getSize("default_margin").height
+		width: UM.Theme.getSize("setting_control").width
+		height: UM.Theme.getSize("setting_control").height
+		highlighted : true		
+		text: catalog.i18nc("@label", "Remove All")
+		onClicked: UM.ActiveTool.triggerAction("removeAllSupportMesh")
+	}
 }

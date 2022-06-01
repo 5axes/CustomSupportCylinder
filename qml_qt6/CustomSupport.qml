@@ -27,6 +27,7 @@ Item
     UM.I18nCatalog { id: catalog; name: "cura"}
 	
     property var s_size: UM.ActiveTool.properties.getValue("SSize")
+	property int localwidth:70
 
     function setSType(type)
     {
@@ -232,7 +233,7 @@ Item
         UM.TextFieldWithUnit
         {
             id: sizeTextField
-            width: UM.Theme.getSize("setting_control").width
+            width: localwidth
             height: UM.Theme.getSize("setting_control").height
             unit: "mm"
             text: UM.ActiveTool.properties.getValue("SSize")
@@ -253,7 +254,7 @@ Item
         UM.TextFieldWithUnit
         {
             id: maxTextField
-            width: UM.Theme.getSize("setting_control").width
+            width: localwidth
             height: UM.Theme.getSize("setting_control").height
             unit: "mm"
 			visible: !freeformButton.checked
@@ -285,7 +286,7 @@ Item
 			   ListElement { text: "t-support"}
 			   ListElement { text: "custom"}
 			}
-			width: UM.Theme.getSize("setting_control").width
+			width: localwidth
 			height: UM.Theme.getSize("setting_control").height
 			visible: freeformButton.checked
 			Component.onCompleted: currentIndex = find(UM.ActiveTool.properties.getValue("SubType"))
@@ -299,7 +300,7 @@ Item
         UM.TextFieldWithUnit
         {
             id: sizeInteriorTextField
-            width: UM.Theme.getSize("setting_control").width
+            width: localwidth
             height: UM.Theme.getSize("setting_control").height
             unit: "mm"
 			visible: tubeButton.checked
@@ -326,7 +327,7 @@ Item
 		UM.TextFieldWithUnit
         {
             id: angleTextField
-            width: UM.Theme.getSize("setting_control").width
+            width: localwidth
             height: UM.Theme.getSize("setting_control").height
             unit: "°"
 			visible: !freeformButton.checked
