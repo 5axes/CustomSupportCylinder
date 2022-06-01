@@ -402,6 +402,20 @@ Item
 			checked: UM.ActiveTool.properties.getValue("EHeights")
 			onClicked: UM.ActiveTool.setProperty("EHeights", checked)
 		}
+		
+
 	}
 
+	Button
+	{
+		id: removeAllButton
+		anchors.top: baseCheckBox.bottom
+		anchors.topMargin: UM.Theme.getSize("default_margin").height
+		spacing: UM.Theme.getSize("default_margin").height
+		width: UM.Theme.getSize("setting_control").width
+		height: UM.Theme.getSize("setting_control").height			
+		text: catalog.i18nc("@label", "Remove All")
+		onClicked: UM.ActiveTool.triggerAction("removeAllSupportMesh");
+	}
+		
 }

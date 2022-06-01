@@ -36,6 +36,7 @@
 # V2.6.1 18-05-2022 Update for Cura 5.0 QML with UM.ToolbarButton
 # V2.6.2 19-05-2022 Scale Also in Main direction
 # V2.6.3 25-05-2022 Temporary ? solution for the Toolbar height in QT6
+# V2.6.4 31-05-2022 Add Button Remove All
 #
 #--------------------------------------------------------------------------------------------
 
@@ -68,6 +69,8 @@ from UM.Operations.GroupedOperation import GroupedOperation
 from UM.Operations.AddSceneNodeOperation import AddSceneNodeOperation
 from UM.Operations.RemoveSceneNodeOperation import RemoveSceneNodeOperation
 from cura.Operations.SetParentOperation import SetParentOperation
+from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
+# from UM.Scene.Selection import Selection
 
 from UM.Settings.SettingInstance import SettingInstance
 
@@ -92,6 +95,7 @@ class CustomSupportsCylinder(Tool):
        
         super().__init__()
         
+        self._all_picked_node = []
         
         self._Nb_Point = 0  
         self._SHeights = 0
@@ -389,7 +393,8 @@ class CustomSupportsCylinder(Tool):
         op.addOperation(SetParentOperation(node, parent))
         op.push()
         node.setPosition(position, CuraSceneNode.TransformSpace.World)
-
+        self._all_picked_node.append(node)
+        
         CuraApplication.getInstance().getController().getScene().sceneChanged.emit(node)
 
     def _removeSupportMesh(self, node: CuraSceneNode):
@@ -928,6 +933,21 @@ class CustomSupportsCylinder(Tool):
         mesh.calculateNormals()
         return mesh
 
+    def removeAllSupportMesh(self):
+        # for node in self._all_picked_node:
+        #            node_stack = node.callDecoration("getStack")
+        #            if node_stack.getProperty("support_mesh", "value"):
+        #               self._removeSupportMesh(node)
+        for node in DepthFirstIterator(self._application.getController().getScene().getRoot()):
+            if node.callDecoration("isSliceable"):
+                # N_Name=node.getName()
+                # Logger.log('d', 'isSliceable : ' + str(N_Name))
+                node_stack=node.callDecoration("getStack")           
+                if node_stack:        
+                    if node_stack.getProperty("support_mesh", "value"):
+                        # N_Name=node.getName()
+                        # Logger.log('d', 'support_mesh : ' + str(N_Name)) 
+                        self._removeSupportMesh(node)
         
     def getSSize(self) -> float:
         """ 
