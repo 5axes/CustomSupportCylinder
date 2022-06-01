@@ -27,7 +27,7 @@ Item
     UM.I18nCatalog { id: catalog; name: "cura"}
 	
     property var s_size: UM.ActiveTool.properties.getValue("SSize")
-	property int localwidth: 120
+	property int localwidth: 110
 
     function setSType(type)
     {
@@ -209,7 +209,7 @@ Item
 		Label
         {
             height: UM.Theme.getSize("setting_control").height
-            text: catalog.i18nc("@label","Interior size")
+            text: catalog.i18nc("@label","Interior Size")
             font: UM.Theme.getFont("default")
             color: UM.Theme.getColor("text")
             verticalAlignment: Text.AlignVCenter
