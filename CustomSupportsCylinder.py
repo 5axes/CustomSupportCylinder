@@ -934,20 +934,23 @@ class CustomSupportsCylinder(Tool):
         return mesh
 
     def removeAllSupportMesh(self):
-        # for node in self._all_picked_node:
-        #            node_stack = node.callDecoration("getStack")
-        #            if node_stack.getProperty("support_mesh", "value"):
-        #               self._removeSupportMesh(node)
-        for node in DepthFirstIterator(self._application.getController().getScene().getRoot()):
-            if node.callDecoration("isSliceable"):
-                # N_Name=node.getName()
-                # Logger.log('d', 'isSliceable : ' + str(N_Name))
-                node_stack=node.callDecoration("getStack")           
-                if node_stack:        
-                    if node_stack.getProperty("support_mesh", "value"):
-                        # N_Name=node.getName()
-                        # Logger.log('d', 'support_mesh : ' + str(N_Name)) 
-                        self._removeSupportMesh(node)
+        if self._all_picked_node:
+            for node in self._all_picked_node:
+                node_stack = node.callDecoration("getStack")
+                if node_stack.getProperty("support_mesh", "value"):
+                    self._removeSupportMesh(node)
+            self._all_picked_node = []
+        else:        
+            for node in DepthFirstIterator(self._application.getController().getScene().getRoot()):
+                if node.callDecoration("isSliceable"):
+                    # N_Name=node.getName()
+                    # Logger.log('d', 'isSliceable : ' + str(N_Name))
+                    node_stack=node.callDecoration("getStack")           
+                    if node_stack:        
+                        if node_stack.getProperty("support_mesh", "value"):
+                            # N_Name=node.getName()
+                            # Logger.log('d', 'support_mesh : ' + str(N_Name)) 
+                            self._removeSupportMesh(node)
         
     def getSSize(self) -> float:
         """ 
