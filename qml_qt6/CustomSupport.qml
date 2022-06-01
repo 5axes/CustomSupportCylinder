@@ -27,7 +27,7 @@ Item
     UM.I18nCatalog { id: catalog; name: "cura"}
 	
     property var s_size: UM.ActiveTool.properties.getValue("SSize")
-	property int localwidth:70
+	property int localwidth: 120
 
     function setSType(type)
     {
@@ -385,7 +385,7 @@ Item
 			anchors.top: mirrorCheckbox.bottom
 			anchors.topMargin: UM.Theme.getSize("default_margin").height
 			anchors.left: parent.left
-			text: catalog.i18nc("@option:check","Scaling also in main Directions")
+			text: catalog.i18nc("@option:check","Scaling in main Directions")
 			visible: freeformButton.checked
 
 			checked: UM.ActiveTool.properties.getValue("SMain")
