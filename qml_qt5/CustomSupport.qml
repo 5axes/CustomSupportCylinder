@@ -402,7 +402,7 @@ Item
 		anchors.centerIn: rightRect
 		width: UM.Theme.getSize("setting_control").width
 		height: UM.Theme.getSize("setting_control").height	
-		text: catalog.i18nc("@label", "Remove All")
+		text: catalog.i18nc("@label", UM.ActiveTool.properties.getValue("SMsg"))
 		onClicked: UM.ActiveTool.triggerAction("removeAllSupportMesh")
 	}
 }

@@ -397,7 +397,7 @@ class CustomSupportsCylinder(Tool):
         node.setPosition(position, CuraSceneNode.TransformSpace.World)
         self._all_picked_node.append(node)
         self._SMsg = 'Remove Last'
-        Ret = self.getSMsg
+        self.propertyChanged.emit()
         
         CuraApplication.getInstance().getController().getScene().sceneChanged.emit(node)
 
@@ -945,6 +945,7 @@ class CustomSupportsCylinder(Tool):
                     self._removeSupportMesh(node)
             self._all_picked_node = []
             self._SMsg = 'Remove All'
+            self.propertyChanged.emit()
         else:        
             for node in DepthFirstIterator(self._application.getController().getScene().getRoot()):
                 if node.callDecoration("isSliceable"):
