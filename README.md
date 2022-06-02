@@ -112,7 +112,13 @@ To create custom support you need to clic 2 points on the model.
 
 - Version 2.5.X : New option for Freeform Support : Can add a support with a form freely defined by an STL file ( Model must have the size 1x1x1 bo be modified according to the Size value and the height ) :
 
-[![Version 2.5.2](http://img.youtube.com/vi/lCSbLjEbc-E/0.jpg)](http://www.youtube.com/watch?v=lCSbLjEbc-E)
-[![Version 2.5.5](http://img.youtube.com/vi/fMwHHQumd3o/0.jpg)](http://www.youtube.com/watch?v=fMwHHQumd3o)
+
 
 - Version 2.6.X : Update for Cura 5.0
+- 
+# Youtube Video
+
+[![Version 2.5.2](http://img.youtube.com/vi/lCSbLjEbc-E/0.jpg)](http://www.youtube.com/watch?v=lCSbLjEbc-E)
+[![Version 2.5.5](http://img.youtube.com/vi/fMwHHQumd3o/0.jpg)](http://www.youtube.com/watch?v=fMwHHQumd3o)
+[![Version 2.6.4](http://img.youtube.com/vi/mttGebG2k3o/0.jpg)](http://www.youtube.com/watch?v=mttGebG2k3o)
+
