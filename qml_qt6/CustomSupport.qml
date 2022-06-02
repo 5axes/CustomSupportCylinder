@@ -12,6 +12,7 @@
 //   "SType"       : Support Type ( Cylinder/Tube/Cube/Abutment/Freeform/Custom ) 
 //   "SubType"     : Support Freeform Type ( Cross/Section/Pillar/Bridge/Custom ) 
 //   "SMirror"     : Support Mirror for Freeform Type
+//   "SMsg"        : Text for the Remove All Button
 //-----------------------------------------------------------------------------
 
 import QtQuick 6.0
