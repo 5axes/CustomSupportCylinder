@@ -37,6 +37,7 @@
 # V2.6.2 19-05-2022 Scale Also in Main direction
 # V2.6.3 25-05-2022 Temporary ? solution for the Toolbar height in QT6
 # V2.6.4 31-05-2022 Add Button Remove All
+#                   Increase the Increment angle for Cylinder and Tube from 2° to 10°
 #
 #--------------------------------------------------------------------------------------------
 
@@ -275,13 +276,13 @@ class CustomSupportsCylinder(Tool):
                 
                 
         if self._SType == 'cylinder':
-            # Cylinder creation Diameter , Increment angle 2°, length
-            mesh = self._createCylinder(self._UseSize,self._MaxSize,2,self._long,self._UseAngle)
+            # Cylinder creation Diameter , Maximum diameter , Increment angle 10°, length , Angle of the support
+            mesh = self._createCylinder(self._UseSize,self._MaxSize,10,self._long,self._UseAngle)
         elif self._SType == 'tube':
-            # Tube creation Diameter , Diameter Int, Increment angle 2°, length
-            mesh =  self._createTube(self._UseSize,self._MaxSize,self._UseISize,2,self._long,self._UseAngle)
+            # Tube creation Diameter ,Maximum diameter , Diameter Int, Increment angle 10°, length , Angle of the support
+            mesh =  self._createTube(self._UseSize,self._MaxSize,self._UseISize,10,self._long,self._UseAngle)
         elif self._SType == 'cube':
-            # Cube creation Size , length
+            # Cube creation Size,Maximum Size , length , Angle of the support
             mesh =  self._createCube(self._UseSize,self._MaxSize,self._long,self._UseAngle)
         elif self._SType == 'freeform':
             # Cube creation Size , length
