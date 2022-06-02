@@ -112,6 +112,7 @@ class CustomSupportsCylinder(Tool):
         self._MirrorSupport = False
         self._SType = 'cylinder'
         self._SubType = 'cross'
+        self._SMsg = 'Remove All'
         
         # Shortcut
         if not VERSION_QT5:
@@ -128,7 +129,7 @@ class CustomSupportsCylinder(Tool):
         
         self._application = CuraApplication.getInstance()
         
-        self.setExposedProperties("SSize", "MSize", "ISize", "AAngle", "SType" , "YDirection" , "EHeights" , "SMain" , "SubType" , "SMirror")
+        self.setExposedProperties("SSize", "MSize", "ISize", "AAngle", "SType" , "YDirection" , "EHeights" , "SMain" , "SubType" , "SMirror", "SMsg")
         
         CuraApplication.getInstance().globalContainerStackChanged.connect(self._updateEnabled)
         
@@ -395,6 +396,8 @@ class CustomSupportsCylinder(Tool):
         op.push()
         node.setPosition(position, CuraSceneNode.TransformSpace.World)
         self._all_picked_node.append(node)
+        self._SMsg = 'Remove Last'
+        Ret = self.getSMsg
         
         CuraApplication.getInstance().getController().getScene().sceneChanged.emit(node)
 
@@ -941,6 +944,7 @@ class CustomSupportsCylinder(Tool):
                 if node_stack.getProperty("support_mesh", "value"):
                     self._removeSupportMesh(node)
             self._all_picked_node = []
+            self._SMsg = 'Remove All'
         else:        
             for node in DepthFirstIterator(self._application.getController().getScene().getRoot()):
                 if node.callDecoration("isSliceable"):
@@ -1044,7 +1048,20 @@ class CustomSupportsCylinder(Tool):
         # Logger.log('d', 's_value : ' + str(s_value))        
         self._UseAngle = s_value
         self._preferences.setValue("customsupportcylinder/a_angle", s_value)
+ 
+    def getSMsg(self) -> bool:
+        """ 
+            return: golabl _SMsg  as text paramater.
+        """ 
+        return self._SMsg
     
+    def setSMsg(self, SMsg: str) -> None:
+        """
+        param SType: SMsg as text paramater.
+        """
+        self._SMsg = SMsg
+
+        
     def getSType(self) -> bool:
         """ 
             return: golabl _SType  as text paramater.
