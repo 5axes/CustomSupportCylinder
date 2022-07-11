@@ -38,7 +38,7 @@
 # V2.6.3 25-05-2022 Temporary ? solution for the Toolbar height in QT6
 # V2.6.4 31-05-2022 Add Button Remove All
 #                   Increase the Increment angle for Cylinder and Tube from 2° to 10°
-#
+# V2.6.5 11-07-2022 Change Style of Button for Cura 5.0 5.1
 #--------------------------------------------------------------------------------------------
 
 VERSION_QT5 = False
