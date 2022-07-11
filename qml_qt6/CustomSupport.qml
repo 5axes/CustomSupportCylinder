@@ -19,6 +19,7 @@ import QtQuick 6.0
 import QtQuick.Controls 6.0
 
 import UM 1.6 as UM
+import Cura 1.0 as Cura
 
 Item
 {
@@ -419,14 +420,13 @@ Item
 		anchors.topMargin: UM.Theme.getSize("default_margin").height
     }
 	
-	Button
+	Cura.SecondaryButton
 	{
 		id: removeAllButton
 		anchors.centerIn: rightRect
 		spacing: UM.Theme.getSize("default_margin").height
 		width: UM.Theme.getSize("setting_control").width
-		height: UM.Theme.getSize("setting_control").height
-		highlighted : true		
+		height: UM.Theme.getSize("setting_control").height		
 		text: catalog.i18nc("@label", UM.ActiveTool.properties.getValue("SMsg"))
 		onClicked: UM.ActiveTool.triggerAction("removeAllSupportMesh")
 	}
