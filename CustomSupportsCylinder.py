@@ -541,10 +541,11 @@ class CustomSupportsCylinder(Tool):
         else :
             l_max=l
         
+        # Debug Log Lines
+        # Logger.log('d', 's_inf : ' + str(s_inf))
+        # Logger.log('d', 'l_max : ' + str(l_max)) 
+        # Logger.log('d', 'l : ' + str(l))
         
-        Logger.log('d', 's_inf : ' + str(s_inf))
-        Logger.log('d', 'l_max : ' + str(l_max)) 
-        Logger.log('d', 'l : ' + str(l))
         # Difference between Standart Abutment and Abutment + max base size
         if l_max<l and l_max>0:
             nbv=40  
