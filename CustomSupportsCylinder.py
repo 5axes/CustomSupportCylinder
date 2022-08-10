@@ -39,6 +39,7 @@
 # V2.6.4 31-05-2022 Add Button Remove All
 #                   Increase the Increment angle for Cylinder and Tube from 2° to 10°
 # V2.6.5 11-07-2022 Change Style of Button for Cura 5.0 5.1
+# V2.6.6 07-08-2022 Internal modification for Maximum Z height
 #--------------------------------------------------------------------------------------------
 
 VERSION_QT5 = False
@@ -284,7 +285,7 @@ class CustomSupportsCylinder(Tool):
             mesh =  self._createTube(self._UseSize,self._MaxSize,self._UseISize,10,self._long,self._UseAngle)
         elif self._SType == 'cube':
             # Cube creation Size,Maximum Size , length , Angle of the support
-            mesh =  self._createCube(self._UseSize,self._MaxSize,self._long,self._UseAngle)
+            mesh =  self._createCube(self._UseSize,self._MaxSize,self._long,self._UseSize*0.5,self._UseAngle)
         elif self._SType == 'freeform':
             # Cube creation Size , length
             mesh = MeshBuilder()  
@@ -473,7 +474,7 @@ class CustomSupportsCylinder(Tool):
         return mesh_data
         
     # Cube Creation
-    def _createCube(self, size, maxs, height, dep):
+    def _createCube(self, size, maxs, height, top, dep):
         mesh = MeshBuilder()
 
         # Intial Comment from Ultimaker B.V. I have never try to verify this point
@@ -482,7 +483,7 @@ class CustomSupportsCylinder(Tool):
         s = size / 2
         sm = maxs / 2
         l = height 
-        s_inf=math.tan(math.radians(dep))*l+s
+        s_inf=s+math.tan(math.radians(dep))*(l+top)
         
         if sm>s and dep!=0:
             l_max=(sm-s) / math.tan(math.radians(dep))
@@ -493,26 +494,26 @@ class CustomSupportsCylinder(Tool):
         if l_max<l and l_max>0:
             nbv=40        
             verts = [ # 10 faces with 4 corners each
-                [-sm, -l_max,  sm], [-s,  s,  s], [ s,  s,  s], [ sm, -l_max,  sm],
-                [-s,  s, -s], [-sm, -l_max, -sm], [ sm, -l_max, -sm], [ s,  s, -s],
+                [-sm, -l_max,  sm], [-s,  top,  s], [ s,  top,  s], [ sm, -l_max,  sm],
+                [-s,  top, -s], [-sm, -l_max, -sm], [ sm, -l_max, -sm], [ s,  top, -s],
                 [-sm, -l,  sm], [-sm,  -l_max,  sm], [ sm,  -l_max,  sm], [ sm, -l,  sm],
                 [-sm,  -l_max, -sm], [-sm, -l, -sm], [ sm, -l, -sm], [ sm,  -l_max, -sm],
                 [ sm, -l, -sm], [-sm, -l, -sm], [-sm, -l,  sm], [ sm, -l,  sm],
-                [-s,  s, -s], [ s,  s, -s], [ s,  s,  s], [-s,  s,  s],
+                [-s,  top, -s], [ s,  top, -s], [ s,  top,  s], [-s,  top,  s],
                 [-sm, -l,  sm], [-sm, -l, -sm], [-sm,  -l_max, -sm], [-sm,  -l_max,  sm],
                 [ sm, -l, -sm], [ sm, -l,  sm], [ sm,  -l_max,  sm], [ sm,  -l_max, -sm],  
-                [-sm, -l_max,  sm], [-sm, -l_max, -sm], [-s,  s, -s], [-s,  s,  s],
-                [ sm, -l_max, -sm], [ sm, -l_max,  sm], [ s,  s,  s], [ s,  s, -s]
+                [-sm, -l_max,  sm], [-sm, -l_max, -sm], [-s,  top, -s], [-s,  top,  s],
+                [ sm, -l_max, -sm], [ sm, -l_max,  sm], [ s,  top,  s], [ s,  top, -s]
             ]       
         else:
             nbv=24        
             verts = [ # 6 faces with 4 corners each
-                [-s_inf, -l,  s_inf], [-s,  s,  s], [ s,  s,  s], [ s_inf, -l,  s_inf],
-                [-s,  s, -s], [-s_inf, -l, -s_inf], [ s_inf, -l, -s_inf], [ s,  s, -s],
+                [-s_inf, -l,  s_inf], [-s,  top,  s], [ s,  top,  s], [ s_inf, -l,  s_inf],
+                [-s,  top, -s], [-s_inf, -l, -s_inf], [ s_inf, -l, -s_inf], [ s,  top, -s],
                 [ s_inf, -l, -s_inf], [-s_inf, -l, -s_inf], [-s_inf, -l,  s_inf], [ s_inf, -l,  s_inf],
-                [-s,  s, -s], [ s,  s, -s], [ s,  s,  s], [-s,  s,  s],
-                [-s_inf, -l,  s_inf], [-s_inf, -l, -s_inf], [-s,  s, -s], [-s,  s,  s],
-                [ s_inf, -l, -s_inf], [ s_inf, -l,  s_inf], [ s,  s,  s], [ s,  s, -s]
+                [-s,  top, -s], [ s,  top, -s], [ s,  top,  s], [-s,  top,  s],
+                [-s_inf, -l,  s_inf], [-s_inf, -l, -s_inf], [-s,  top, -s], [-s,  top,  s],
+                [ s_inf, -l, -s_inf], [ s_inf, -l,  s_inf], [ s,  top,  s], [ s,  top, -s]
             ]
         mesh.setVertices(numpy.asarray(verts, dtype=numpy.float32))
 
