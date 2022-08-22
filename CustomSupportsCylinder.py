@@ -258,6 +258,13 @@ class CustomSupportsCylinder(Tool):
     def _createSupportMesh(self, parent: CuraSceneNode, position: Vector , position2: Vector):
         node = CuraSceneNode()
 
+        node_bounds = parent.getBoundingBox()
+        self._nodeHeight = node_bounds.height
+        
+        Logger.log("d", "height= %s", str(node_bounds.height))
+
+        
+        
         if self._SType == 'cylinder':
             node.setName("CustomSupportCylinder")
         elif self._SType == 'tube':
@@ -275,6 +282,7 @@ class CustomSupportsCylinder(Tool):
         
         # long=Support Height
         self._long=position.y
+        Logger.log("d", "Long= %s", str(self._long))
                 
                 
         if self._SType == 'cylinder':
