@@ -38,7 +38,7 @@
 # V2.6.3 25-05-2022 Temporary ? solution for the Toolbar height in QT6
 # V2.6.4 31-05-2022 Add Button Remove All
 #                   Increase the Increment angle for Cylinder and Tube from 2° to 10°
-# V2.6.5 11-07-2022 Change Style of Button for Cura 5.0 5.1
+# V2.6.5 11-07-2022 Change Style of Button for Cura 5.0  5.1
 # V2.6.6 07-08-2022 Internal modification for Maximum Z height
 #--------------------------------------------------------------------------------------------
 
@@ -261,7 +261,7 @@ class CustomSupportsCylinder(Tool):
         node_bounds = parent.getBoundingBox()
         self._nodeHeight = node_bounds.height
         
-        Logger.log("d", "Height Model= %s", str(node_bounds.height))
+        # Logger.log("d", "Height Model= %s", str(node_bounds.height))
         
         if self._SType == 'cylinder':
             node.setName("CustomSupportCylinder")
@@ -280,7 +280,7 @@ class CustomSupportsCylinder(Tool):
         
         # long=Support Height
         self._long=position.y
-        Logger.log("d", "Long Support= %s", str(self._long))
+        # Logger.log("d", "Long Support= %s", str(self._long))
         
         # Limitation for support height to Node Height
         # For Cube/Cylinder/Tube
@@ -293,7 +293,7 @@ class CustomSupportsCylinder(Tool):
             else :
                 self._Sup = self._UseSize*0.1
                 
-        Logger.log("d", "Additional Long Support = %s", str(self._long+self._Sup))    
+        # Logger.log("d", "Additional Long Support = %s", str(self._long+self._Sup))    
             
         if self._SType == 'cylinder':
             # Cylinder creation Diameter , Maximum diameter , Increment angle 10°, length , top Additional Height, Angle of the support
@@ -407,7 +407,7 @@ class CustomSupportsCylinder(Tool):
         s_p = global_container_stack.getProperty("support_type", "value")
         if s_p ==  'buildplate' :
             Message(text = "Info modification support_type new value : everywhere", title = catalog.i18nc("@info:title", "Custom Supports Cylinder")).show()
-            Logger.log('d', 'support_type different : ' + str(s_p))
+            Logger.log('d', 'Support_type different from everywhere : ' + str(s_p))
             # Define support_type=everywhere
             global_container_stack.setProperty("support_type", "value", 'everywhere')
             
