@@ -284,6 +284,7 @@ class CustomSupportsCylinder(Tool):
         
         # Limitation for support height to Node Height
         # For Cube/Cylinder/Tube
+        # Test with 0.5 because the precision on the clic poisition is not very thight 
         if self._long >= (self._nodeHeight-0.5) :
             # additionale length
             self._Sup = 0
