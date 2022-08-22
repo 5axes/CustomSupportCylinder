@@ -291,6 +291,8 @@ class CustomSupportsCylinder(Tool):
         else :
             if self._SType == 'cube' :
                 self._Sup = self._UseSize*0.5
+            elif self._SType == 'abutment':
+                self._Sup = self._UseSize
             else :
                 self._Sup = self._UseSize*0.1
                 
@@ -346,10 +348,10 @@ class CustomSupportsCylinder(Tool):
                 if self._SHeights==0 :
                     self._SHeights=position.y
 
-                self._top=self._UseSize+(self._SHeights-position.y)
+                self._top=self._Sup+(self._SHeights-position.y)
                 
             else:
-                self._top=self._UseSize
+                self._top=self._Sup
                 self._SHeights=0
             
             # 
