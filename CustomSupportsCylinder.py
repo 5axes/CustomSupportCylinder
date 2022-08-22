@@ -347,8 +347,9 @@ class CustomSupportsCylinder(Tool):
                 # Logger.log('d', 'SHeights : ' + str(self._SHeights)) 
                 if self._SHeights==0 :
                     self._SHeights=position.y
+                    self._SSup=self._Sup
 
-                self._top=self._Sup+(self._SHeights-position.y)
+                self._top=self._SSup+(self._SHeights-position.y)
                 
             else:
                 self._top=self._Sup
