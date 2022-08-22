@@ -261,9 +261,7 @@ class CustomSupportsCylinder(Tool):
         node_bounds = parent.getBoundingBox()
         self._nodeHeight = node_bounds.height
         
-        Logger.log("d", "height= %s", str(node_bounds.height))
-
-        
+        Logger.log("d", "Height Model= %s", str(node_bounds.height))
         
         if self._SType == 'cylinder':
             node.setName("CustomSupportCylinder")
@@ -282,18 +280,30 @@ class CustomSupportsCylinder(Tool):
         
         # long=Support Height
         self._long=position.y
-        Logger.log("d", "Long= %s", str(self._long))
+        Logger.log("d", "Long Support= %s", str(self._long))
+        
+        # Limitation for support height to Node Height
+        # For Cube/Cylinder/Tube
+        if self._long >= (self._nodeHeight-0.5) :
+            # additionale length
+            self._Sup = 0
+        else :
+            if self._SType == 'cube' :
+                self._Sup = self._UseSize*0.5
+            else :
+                self._Sup = self._UseSize*0.1
                 
-                
+        Logger.log("d", "Additional Long Support = %s", str(self._long+self._Sup))    
+            
         if self._SType == 'cylinder':
-            # Cylinder creation Diameter , Maximum diameter , Increment angle 10°, length , Angle of the support
-            mesh = self._createCylinder(self._UseSize,self._MaxSize,10,self._long,self._UseAngle)
+            # Cylinder creation Diameter , Maximum diameter , Increment angle 10°, length , top Additional Height, Angle of the support
+            mesh = self._createCylinder(self._UseSize,self._MaxSize,10,self._long,self._Sup,self._UseAngle)
         elif self._SType == 'tube':
-            # Tube creation Diameter ,Maximum diameter , Diameter Int, Increment angle 10°, length , Angle of the support
-            mesh =  self._createTube(self._UseSize,self._MaxSize,self._UseISize,10,self._long,self._UseAngle)
+            # Tube creation Diameter ,Maximum diameter , Diameter Int, Increment angle 10°, length, top Additional Height , Angle of the support
+            mesh =  self._createTube(self._UseSize,self._MaxSize,self._UseISize,10,self._long,self._Sup,self._UseAngle)
         elif self._SType == 'cube':
-            # Cube creation Size,Maximum Size , length , Angle of the support
-            mesh =  self._createCube(self._UseSize,self._MaxSize,self._long,self._UseSize*0.5,self._UseAngle)
+            # Cube creation Size,Maximum Size , length , top Additional Height, Angle of the support
+            mesh =  self._createCube(self._UseSize,self._MaxSize,self._long,self._Sup,self._UseAngle)
         elif self._SType == 'freeform':
             # Cube creation Size , length
             mesh = MeshBuilder()  
@@ -350,7 +360,10 @@ class CustomSupportsCylinder(Tool):
             # Custom creation Size , P1 as vector P2 as vector
             # Get support_interface_height as extra distance 
             extruder_stack = self._application.getExtruderManager().getActiveExtruderStacks()[0]
-            extra_top=extruder_stack.getProperty("support_interface_height", "value")            
+            if self._Sup == 0 :
+                extra_top = 0
+            else :
+                extra_top=extruder_stack.getProperty("support_interface_height", "value")            
             mesh =  self._createCustom(self._UseSize,self._MaxSize,position,position2,self._UseAngle,extra_top)
 
         # Mesh Freeform are loaded via trimesh doesn't aheve the Build method
@@ -616,13 +629,12 @@ class CustomSupportsCylinder(Tool):
         return mesh
         
     # Cylinder creation
-    def _createCylinder(self, size, maxs, nb , lg ,dep):
+    def _createCylinder(self, size, maxs, nb , lg , sup ,dep):
         mesh = MeshBuilder()
         # Per-vertex normals require duplication of vertices
         r = size / 2
         rm = maxs / 2
-        # additionale length
-        sup = size * 0.1
+
         l = -lg
         rng = int(360 / nb)
         ang = math.radians(nb)
@@ -697,15 +709,13 @@ class CustomSupportsCylinder(Tool):
         return mesh
  
    # Tube creation
-    def _createTube(self, size, maxs, isize, nb , lg ,dep):
+    def _createTube(self, size, maxs, isize, nb , lg, sup ,dep):
         # Logger.log('d', 'isize : ' + str(isize)) 
         mesh = MeshBuilder()
         # Per-vertex normals require duplication of vertices
         r = size / 2
         ri = isize / 2
         rm = maxs / 2
-        # additionale length
-        sup = size * 0.1
         l = -lg
         rng = int(360 / nb)
         ang = math.radians(nb)
