@@ -38,7 +38,8 @@
 # V2.6.3 25-05-2022 Temporary ? solution for the Toolbar height in QT6
 # V2.6.4 31-05-2022 Add Button Remove All
 #                   Increase the Increment angle for Cylinder and Tube from 2° to 10°
-# V2.6.5 11-07-2022 Change Style of Button for Cura 5.0 5.1
+# V2.6.5 11-07-2022 Change Style of Button for Cura 5.0  5.1
+# V2.6.6 07-08-2022 Internal modification for Maximum Z height
 #--------------------------------------------------------------------------------------------
 
 VERSION_QT5 = False
@@ -257,6 +258,11 @@ class CustomSupportsCylinder(Tool):
     def _createSupportMesh(self, parent: CuraSceneNode, position: Vector , position2: Vector):
         node = CuraSceneNode()
 
+        node_bounds = parent.getBoundingBox()
+        self._nodeHeight = node_bounds.height
+        
+        # Logger.log("d", "Height Model= %s", str(node_bounds.height))
+        
         if self._SType == 'cylinder':
             node.setName("CustomSupportCylinder")
         elif self._SType == 'tube':
@@ -274,17 +280,33 @@ class CustomSupportsCylinder(Tool):
         
         # long=Support Height
         self._long=position.y
+        # Logger.log("d", "Long Support= %s", str(self._long))
+        
+        # Limitation for support height to Node Height
+        # For Cube/Cylinder/Tube
+        # Test with 0.5 because the precision on the clic poisition is not very thight 
+        if self._long >= (self._nodeHeight-0.5) :
+            # additionale length
+            self._Sup = 0
+        else :
+            if self._SType == 'cube' :
+                self._Sup = self._UseSize*0.5
+            elif self._SType == 'abutment':
+                self._Sup = self._UseSize
+            else :
+                self._Sup = self._UseSize*0.1
                 
-                
+        # Logger.log("d", "Additional Long Support = %s", str(self._long+self._Sup))    
+            
         if self._SType == 'cylinder':
-            # Cylinder creation Diameter , Maximum diameter , Increment angle 10°, length , Angle of the support
-            mesh = self._createCylinder(self._UseSize,self._MaxSize,10,self._long,self._UseAngle)
+            # Cylinder creation Diameter , Maximum diameter , Increment angle 10°, length , top Additional Height, Angle of the support
+            mesh = self._createCylinder(self._UseSize,self._MaxSize,10,self._long,self._Sup,self._UseAngle)
         elif self._SType == 'tube':
-            # Tube creation Diameter ,Maximum diameter , Diameter Int, Increment angle 10°, length , Angle of the support
-            mesh =  self._createTube(self._UseSize,self._MaxSize,self._UseISize,10,self._long,self._UseAngle)
+            # Tube creation Diameter ,Maximum diameter , Diameter Int, Increment angle 10°, length, top Additional Height , Angle of the support
+            mesh =  self._createTube(self._UseSize,self._MaxSize,self._UseISize,10,self._long,self._Sup,self._UseAngle)
         elif self._SType == 'cube':
-            # Cube creation Size,Maximum Size , length , Angle of the support
-            mesh =  self._createCube(self._UseSize,self._MaxSize,self._long,self._UseAngle)
+            # Cube creation Size,Maximum Size , length , top Additional Height, Angle of the support
+            mesh =  self._createCube(self._UseSize,self._MaxSize,self._long,self._Sup,self._UseAngle)
         elif self._SType == 'freeform':
             # Cube creation Size , length
             mesh = MeshBuilder()  
@@ -325,11 +347,12 @@ class CustomSupportsCylinder(Tool):
                 # Logger.log('d', 'SHeights : ' + str(self._SHeights)) 
                 if self._SHeights==0 :
                     self._SHeights=position.y
+                    self._SSup=self._Sup
 
-                self._top=self._UseSize+(self._SHeights-position.y)
+                self._top=self._SSup+(self._SHeights-position.y)
                 
             else:
-                self._top=self._UseSize
+                self._top=self._Sup
                 self._SHeights=0
             
             # 
@@ -341,7 +364,10 @@ class CustomSupportsCylinder(Tool):
             # Custom creation Size , P1 as vector P2 as vector
             # Get support_interface_height as extra distance 
             extruder_stack = self._application.getExtruderManager().getActiveExtruderStacks()[0]
-            extra_top=extruder_stack.getProperty("support_interface_height", "value")            
+            if self._Sup == 0 :
+                extra_top = 0
+            else :
+                extra_top=extruder_stack.getProperty("support_interface_height", "value")            
             mesh =  self._createCustom(self._UseSize,self._MaxSize,position,position2,self._UseAngle,extra_top)
 
         # Mesh Freeform are loaded via trimesh doesn't aheve the Build method
@@ -385,7 +411,7 @@ class CustomSupportsCylinder(Tool):
         s_p = global_container_stack.getProperty("support_type", "value")
         if s_p ==  'buildplate' :
             Message(text = "Info modification support_type new value : everywhere", title = catalog.i18nc("@info:title", "Custom Supports Cylinder")).show()
-            Logger.log('d', 'support_type different : ' + str(s_p))
+            Logger.log('d', 'Support_type different from everywhere : ' + str(s_p))
             # Define support_type=everywhere
             global_container_stack.setProperty("support_type", "value", 'everywhere')
             
@@ -473,7 +499,7 @@ class CustomSupportsCylinder(Tool):
         return mesh_data
         
     # Cube Creation
-    def _createCube(self, size, maxs, height, dep):
+    def _createCube(self, size, maxs, height, top, dep):
         mesh = MeshBuilder()
 
         # Intial Comment from Ultimaker B.V. I have never try to verify this point
@@ -482,7 +508,7 @@ class CustomSupportsCylinder(Tool):
         s = size / 2
         sm = maxs / 2
         l = height 
-        s_inf=math.tan(math.radians(dep))*l+s
+        s_inf=s+math.tan(math.radians(dep))*(l+top)
         
         if sm>s and dep!=0:
             l_max=(sm-s) / math.tan(math.radians(dep))
@@ -493,26 +519,26 @@ class CustomSupportsCylinder(Tool):
         if l_max<l and l_max>0:
             nbv=40        
             verts = [ # 10 faces with 4 corners each
-                [-sm, -l_max,  sm], [-s,  s,  s], [ s,  s,  s], [ sm, -l_max,  sm],
-                [-s,  s, -s], [-sm, -l_max, -sm], [ sm, -l_max, -sm], [ s,  s, -s],
+                [-sm, -l_max,  sm], [-s,  top,  s], [ s,  top,  s], [ sm, -l_max,  sm],
+                [-s,  top, -s], [-sm, -l_max, -sm], [ sm, -l_max, -sm], [ s,  top, -s],
                 [-sm, -l,  sm], [-sm,  -l_max,  sm], [ sm,  -l_max,  sm], [ sm, -l,  sm],
                 [-sm,  -l_max, -sm], [-sm, -l, -sm], [ sm, -l, -sm], [ sm,  -l_max, -sm],
                 [ sm, -l, -sm], [-sm, -l, -sm], [-sm, -l,  sm], [ sm, -l,  sm],
-                [-s,  s, -s], [ s,  s, -s], [ s,  s,  s], [-s,  s,  s],
+                [-s,  top, -s], [ s,  top, -s], [ s,  top,  s], [-s,  top,  s],
                 [-sm, -l,  sm], [-sm, -l, -sm], [-sm,  -l_max, -sm], [-sm,  -l_max,  sm],
                 [ sm, -l, -sm], [ sm, -l,  sm], [ sm,  -l_max,  sm], [ sm,  -l_max, -sm],  
-                [-sm, -l_max,  sm], [-sm, -l_max, -sm], [-s,  s, -s], [-s,  s,  s],
-                [ sm, -l_max, -sm], [ sm, -l_max,  sm], [ s,  s,  s], [ s,  s, -s]
+                [-sm, -l_max,  sm], [-sm, -l_max, -sm], [-s,  top, -s], [-s,  top,  s],
+                [ sm, -l_max, -sm], [ sm, -l_max,  sm], [ s,  top,  s], [ s,  top, -s]
             ]       
         else:
             nbv=24        
             verts = [ # 6 faces with 4 corners each
-                [-s_inf, -l,  s_inf], [-s,  s,  s], [ s,  s,  s], [ s_inf, -l,  s_inf],
-                [-s,  s, -s], [-s_inf, -l, -s_inf], [ s_inf, -l, -s_inf], [ s,  s, -s],
+                [-s_inf, -l,  s_inf], [-s,  top,  s], [ s,  top,  s], [ s_inf, -l,  s_inf],
+                [-s,  top, -s], [-s_inf, -l, -s_inf], [ s_inf, -l, -s_inf], [ s,  top, -s],
                 [ s_inf, -l, -s_inf], [-s_inf, -l, -s_inf], [-s_inf, -l,  s_inf], [ s_inf, -l,  s_inf],
-                [-s,  s, -s], [ s,  s, -s], [ s,  s,  s], [-s,  s,  s],
-                [-s_inf, -l,  s_inf], [-s_inf, -l, -s_inf], [-s,  s, -s], [-s,  s,  s],
-                [ s_inf, -l, -s_inf], [ s_inf, -l,  s_inf], [ s,  s,  s], [ s,  s, -s]
+                [-s,  top, -s], [ s,  top, -s], [ s,  top,  s], [-s,  top,  s],
+                [-s_inf, -l,  s_inf], [-s_inf, -l, -s_inf], [-s,  top, -s], [-s,  top,  s],
+                [ s_inf, -l, -s_inf], [ s_inf, -l,  s_inf], [ s,  top,  s], [ s,  top, -s]
             ]
         mesh.setVertices(numpy.asarray(verts, dtype=numpy.float32))
 
@@ -607,13 +633,12 @@ class CustomSupportsCylinder(Tool):
         return mesh
         
     # Cylinder creation
-    def _createCylinder(self, size, maxs, nb , lg ,dep):
+    def _createCylinder(self, size, maxs, nb , lg , sup ,dep):
         mesh = MeshBuilder()
         # Per-vertex normals require duplication of vertices
         r = size / 2
         rm = maxs / 2
-        # additionale length
-        sup = size * 0.1
+
         l = -lg
         rng = int(360 / nb)
         ang = math.radians(nb)
@@ -688,15 +713,13 @@ class CustomSupportsCylinder(Tool):
         return mesh
  
    # Tube creation
-    def _createTube(self, size, maxs, isize, nb , lg ,dep):
+    def _createTube(self, size, maxs, isize, nb , lg, sup ,dep):
         # Logger.log('d', 'isize : ' + str(isize)) 
         mesh = MeshBuilder()
         # Per-vertex normals require duplication of vertices
         r = size / 2
         ri = isize / 2
         rm = maxs / 2
-        # additionale length
-        sup = size * 0.1
         l = -lg
         rng = int(360 / nb)
         ang = math.radians(nb)
