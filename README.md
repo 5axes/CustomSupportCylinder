@@ -11,7 +11,7 @@ This plugin offer now much more possibilities :
 - Possibility to define the support size
 - Visualisation of the support on the total height
 - Possibility to add an angle to obtain a conical support
-- Possibility to limit the size of the botom of the support in case of tapered support
+- Possibility to limit the size of the bottom of the support in case of tapered support
 
 **New 2.4.0**
 
@@ -54,7 +54,7 @@ First, make sure your Cura version is 4.5 or newer. This plugin is now avalaible
 * Load a model in Cura and select it
 
 * Click on the "Custom Supports Cylinder" button on the left toolbar
-* With the 6 buttons in the plugin windows, it's possible to switch the geometry between a cylinder, a tube, a cubic, an abutment , a freeform or a custom support.
+* With the 6 buttons in the plugin windows, it's possible to switch the geometry between a cylinder, a tube, a cubic, an abutment, a freeform or a custom support.
 * Change the value for the support *Size* in numeric input field in the tool panel if necessary
 * Change the value for the support *Angle* in numeric input field in the tool panel if necessary **(Version 1.0.03)**
 * You can limit the size of the tappered support by fixing a Max Size Value if necessary **(Version 2.4.0)**
