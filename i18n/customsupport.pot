@@ -17,6 +17,16 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: __init__.py:23
+msgctxt "@label"
+msgid "Custom Supports Cylinder"
+msgstr ""
+
+#: __init__.py:24
+msgctxt "@info:tooltip"
+msgid "Add 6 types of custom support"
+msgstr ""	
+			
 #: CustomSupportsCylinder.py:422
 msgctxt "@info:title"
 msgid "Custom Supports Cylinder"
