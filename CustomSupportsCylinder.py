@@ -418,7 +418,7 @@ class CustomSupportsCylinder(Tool):
         
         s_p = global_container_stack.getProperty("support_type", "value")
         if s_p ==  'buildplate' :
-            Message(text = "Info modification support_type new value : everywhere", title = i18n_catalog.i18nc("@info:title", "Custom Supports Cylinder")).show()
+            Message(text = catalog.i18nc("@info:label", "Info modification support_type new value : Everywhere"), title = catalog.i18nc("@info:title", "Custom Supports Cylinder")).show()
             Logger.log('d', 'Support_type different from everywhere : ' + str(s_p))
             # Define support_type=everywhere
             global_container_stack.setProperty("support_type", "value", 'everywhere')

@@ -27,10 +27,15 @@ msgctxt "@info:tooltip"
 msgid "Add 6 types of custom support"
 msgstr "Ajouter 6 types de support personnalisé"
 
-#: CustomSupportsCylinder.py:422
+#: CustomSupportsCylinder.py:421
 msgctxt "@info:title"
 msgid "Custom Supports Cylinder"
 msgstr "Supports Custom Cylindrique"
+
+#: CustomSupportsCylinder.py:421
+msgctxt "@info:label"
+msgid "Info modification support_type new value : Everywhere"
+msgstr "Info modification support_type nouvelle valeur : Partout"
 
 #: CustomSupportsCylinder.py:126:979
 msgctxt "@label"
