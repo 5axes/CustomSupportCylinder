@@ -29,8 +29,8 @@ msgstr "Ajouter 6 types de support personnalisé"
 
 #: CustomSupportsCylinder.py:421
 msgctxt "@info:title"
-msgid "Custom Supports Cylinder"
-msgstr "Supports Custom Cylindrique"
+msgid "Warning ! Custom Supports Cylinder"
+msgstr "Attention ! Supports Custom Cylindrique"
 
 #: CustomSupportsCylinder.py:421
 msgctxt "@info:label"

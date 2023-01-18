@@ -29,12 +29,12 @@ msgstr ""
 			
 #: CustomSupportsCylinder.py:421
 msgctxt "@info:title"
-msgid "Custom Supports Cylinder"
+msgid "Warning ! Custom Supports Cylinder"
 msgstr ""
 
 #: CustomSupportsCylinder.py:421
 msgctxt "@info:label"
-msgid "Info modification support_type new value : everywhere"
+msgid "Info modification support_type new value : Everywhere"
 msgstr ""
 
 #: CustomSupportsCylinder.py:126:979
