@@ -130,7 +130,7 @@ Item
             UM.ToolbarButton
             {
                 id: freeformButton
-                text: catalog.i18nc("@label", "Freeshape")
+                text: catalog.i18nc("@label", "Freeform")
 				toolItem: UM.ColorImage
 				{
 					source: Qt.resolvedUrl("type_freeform.svg")
