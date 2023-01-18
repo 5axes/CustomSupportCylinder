@@ -96,9 +96,9 @@ Resources.addSearchPath(
     os.path.join(os.path.abspath(os.path.dirname(__file__)))
 )  # Plugin translation file import
 
-i18n_catalog = i18nCatalog("customsupport")
+catalog = i18nCatalog("customsupport")
 
-if i18n_catalog.hasTranslationLoaded():
+if catalog.hasTranslationLoaded():
     Logger.log("i", "Custom Support Cylinder Plugin translation loaded!")
     
 
@@ -123,7 +123,7 @@ class CustomSupportsCylinder(Tool):
         self._MirrorSupport = False
         self._SType = 'cylinder'
         self._SubType = 'cross'
-        self._SMsg = i18n_catalog.i18nc("@message", "Remove All") 
+        self._SMsg = catalog.i18nc("@message", "Remove All") 
         
         # Shortcut
         if not VERSION_QT5:
@@ -430,7 +430,7 @@ class CustomSupportsCylinder(Tool):
         op.push()
         node.setPosition(position, CuraSceneNode.TransformSpace.World)
         self._all_picked_node.append(node)
-        self._SMsg = i18n_catalog.i18nc("@message", "Remove Last") 
+        self._SMsg = catalog.i18nc("@message", "Remove Last") 
         self.propertyChanged.emit()
         
         CuraApplication.getInstance().getController().getScene().sceneChanged.emit(node)
@@ -976,7 +976,7 @@ class CustomSupportsCylinder(Tool):
                 if node_stack.getProperty("support_mesh", "value"):
                     self._removeSupportMesh(node)
             self._all_picked_node = []
-            self._SMsg = i18n_catalog.i18nc("@message", "Remove All") 
+            self._SMsg = catalog.i18nc("@message", "Remove All") 
             self.propertyChanged.emit()
         else:        
             for node in DepthFirstIterator(self._application.getController().getScene().getRoot()):
