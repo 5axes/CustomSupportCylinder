@@ -30,7 +30,7 @@ msgstr "Supprimer Tous"
 #: CustomSupportsCylinder.py:433
 msgctxt "@label"
 msgid "Remove Last"
-msgstr "Supprimer Dernier"
+msgstr "Supprimer Derniers"
 
 #: qml_qt6/MeasureTool.qml:61 qml_qt5/MeasureTool.qml:58
 msgctxt "@label"
