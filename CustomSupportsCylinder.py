@@ -40,6 +40,7 @@
 #                   Increase the Increment angle for Cylinder and Tube from 2° to 10°
 # V2.6.5 11-07-2022 Change Style of Button for Cura 5.0  5.1
 # V2.6.6 07-08-2022 Internal modification for Maximum Z height
+# V2.7.0 18-01-2023 Prepare translation
 #--------------------------------------------------------------------------------------------
 
 VERSION_QT5 = False
@@ -82,15 +83,24 @@ from cura.Scene.CuraSceneNode import CuraSceneNode
 from UM.Scene.ToolHandle import ToolHandle
 from UM.Tool import Tool
 
-
-from UM.i18n import i18nCatalog
-catalog = i18nCatalog("cura")
-
 import math
 import numpy
-import os
+import os.path
 import trimesh
 
+from UM.Resources import Resources
+from UM.i18n import i18nCatalog
+
+
+Resources.addSearchPath(
+    os.path.join(os.path.abspath(os.path.dirname(__file__)))
+)  # Plugin translation file import
+
+i18n_catalog = i18nCatalog("customsupport")
+
+if i18n_catalog.hasTranslationLoaded():
+    Logger.log("i", "Custom Support Cylinder Plugin translation loaded!")
+    
 
 class CustomSupportsCylinder(Tool):
     def __init__(self):
@@ -113,7 +123,7 @@ class CustomSupportsCylinder(Tool):
         self._MirrorSupport = False
         self._SType = 'cylinder'
         self._SubType = 'cross'
-        self._SMsg = 'Remove All'
+        self._SMsg = i18n_catalog.i18nc("@message", "Remove All") 
         
         # Shortcut
         if not VERSION_QT5:
@@ -125,8 +135,6 @@ class CustomSupportsCylinder(Tool):
 
         self._Svg_Position = Vector
         self._selection_pass = None
-
-        self._i18n_catalog = None
         
         self._application = CuraApplication.getInstance()
         
@@ -410,7 +418,7 @@ class CustomSupportsCylinder(Tool):
         
         s_p = global_container_stack.getProperty("support_type", "value")
         if s_p ==  'buildplate' :
-            Message(text = "Info modification support_type new value : everywhere", title = catalog.i18nc("@info:title", "Custom Supports Cylinder")).show()
+            Message(text = "Info modification support_type new value : everywhere", title = i18n_catalog.i18nc("@info:title", "Custom Supports Cylinder")).show()
             Logger.log('d', 'Support_type different from everywhere : ' + str(s_p))
             # Define support_type=everywhere
             global_container_stack.setProperty("support_type", "value", 'everywhere')
@@ -422,7 +430,7 @@ class CustomSupportsCylinder(Tool):
         op.push()
         node.setPosition(position, CuraSceneNode.TransformSpace.World)
         self._all_picked_node.append(node)
-        self._SMsg = 'Remove Last'
+        self._SMsg = i18n_catalog.i18nc("@message", "Remove Last") 
         self.propertyChanged.emit()
         
         CuraApplication.getInstance().getController().getScene().sceneChanged.emit(node)
@@ -968,7 +976,7 @@ class CustomSupportsCylinder(Tool):
                 if node_stack.getProperty("support_mesh", "value"):
                     self._removeSupportMesh(node)
             self._all_picked_node = []
-            self._SMsg = 'Remove All'
+            self._SMsg = i18n_catalog.i18nc("@message", "Remove All") 
             self.propertyChanged.emit()
         else:        
             for node in DepthFirstIterator(self._application.getController().getScene().getRoot()):

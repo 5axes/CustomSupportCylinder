@@ -24,7 +24,7 @@ Item
     id: base
     width: childrenRect.width
     height: childrenRect.height
-    UM.I18nCatalog { id: catalog; name: "cura"}
+    UM.I18nCatalog { id: catalog; name: "customsupport"}
 
     property var s_size: UM.ActiveTool.properties.getValue("SSize")
 
@@ -180,7 +180,7 @@ Item
 		Label
         {
             height: UM.Theme.getSize("setting_control").height
-            text: catalog.i18nc("@label","Interior size")
+            text: catalog.i18nc("@label","Interior Size")
             font: UM.Theme.getFont("default")
             color: UM.Theme.getColor("text")
             verticalAlignment: Text.AlignVCenter

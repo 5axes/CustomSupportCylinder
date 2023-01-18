@@ -1,0 +1,53 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the Measure Tool package.
+# 5axes <5axes@free.fr>, 2023.
+msgid ""
+msgstr ""
+"Project-Id-Version: Custom Support Cylinder\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-11 15:10+0000\n"
+"PO-Revision-Date: 2023-01-18 19:18+0200\n"
+"Last-Translator: 5axes <5axes@free.fr>\n"
+"Language-Team: 5axes\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Virtaal 0.7.1\n"
+
+#: CustomSupportsCylinder.py:422
+msgctxt "@info:title"
+msgid "Custom Supports Cylinder"
+msgstr "Supports Custom Cylindrique"
+
+#: CustomSupportsCylinder.py:126:979
+msgctxt "@label"
+msgid "Remove All"
+msgstr "Supprimer Tous"
+
+#: CustomSupportsCylinder.py:433
+msgctxt "@label"
+msgid "Remove Last"
+msgstr "Supprimer Dernier"
+
+#: qml_qt6/MeasureTool.qml:61 qml_qt5/MeasureTool.qml:58
+msgctxt "@label"
+msgid "Cylinder"
+msgstr "Cylindre"
+
+#: qml_qt6/MeasureTool.qml:377 qml_qt5/MeasureTool.qml:351
+msgctxt "@option:check"
+msgid "Rotate 180°"
+msgstr "Rotation 180°"
+
+#: qml_qt6/MeasureTool.qml:390 qml_qt5/MeasureTool.qml:365
+msgctxt "@option:check"
+msgid "Scaling in main Directions"
+msgstr "Echelle selon directions principales"
+
+#: qml_qt6/MeasureTool.qml:402 qml_qt5/MeasureTool.qml:379
+msgctxt "@option:check"
+msgid "Equalize heights"
+msgstr "Égaliser les hauteurs"

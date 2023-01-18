@@ -1,0 +1,53 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the Measure Tool package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Custom Support Cylinder\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-11 15:10+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: CustomSupportsCylinder.py:422
+msgctxt "@info:title"
+msgid "Custom Supports Cylinder"
+msgstr ""
+
+#: CustomSupportsCylinder.py:126:979
+msgctxt "@label"
+msgid "Remove All"
+msgstr ""
+
+#: CustomSupportsCylinder.py:433
+msgctxt "@label"
+msgid "Remove Last"
+msgstr ""
+
+#: qml_qt6/MeasureTool.qml:61 qml_qt5/MeasureTool.qml:58
+msgctxt "@label"
+msgid "Cylinder"
+msgstr ""
+
+#: qml_qt6/MeasureTool.qml:377 qml_qt5/MeasureTool.qml:351
+msgctxt "@option:check"
+msgid "Rotate 180°"
+msgstr ""
+
+#: qml_qt6/MeasureTool.qml:390 qml_qt5/MeasureTool.qml:365
+msgctxt "@option:check"
+msgid "Scaling in main Directions"
+msgstr ""
+
+#: qml_qt6/MeasureTool.qml:402 qml_qt5/MeasureTool.qml:379
+msgctxt "@option:check"
+msgid "Equalize heights"
+msgstr ""
