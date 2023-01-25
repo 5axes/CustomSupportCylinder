@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Custom Support Cylinder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-11 15:10+0000\n"
-"PO-Revision-Date: 2023-01-18 19:18+0200\n"
+"POT-Creation-Date: 2023-01-25 11:36+0000\n"
+"PO-Revision-Date: 2023-01-25 12:37+0200\n"
 "Last-Translator: 5axes <5axes@free.fr>\n"
 "Language-Team: 5axes\n"
 "Language: fr\n"
@@ -27,97 +27,97 @@ msgctxt "@info:tooltip"
 msgid "Add 6 types of custom support"
 msgstr "Ajouter 6 types de support personnalisé"
 
-#: CustomSupportsCylinder.py:421
-msgctxt "@info:title"
-msgid "Warning ! Custom Supports Cylinder"
-msgstr "Attention ! Supports Custom Cylindrique"
+#: CustomSupportsCylinder.py:126 CustomSupportsCylinder.py:979
+msgctxt "@label"
+msgid "Remove All"
+msgstr "Supprimer Tous"
 
 #: CustomSupportsCylinder.py:421
 msgctxt "@info:label"
 msgid "Info modification support_type new value : Everywhere"
 msgstr "Info modification support_type nouvelle valeur : Partout"
 
-#: CustomSupportsCylinder.py:126:979
-msgctxt "@label"
-msgid "Remove All"
-msgstr "Supprimer Tous"
+#: CustomSupportsCylinder.py:421
+msgctxt "@info:title"
+msgid "Warning ! Custom Supports Cylinder"
+msgstr "Attention ! Supports Custom Cylindrique"
 
 #: CustomSupportsCylinder.py:433
 msgctxt "@label"
 msgid "Remove Last"
 msgstr "Supprimer Derniers"
 
-#: qml_qt6/MeasureTool.qml:61 qml_qt5/MeasureTool.qml:58
+#: qml_qt6/CustomSupport.qml:61 qml_qt5/CustomSupport.qml:58
 msgctxt "@label"
 msgid "Cylinder"
 msgstr "Cylindre"
 
-#: qml_qt6/MeasureTool.qml:77 qml_qt5/MeasureTool.qml:71
+#: qml_qt6/CustomSupport.qml:77 qml_qt5/CustomSupport.qml:71
 msgctxt "@label"
 msgid "Tube"
 msgstr "Tube"
 
-#: qml_qt6/MeasureTool.qml:93 qml_qt5/MeasureTool.qml:84
+#: qml_qt6/CustomSupport.qml:93 qml_qt5/CustomSupport.qml:84
 msgctxt "@label"
 msgid "Cube"
 msgstr "Cube"
 
-#: qml_qt6/MeasureTool.qml:117 qml_qt5/MeasureTool.qml:97
+#: qml_qt6/CustomSupport.qml:117 qml_qt5/CustomSupport.qml:97
 msgctxt "@label"
 msgid "Abutment"
 msgstr "Contrefort"
 
-#: qml_qt6/MeasureTool.qml:133 qml_qt5/MeasureTool.qml:110
+#: qml_qt6/CustomSupport.qml:133 qml_qt5/CustomSupport.qml:110
 msgctxt "@label"
 msgid "Freeform"
 msgstr "Forme libre"
 
-#: qml_qt6/MeasureTool.qml:149 qml_qt5/MeasureTool.qml:123
+#: qml_qt6/CustomSupport.qml:149 qml_qt5/CustomSupport.qml:123
 msgctxt "@label"
 msgid "Custom"
 msgstr "Personnalisé"
 
-#: qml_qt6/MeasureTool.qml:178 qml_qt5/MeasureTool.qml:148
+#: qml_qt6/CustomSupport.qml:178 qml_qt5/CustomSupport.qml:148
 msgctxt "@label"
 msgid "Size"
 msgstr "Taille"
 
-#: qml_qt6/MeasureTool.qml:189 qml_qt5/MeasureTool.qml:159
+#: qml_qt6/CustomSupport.qml:189 qml_qt5/CustomSupport.qml:159
 msgctxt "@label"
 msgid "Max Size"
 msgstr "Taille maxi"
 
-#: qml_qt6/MeasureTool.qml:201 qml_qt5/MeasureTool.qml:171
+#: qml_qt6/CustomSupport.qml:201 qml_qt5/CustomSupport.qml:171
 msgctxt "@label"
 msgid "Type"
 msgstr "Type"
 
-#: qml_qt6/MeasureTool.qml:214 qml_qt5/MeasureTool.qml:183
+#: qml_qt6/CustomSupport.qml:214 qml_qt5/CustomSupport.qml:183
 msgctxt "@label"
 msgid "Interior Size"
 msgstr "Taille intérieure"
 
-#: qml_qt6/MeasureTool.qml:226 qml_qt5/MeasureTool.qml:195
+#: qml_qt6/CustomSupport.qml:226 qml_qt5/CustomSupport.qml:195
 msgctxt "@label"
 msgid "Angle"
 msgstr "Angle"
 
-#: qml_qt6/MeasureTool.qml:365 qml_qt5/MeasureTool.qml:337
+#: qml_qt6/CustomSupport.qml:365 qml_qt5/CustomSupport.qml:337
 msgctxt "@option:check"
 msgid "Set on Y direction"
 msgstr "Orienter selon Y"
 
-#: qml_qt6/MeasureTool.qml:377 qml_qt5/MeasureTool.qml:351
+#: qml_qt6/CustomSupport.qml:377 qml_qt5/CustomSupport.qml:351
 msgctxt "@option:check"
 msgid "Rotate 180°"
 msgstr "Rotation 180°"
 
-#: qml_qt6/MeasureTool.qml:390 qml_qt5/MeasureTool.qml:365
+#: qml_qt6/CustomSupport.qml:390 qml_qt5/CustomSupport.qml:365
 msgctxt "@option:check"
 msgid "Scaling in main Directions"
 msgstr "Echelle selon directions principales"
 
-#: qml_qt6/MeasureTool.qml:402 qml_qt5/MeasureTool.qml:379
+#: qml_qt6/CustomSupport.qml:402 qml_qt5/CustomSupport.qml:379
 msgctxt "@option:check"
 msgid "Equalize heights"
 msgstr "Égaliser les hauteurs"
