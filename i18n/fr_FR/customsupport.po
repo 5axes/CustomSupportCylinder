@@ -1,6 +1,6 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the Measure Tool package.
+# This file is distributed under the same license as the Custom Support Cylinder package.
 # 5axes <5axes@free.fr>, 2023.
 msgid ""
 msgstr ""
