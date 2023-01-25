@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Custom Support Cylinder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-25 11:34+0000\n"
+"POT-Creation-Date: 2023-01-25 11:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,7 +28,7 @@ msgid "Add 6 types of custom support"
 msgstr ""
 
 #: CustomSupportsCylinder.py:126 CustomSupportsCylinder.py:979
-msgctxt "@message"
+msgctxt "@label"
 msgid "Remove All"
 msgstr ""
 
@@ -43,7 +43,7 @@ msgid "Warning ! Custom Supports Cylinder"
 msgstr ""
 
 #: CustomSupportsCylinder.py:433
-msgctxt "@message"
+msgctxt "@label"
 msgid "Remove Last"
 msgstr ""
 
