@@ -41,6 +41,7 @@
 # V2.6.5 11-07-2022 Change Style of Button for Cura 5.0  5.1
 # V2.6.6 07-08-2022 Internal modification for Maximum Z height
 # V2.7.0 18-01-2023 Prepare translation
+# V2.7.1 02-02-2023 Replace Rotation 180° / Auto Orientation
 #--------------------------------------------------------------------------------------------
 
 VERSION_QT5 = False
@@ -52,45 +53,44 @@ except ImportError:
     from PyQt5.QtWidgets import QApplication
     VERSION_QT5 = True
 
-from cura.CuraApplication import CuraApplication
-
-from UM.Mesh.MeshData import MeshData, calculateNormalsFromIndexedVertices
-
-from UM.Logger import Logger
-from UM.Message import Message
-from UM.Math.Matrix import Matrix
-from UM.Math.Vector import Vector
-
-from UM.Tool import Tool
-from UM.Event import Event, MouseEvent
-from UM.Mesh.MeshBuilder import MeshBuilder
-from UM.Scene.Selection import Selection
-
-from cura.PickingPass import PickingPass
-
-from UM.Operations.GroupedOperation import GroupedOperation
-from UM.Operations.AddSceneNodeOperation import AddSceneNodeOperation
-from UM.Operations.RemoveSceneNodeOperation import RemoveSceneNodeOperation
-from cura.Operations.SetParentOperation import SetParentOperation
-from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
-# from UM.Scene.Selection import Selection
-
-from UM.Settings.SettingInstance import SettingInstance
-
-from cura.Scene.SliceableObjectDecorator import SliceableObjectDecorator
-from cura.Scene.BuildPlateDecorator import BuildPlateDecorator
-from cura.Scene.CuraSceneNode import CuraSceneNode
-from UM.Scene.ToolHandle import ToolHandle
-from UM.Tool import Tool
-
 import math
 import numpy
 import os.path
 import trimesh
 
+from typing import Optional, List
+
+from cura.CuraApplication import CuraApplication
+from cura.PickingPass import PickingPass
+from cura.Operations.SetParentOperation import SetParentOperation
+from cura.Scene.SliceableObjectDecorator import SliceableObjectDecorator
+from cura.Scene.BuildPlateDecorator import BuildPlateDecorator
+from cura.Scene.CuraSceneNode import CuraSceneNode
+from cura.Scene.CuraSceneNode import CuraSceneNode
+
+from UM.Logger import Logger
+from UM.Message import Message
+from UM.Math.Matrix import Matrix
+from UM.Math.Vector import Vector
+from UM.Tool import Tool
+from UM.Event import Event, MouseEvent
+from UM.Mesh.MeshBuilder import MeshBuilder
+from UM.Mesh.MeshData import MeshData, calculateNormalsFromIndexedVertices
+
+from UM.Operations.GroupedOperation import GroupedOperation
+from UM.Operations.AddSceneNodeOperation import AddSceneNodeOperation
+from UM.Operations.RemoveSceneNodeOperation import RemoveSceneNodeOperation
+from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
+from UM.Scene.Selection import Selection
+from UM.Scene.SceneNode import SceneNode
+from UM.Tool import Tool
+from UM.Settings.SettingInstance import SettingInstance
 from UM.Resources import Resources
 from UM.i18n import i18nCatalog
 
+i18n_cura_catalog = i18nCatalog("cura")
+i18n_catalog = i18nCatalog("fdmprinter.def.json")
+i18n_extrud_catalog = i18nCatalog("fdmextruder.def.json")
 
 Resources.addSearchPath(
     os.path.join(os.path.abspath(os.path.dirname(__file__)))
@@ -100,7 +100,6 @@ catalog = i18nCatalog("customsupport")
 
 if catalog.hasTranslationLoaded():
     Logger.log("i", "Custom Support Cylinder Plugin translation loaded!")
-    
 
 class CustomSupportsCylinder(Tool):
     def __init__(self):
@@ -120,9 +119,10 @@ class CustomSupportsCylinder(Tool):
         self._UseYDirection = False
         self._EqualizeHeights = True
         self._ScaleMainDirection = True
-        self._MirrorSupport = False
+        self._OrientSupport = False
         self._SType = 'cylinder'
         self._SubType = 'cross'
+        self._Mesg = False # To avoid message 
         self._SMsg = catalog.i18nc("@label", "Remove All") 
         
         # Shortcut
@@ -138,7 +138,7 @@ class CustomSupportsCylinder(Tool):
         
         self._application = CuraApplication.getInstance()
         
-        self.setExposedProperties("SSize", "MSize", "ISize", "AAngle", "SType" , "YDirection" , "EHeights" , "SMain" , "SubType" , "SMirror", "SMsg")
+        self.setExposedProperties("SSize", "MSize", "ISize", "AAngle", "SType" , "YDirection" , "EHeights" , "SMain" , "SubType" , "SOrient", "SMsg")
         
         CuraApplication.getInstance().globalContainerStackChanged.connect(self._updateEnabled)
         
@@ -164,7 +164,7 @@ class CustomSupportsCylinder(Tool):
         self._preferences.addPreference("customsupportcylinder/y_direction", False)
         self._preferences.addPreference("customsupportcylinder/e_heights", True)
         self._preferences.addPreference("customsupportcylinder/scale_main_direction", True)
-        self._preferences.addPreference("customsupportcylinder/s_mirror", False)
+        self._preferences.addPreference("customsupportcylinder/s_orient", False)
         self._preferences.addPreference("customsupportcylinder/t_type", "cylinder")
         self._preferences.addPreference("customsupportcylinder/s_type", "cross")
         
@@ -177,7 +177,7 @@ class CustomSupportsCylinder(Tool):
         self._UseYDirection = bool(self._preferences.getValue("customsupportcylinder/y_direction"))
         self._EqualizeHeights = bool(self._preferences.getValue("customsupportcylinder/e_heights"))
         self._ScaleMainDirection = bool(self._preferences.getValue("customsupportcylinder/scale_main_direction"))
-        self._MirrorSupport = bool(self._preferences.getValue("customsupportcylinder/s_mirror"))
+        self._OrientSupport = bool(self._preferences.getValue("customsupportcylinder/s_orient"))
         # convert as string to avoid further issue
         self._SType = str(self._preferences.getValue("customsupportcylinder/t_type"))
         # Sub type for Free Form support
@@ -265,6 +265,7 @@ class CustomSupportsCylinder(Tool):
 
     def _createSupportMesh(self, parent: CuraSceneNode, position: Vector , position2: Vector):
         node = CuraSceneNode()
+        EName = parent.getName()
 
         node_bounds = parent.getBoundingBox()
         self._nodeHeight = node_bounds.height
@@ -339,11 +340,33 @@ class CustomSupportsCylinder(Tool):
                 load_mesh.apply_transform(trimesh.transformations.scale_matrix(self._UseSize, origin, DirX))
                 load_mesh.apply_transform(trimesh.transformations.scale_matrix(self._UseSize, origin, DirY))
                 
-            #load_mesh.apply_transform(trimesh.transformations.scale_matrix(self._UseSize, origin, DirY))
+            # load_mesh.apply_transform(trimesh.transformations.scale_matrix(self._UseSize, origin, DirY))
  
             load_mesh.apply_transform(trimesh.transformations.scale_matrix(self._long, origin, DirZ)) 
-            if self._MirrorSupport == True :   
-                load_mesh.apply_transform(trimesh.transformations.rotation_matrix(math.radians(180), [0, 0, 1]))
+            
+            # Logger.log('d', "Info Orient Support --> " + str(self._OrientSupport))
+            if self._OrientSupport == True :
+                key = "adhesion_type"
+                # This function can be triggered in the middle of a machine change, so do not proceed if the machine change has not done yet.
+                global_container_stack = CuraApplication.getInstance().getGlobalContainerStack()
+                #extruder = global_container_stack.extruderList[int(_id_ex)] 
+                extruder_stack = CuraApplication.getInstance().getExtruderManager().getActiveExtruderStacks()[0]                
+                adhesion=global_container_stack.getProperty(key, "value") 
+                   
+                if adhesion ==  'none' :
+                    if not self._Mesg :
+                        definition_key=key + " label"
+                        untranslated_label=extruder_stack.getProperty(key,"label")
+                        translated_label=i18n_catalog.i18nc(definition_key, untranslated_label) 
+                        Format_String = catalog.i18nc("@info:label", "Info modification current profile '") + translated_label  + catalog.i18nc("@info:label", "' parameter\nNew value : ") + catalog.i18nc("@info:label", "Skirt")                
+                        Message(text = Format_String, title = catalog.i18nc("@info:title", "Warning ! Spoon Anti-Warping")).show()
+                        self._Mesg = True
+                    # Define temporary adhesion_type=skirt to force boundary calculation ?
+                    global_container_stack.setProperty(key, "value", 'skirt')
+                    Logger.log('d', "Info adhesion_type --> " + str(adhesion)) 
+                _angle = self.defineAngle(EName,position)
+                Logger.log('d', 'Angle : ' + str(_angle))
+                load_mesh.apply_transform(trimesh.transformations.rotation_matrix(_angle, [0, 0, 1]))
             if self._UseYDirection == True :
                 load_mesh.apply_transform(trimesh.transformations.rotation_matrix(math.radians(90), [0, 0, 1]))
 
@@ -435,6 +458,121 @@ class CustomSupportsCylinder(Tool):
         
         CuraApplication.getInstance().getController().getScene().sceneChanged.emit(node)
 
+    # Source code from MeshTools Plugin 
+    # Copyright (c) 2020 Aldo Hoeben / fieldOfView
+    def _getAllSelectedNodes(self) -> List[SceneNode]:
+        selection = Selection.getAllSelectedObjects()[:]
+        if selection:
+            deep_selection = []  # type: List[SceneNode]
+            for selected_node in selection:
+                if selected_node.hasChildren():
+                    deep_selection = deep_selection + selected_node.getAllChildren()
+                if selected_node.getMeshData() != None:
+                    deep_selection.append(selected_node)
+            if deep_selection:
+                return deep_selection
+
+        # Message(catalog.i18nc("@info:status", "Please select one or more models first"))
+
+        return []
+        
+    def defineAngle(self, Cname : str, act_position: Vector) -> float:
+        Angle = 0
+        min_lght = 9999999.999
+        # Set on the build plate for distance
+        calc_position = Vector(act_position.x, 0, act_position.z)
+        # Logger.log('d', "Mesh : {}".format(Cname))
+        # Logger.log('d', "Position : {}".format(calc_position))
+
+        nodes_list = self._getAllSelectedNodes()
+        if not nodes_list:
+            nodes_list = DepthFirstIterator(self._application.getController().getScene().getRoot())
+         
+        for node in nodes_list:
+            if node.callDecoration("isSliceable"):
+                # Logger.log('d', "isSliceable : {}".format(node.getName()))
+                node_stack=node.callDecoration("getStack")           
+                if node_stack:                    
+                    if node.getName()==Cname :
+                        # Logger.log('d', "Mesh : {}".format(node.getName()))
+                        
+                        hull_polygon = node.callDecoration("getAdhesionArea")
+                        # hull_polygon = node.callDecoration("getConvexHull")
+                        # hull_polygon = node.callDecoration("getConvexHullBoundary")
+                        # hull_polygon = node.callDecoration("_compute2DConvexHull")
+                                   
+                        if not hull_polygon or hull_polygon.getPoints is None:
+                            Logger.log("w", "Object {} cannot be calculated because it has no convex hull.".format(node.getName()))
+                            return 0
+                            
+                        points=hull_polygon.getPoints()
+                        # nb_pt = point[0] / point[1] must be divided by 2
+                        # Angle Ref for angle / Y Dir
+                        ref = Vector(0, 0, 1)
+                        Id=0
+                        Start_Id=0
+                        End_Id=0
+                        for point in points:                               
+                            # Logger.log('d', "X : {}".format(point[0]))
+                            # Logger.log('d', "Point : {}".format(point))
+                            new_position = Vector(point[0], 0, point[1])
+                            lg=calc_position-new_position
+                            # Logger.log('d', "Lg : {}".format(lg))
+                            # lght = lg.length()
+                            lght = round(lg.length(),0)
+
+                            if lght<min_lght and lght>0 :
+                                min_lght=lght
+                                Start_Id=Id
+                                Select_position = new_position
+                                unit_vector2 = lg.normalized()
+                                # Logger.log('d', "unit_vector2 : {}".format(unit_vector2))
+                                LeSin = math.asin(ref.dot(unit_vector2))
+                                # LeCos = math.acos(ref.dot(unit_vector2))
+                                
+                                if unit_vector2.x>=0 :
+                                    Angle = math.pi+LeSin  #angle in radian
+                                else :
+                                    Angle = -LeSin                                    
+                                    
+                            if lght==min_lght and lght>0 :
+                                if Id > End_Id+1 :
+                                    Start_Id=Id
+                                    End_Id=Id
+                                else :
+                                    End_Id=Id
+                                    
+                            Id+=1
+                        
+                        # Could be the case with automatic .. rarely in pickpoint   
+                        if Start_Id != End_Id :
+                            # Logger.log('d', "Possibility   : {} / {}".format(Start_Id,End_Id))
+                            Id=int(Start_Id+0.5*(End_Id-Start_Id))
+                            # Logger.log('d', "Id   : {}".format(Id))
+                            new_position = Vector(points[Id][0], 0, points[Id][1])
+                            lg=calc_position-new_position                            
+                            unit_vector2 = lg.normalized()
+                            # Logger.log('d', "unit_vector2 : {}".format(unit_vector2))
+                            LeSin = math.asin(ref.dot(unit_vector2))
+                            # LeCos = math.acos(ref.dot(unit_vector2))
+                            
+                            if unit_vector2.x>=0 :
+                                Angle = math.pi+LeSin  #angle in radian
+                                Logger.log('d', "Angle Pos 1")
+                            else :
+                                Angle = -LeSin
+                                Logger.log('d', "Angle Pos 2")
+                            
+                            # Modification / Spoon not ne same start orientation
+                            
+                        Logger.log('d', "Pick_position   : {}".format(calc_position))
+                        Logger.log('d', "Close_position  : {}".format(Select_position))
+                        Logger.log('d', "Unit_vector2    : {}".format(unit_vector2))
+                        Logger.log('d', "Angle Sinus     : {}".format(math.degrees(LeSin)))
+                        # Logger.log('d', "Angle Cosinus   : {}".format(math.degrees(LeCos)))
+                        Logger.log('d', "Chose Angle     : {}".format(math.degrees(Angle)))
+        return Angle
+        
     def _removeSupportMesh(self, node: CuraSceneNode):
         parent = node.getParent()
         if parent == self._controller.getScene().getRoot():
@@ -1163,15 +1301,15 @@ class CustomSupportsCylinder(Tool):
         self._ScaleMainDirection = SMain
         self._preferences.setValue("customsupportcylinder/scale_main_direction", SMain)
         
-    def getSMirror(self) -> bool:
+    def getSOrient(self) -> bool:
         """ 
-            return: golabl _MirrorSupport  as boolean.
+            return: golabl _OrientSupport  as boolean.
         """ 
-        return self._MirrorSupport
+        return self._OrientSupport
   
-    def setSMirror(self, SMirror: bool) -> None:
+    def setSOrient(self, SOrient: bool) -> None:
         """
-        param SMirror: as boolean.
+        param SOrient: as boolean.
         """
-        self._MirrorSupport = SMirror
-        self._preferences.setValue("customsupportcylinder/s_mirror", SMirror)
+        self._OrientSupport = SOrient
+        self._preferences.setValue("customsupportcylinder/s_orient", SOrient)

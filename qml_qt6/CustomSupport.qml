@@ -11,7 +11,7 @@
 //   "SMain"       : Scale Main direction (Freeform)
 //   "SType"       : Support Type ( Cylinder/Tube/Cube/Abutment/Freeform/Custom ) 
 //   "SubType"     : Support Freeform Type ( Cross/Section/Pillar/Bridge/Custom ) 
-//   "SMirror"     : Support Mirror for Freeform Type
+//   "SOrient"     : Support Automatic Orientation for Freeform Type
 //   "SMsg"        : Text for the Remove All Button
 //-----------------------------------------------------------------------------
 
@@ -370,21 +370,21 @@ Item
 		}
 		UM.CheckBox
 		{
-			id: mirrorCheckbox
+			id: orientCheckbox
 			anchors.top: useYDirectionCheckbox.bottom
 			anchors.topMargin: UM.Theme.getSize("default_margin").height
 			anchors.left: parent.left
-			text: catalog.i18nc("@option:check","Rotate 180°")
+			text: catalog.i18nc("@option:check","Auto Orientation")
 			visible: freeformButton.checked
 
-			checked: UM.ActiveTool.properties.getValue("SMirror")
-			onClicked: UM.ActiveTool.setProperty("SMirror", checked)
+			checked: UM.ActiveTool.properties.getValue("SOrient")
+			onClicked: UM.ActiveTool.setProperty("SOrient", checked)
 			
 		}	
 		UM.CheckBox
 		{
 			id: scaleMainDirectionCheckbox
-			anchors.top: mirrorCheckbox.bottom
+			anchors.top: orientCheckbox.bottom
 			anchors.topMargin: UM.Theme.getSize("default_margin").height
 			anchors.left: parent.left
 			text: catalog.i18nc("@option:check","Scaling in main Directions")
