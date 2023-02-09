@@ -43,7 +43,7 @@
 # V2.7.0 18-01-2023 Prepare translation
 # V2.7.1 02-02-2023 Replace Rotation 180° / Auto Orientation for FreeForm Model
 #
-# V2.8.0 09-02-2023 Add Define As part For Cylindrical Model
+# V2.8.0 09-02-2023 Add Define As Model For Cylindrical Model
 #--------------------------------------------------------------------------------------------
 
 VERSION_QT5 = False
@@ -121,7 +121,7 @@ class CustomSupportsCylinder(Tool):
         self._ScaleMainDirection = True
         self._OrientSupport = False
         self._MirrorSupport = False
-        self._DefineAsPart = False
+        self._DefineAsModel = False
         self._SType = 'cylinder'
         self._SubType = 'cross'
         self._Mesg = False # To avoid message 
@@ -140,7 +140,7 @@ class CustomSupportsCylinder(Tool):
         
         self._application = CuraApplication.getInstance()
         
-        self.setExposedProperties("SSize", "MSize", "ISize", "AAngle", "SType" , "AsPart", "YDirection" , "EHeights" , "SMain" , "SubType" , "SOrient", "SMirror", "SMsg")
+        self.setExposedProperties("SSize", "MSize", "ISize", "AAngle", "SType" , "AsModel", "YDirection" , "EHeights" , "SMain" , "SubType" , "SOrient", "SMirror", "SMsg")
         
         CuraApplication.getInstance().globalContainerStackChanged.connect(self._updateEnabled)
         
@@ -163,7 +163,7 @@ class CustomSupportsCylinder(Tool):
         self._preferences.addPreference("customsupportcylinder/m_size", 10)
         self._preferences.addPreference("customsupportcylinder/i_size", 2)
         self._preferences.addPreference("customsupportcylinder/a_angle", 0)
-        self._preferences.addPreference("customsupportcylinder/d_part", False)
+        self._preferences.addPreference("customsupportcylinder/d_model", False)
         self._preferences.addPreference("customsupportcylinder/y_direction", False)
         self._preferences.addPreference("customsupportcylinder/e_heights", True)
         self._preferences.addPreference("customsupportcylinder/scale_main_direction", True)
@@ -179,7 +179,7 @@ class CustomSupportsCylinder(Tool):
         self._UseAngle = float(self._preferences.getValue("customsupportcylinder/a_angle"))
         # convert as boolean to avoid further issue
         
-        self._DefineAsPart = bool(self._preferences.getValue("customsupportcylinder/d_part"))
+        self._DefineAsModel = bool(self._preferences.getValue("customsupportcylinder/d_model"))
         self._UseYDirection = bool(self._preferences.getValue("customsupportcylinder/y_direction"))
         self._EqualizeHeights = bool(self._preferences.getValue("customsupportcylinder/e_heights"))
         self._ScaleMainDirection = bool(self._preferences.getValue("customsupportcylinder/scale_main_direction"))
@@ -436,7 +436,7 @@ class CustomSupportsCylinder(Tool):
         # for key in ["support_mesh", "support_mesh_drop_down"]:
         # Don't fix
         
-        if self._DefineAsPart and self._SType == 'cylinder' :   
+        if self._DefineAsModel and self._SType == 'cylinder' :   
             
             definition = stack.getSettingDefinition("meshfix_union_all")
             new_instance = SettingInstance(definition, settings)
@@ -1310,18 +1310,18 @@ class CustomSupportsCylinder(Tool):
         # Logger.log('d', 'Get SubType : ' + str(SubType))   
         self._preferences.setValue("customsupportcylinder/s_type", SubType)
 
-    def getAsPart(self) -> bool:
+    def getAsModel(self) -> bool:
         """ 
-            return: global _AsPart  as boolean.
+            return: global _AsModel  as boolean.
         """ 
-        return self._DefineAsPart
+        return self._DefineAsModel
     
-    def setAsPart(self, AsPart: bool) -> None:
+    def setAsModel(self, AsModel: bool) -> None:
         """
-        param AsPart: as boolean.
+        param AsModel: as boolean.
         """
-        self._DefineAsPart = AsPart
-        self._preferences.setValue("customsupportcylinder/d_part", AsPart)
+        self._DefineAsModel = AsModel
+        self._preferences.setValue("customsupportcylinder/d_model", AsModel)
  
     def getYDirection(self) -> bool:
         """ 

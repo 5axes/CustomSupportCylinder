@@ -6,7 +6,7 @@
 //   "MSize"       : Support Maximum Size in mm
 //   "ISize"       : Support Interior Size in mm
 //   "AAngle"      : Support Angle in °
-//   "AsPart"      : Cylindrical Support created as part
+//   "AsModel"      : Cylindrical Support created as Model
 //   "YDirection"  : Support Y direction (Abutment)
 //   "EHeights"    : Equalize heights (Abutment)
 //   "SMain"       : Scale Main direction (Freeform)
@@ -332,16 +332,16 @@ Item
 
 		CheckBox
 		{
-			id: setAsPart
+			id: setAsModel
 			anchors.top: baseCheckBox.top
 			// anchors.topMargin: UM.Theme.getSize("default_margin").height
 			anchors.left: parent.left
-			text: catalog.i18nc("@option:check","Define as Part")
+			text: catalog.i18nc("@option:check","Define as Model")
 			style: UM.Theme.styles.partially_checkbox
 			visible: cylinderButton.checked 
 
-			checked: UM.ActiveTool.properties.getValue("AsPart")
-			onClicked: UM.ActiveTool.setProperty("AsPart", checked)
+			checked: UM.ActiveTool.properties.getValue("AsModel")
+			onClicked: UM.ActiveTool.setProperty("AsModel", checked)
 			
 		}		
 		CheckBox
