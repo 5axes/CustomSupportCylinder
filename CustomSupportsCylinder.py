@@ -362,7 +362,7 @@ class CustomSupportsCylinder(Tool):
                         untranslated_label=extruder_stack.getProperty(key,"label")
                         translated_label=i18n_catalog.i18nc(definition_key, untranslated_label) 
                         Format_String = catalog.i18nc("@info:label", "Info modification current profile '") + translated_label  + catalog.i18nc("@info:label", "' parameter\nNew value : ") + catalog.i18nc("@info:label", "Skirt")                
-                        Message(text = Format_String, title = catalog.i18nc("@info:title", "Warning ! Spoon Anti-Warping")).show()
+                        Message(text = Format_String, title = catalog.i18nc("@info:title", "Warning ! Custom Supports Cylinder")).show()
                         self._Mesg = True
                     # Define temporary adhesion_type=skirt to force boundary calculation ?
                     global_container_stack.setProperty(key, "value", 'skirt')
