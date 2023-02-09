@@ -10,7 +10,8 @@
 //   "EHeights"    : Equalize heights (Abutment)
 //   "SMain"       : Scale Main direction (Freeform)
 //   "SType"       : Support Type ( Cylinder/Tube/Cube/Abutment/Freeform/Custom ) 
-//   "SubType"     : Support Freeform Type ( Cross/Section/Pillar/Bridge/Custom ) 
+//   "SubType"     : Support Freeform Type ( Cross/Section/Pillar/Bridge/Custom )
+//   "SMirror"     : Support Mirror for Freeform Type 
 //   "SOrient"     : Support Automatic Orientation for Freeform Type
 //-----------------------------------------------------------------------------
 
@@ -344,8 +345,22 @@ Item
 		}
 		CheckBox
 		{
-			id: orientCheckbox
+			id: mirrorCheckbox
 			anchors.top: useYDirectionCheckbox.bottom
+			anchors.topMargin: UM.Theme.getSize("default_margin").height
+			anchors.left: parent.left
+			text: catalog.i18nc("@option:check","Rotate 180°")
+			style: UM.Theme.styles.partially_checkbox
+			visible: freeformButton.checked
+
+			checked: UM.ActiveTool.properties.getValue("SMirror")
+			onClicked: UM.ActiveTool.setProperty("SMirror", checked)
+			
+		}			
+		CheckBox
+		{
+			id: orientCheckbox
+			anchors.top: mirrorCheckbox.bottom
 			anchors.topMargin: UM.Theme.getSize("default_margin").height
 			anchors.left: parent.left
 			text: catalog.i18nc("@option:check","Auto Orientation")

@@ -120,6 +120,7 @@ class CustomSupportsCylinder(Tool):
         self._EqualizeHeights = True
         self._ScaleMainDirection = True
         self._OrientSupport = False
+        self._MirrorSupport = False
         self._SType = 'cylinder'
         self._SubType = 'cross'
         self._Mesg = False # To avoid message 
@@ -138,7 +139,7 @@ class CustomSupportsCylinder(Tool):
         
         self._application = CuraApplication.getInstance()
         
-        self.setExposedProperties("SSize", "MSize", "ISize", "AAngle", "SType" , "YDirection" , "EHeights" , "SMain" , "SubType" , "SOrient", "SMsg")
+        self.setExposedProperties("SSize", "MSize", "ISize", "AAngle", "SType" , "YDirection" , "EHeights" , "SMain" , "SubType" , "SOrient", "SMirror", "SMsg")
         
         CuraApplication.getInstance().globalContainerStackChanged.connect(self._updateEnabled)
         
@@ -165,6 +166,7 @@ class CustomSupportsCylinder(Tool):
         self._preferences.addPreference("customsupportcylinder/e_heights", True)
         self._preferences.addPreference("customsupportcylinder/scale_main_direction", True)
         self._preferences.addPreference("customsupportcylinder/s_orient", False)
+        self._preferences.addPreference("customsupportcylinder/s_mirror", False)
         self._preferences.addPreference("customsupportcylinder/t_type", "cylinder")
         self._preferences.addPreference("customsupportcylinder/s_type", "cross")
         
@@ -178,6 +180,7 @@ class CustomSupportsCylinder(Tool):
         self._EqualizeHeights = bool(self._preferences.getValue("customsupportcylinder/e_heights"))
         self._ScaleMainDirection = bool(self._preferences.getValue("customsupportcylinder/scale_main_direction"))
         self._OrientSupport = bool(self._preferences.getValue("customsupportcylinder/s_orient"))
+        self._MirrorSupport = bool(self._preferences.getValue("customsupportcylinder/s_mirror"))
         # convert as string to avoid further issue
         self._SType = str(self._preferences.getValue("customsupportcylinder/t_type"))
         # Sub type for Free Form support
@@ -367,9 +370,13 @@ class CustomSupportsCylinder(Tool):
                 _angle = self.defineAngle(EName,position)
                 Logger.log('d', 'Angle : ' + str(_angle))
                 load_mesh.apply_transform(trimesh.transformations.rotation_matrix(_angle, [0, 0, 1]))
-            if self._UseYDirection == True :
+            
+            elif self._UseYDirection == True :
                 load_mesh.apply_transform(trimesh.transformations.rotation_matrix(math.radians(90), [0, 0, 1]))
 
+            if self._MirrorSupport == True and self._OrientSupport == False :   
+                load_mesh.apply_transform(trimesh.transformations.rotation_matrix(math.radians(180), [0, 0, 1]))
+                
             mesh =  self._toMeshData(load_mesh)
             
         elif self._SType == 'abutment':
@@ -531,9 +538,11 @@ class CustomSupportsCylinder(Tool):
                                 # LeCos = math.acos(ref.dot(unit_vector2))
                                 
                                 if unit_vector2.x>=0 :
-                                    Angle = math.pi+LeSin  #angle in radian
+                                    Logger.log('d', "Angle Pos 1a")
+                                    Angle = math.pi-LeSin  #angle in radian
                                 else :
-                                    Angle = -LeSin                                    
+                                    Logger.log('d', "Angle Pos 2a")
+                                    Angle = LeSin                                    
                                     
                             if lght==min_lght and lght>0 :
                                 if Id > End_Id+1 :
@@ -556,12 +565,14 @@ class CustomSupportsCylinder(Tool):
                             LeSin = math.asin(ref.dot(unit_vector2))
                             # LeCos = math.acos(ref.dot(unit_vector2))
                             
-                            if unit_vector2.x>=0 :
-                                Angle = math.pi+LeSin  #angle in radian
-                                Logger.log('d', "Angle Pos 1")
+                            if unit_vector2.x >=0 :
+                                Logger.log('d', "Angle Pos 1b")
+                                Angle = math.pi-LeSin  #angle in radian
+                                
                             else :
-                                Angle = -LeSin
-                                Logger.log('d', "Angle Pos 2")
+                                Logger.log('d', "Angle Pos 2b")
+                                Angle = LeSin
+                                
                             
                             # Modification / Spoon not ne same start orientation
                             
@@ -1313,3 +1324,16 @@ class CustomSupportsCylinder(Tool):
         """
         self._OrientSupport = SOrient
         self._preferences.setValue("customsupportcylinder/s_orient", SOrient)
+    
+    def getSMirror(self) -> bool:
+        """ 
+            return: golabl _MirrorSupport  as boolean.
+        """ 
+        return self._MirrorSupport
+  
+    def setSMirror(self, SMirror: bool) -> None:
+        """
+        param SMirror: as boolean.
+        """
+        self._MirrorSupport = SMirror
+        self._preferences.setValue("customsupportcylinder/s_mirror", SMirror)
