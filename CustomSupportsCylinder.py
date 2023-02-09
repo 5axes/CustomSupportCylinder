@@ -546,10 +546,10 @@ class CustomSupportsCylinder(Tool):
                                 # LeCos = math.acos(ref.dot(unit_vector2))
                                 
                                 if unit_vector2.x>=0 :
-                                    Logger.log('d', "Angle Pos 1a")
+                                    # Logger.log('d', "Angle Pos 1a")
                                     Angle = math.pi-LeSin  #angle in radian
                                 else :
-                                    Logger.log('d', "Angle Pos 2a")
+                                    # Logger.log('d', "Angle Pos 2a")
                                     Angle = LeSin                                    
                                     
                             if lght==min_lght and lght>0 :
@@ -574,22 +574,22 @@ class CustomSupportsCylinder(Tool):
                             # LeCos = math.acos(ref.dot(unit_vector2))
                             
                             if unit_vector2.x >=0 :
-                                Logger.log('d', "Angle Pos 1b")
+                                # Logger.log('d', "Angle Pos 1b")
                                 Angle = math.pi-LeSin  #angle in radian
                                 
                             else :
-                                Logger.log('d', "Angle Pos 2b")
+                                # Logger.log('d', "Angle Pos 2b")
                                 Angle = LeSin
                                 
                             
                             # Modification / Spoon not ne same start orientation
                             
-                        Logger.log('d', "Pick_position   : {}".format(calc_position))
-                        Logger.log('d', "Close_position  : {}".format(Select_position))
-                        Logger.log('d', "Unit_vector2    : {}".format(unit_vector2))
-                        Logger.log('d', "Angle Sinus     : {}".format(math.degrees(LeSin)))
+                        # Logger.log('d', "Pick_position   : {}".format(calc_position))
+                        # Logger.log('d', "Close_position  : {}".format(Select_position))
+                        # Logger.log('d', "Unit_vector2    : {}".format(unit_vector2))
+                        # Logger.log('d', "Angle Sinus     : {}".format(math.degrees(LeSin)))
                         # Logger.log('d', "Angle Cosinus   : {}".format(math.degrees(LeCos)))
-                        Logger.log('d', "Chose Angle     : {}".format(math.degrees(Angle)))
+                        # Logger.log('d', "Chose Angle     : {}".format(math.degrees(Angle)))
         return Angle
         
     def _removeSupportMesh(self, node: CuraSceneNode):
