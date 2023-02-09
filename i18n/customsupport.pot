@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Custom Support Cylinder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-09 12:19+0000\n"
+"POT-Creation-Date: 2023-02-09 13:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,124 +27,129 @@ msgctxt "@info:tooltip"
 msgid "Add 6 types of custom support"
 msgstr ""
 
-#: CustomSupportsCylinder.py:127 CustomSupportsCylinder.py:1136
+#: CustomSupportsCylinder.py:128 CustomSupportsCylinder.py:1165
 msgctxt "@label"
 msgid "Remove All"
 msgstr ""
 
-#: CustomSupportsCylinder.py:364
+#: CustomSupportsCylinder.py:366
 msgctxt "@info:label"
 msgid "Info modification current profile '"
 msgstr ""
 
-#: CustomSupportsCylinder.py:364
+#: CustomSupportsCylinder.py:366
 msgctxt "@info:label"
 msgid ""
 "' parameter\n"
 "New value : "
 msgstr ""
 
-#: CustomSupportsCylinder.py:364
+#: CustomSupportsCylinder.py:366
 msgctxt "@info:label"
 msgid "Skirt"
 msgstr ""
 
-#: CustomSupportsCylinder.py:365 CustomSupportsCylinder.py:453
+#: CustomSupportsCylinder.py:367 CustomSupportsCylinder.py:482
 msgctxt "@info:title"
 msgid "Warning ! Custom Supports Cylinder"
 msgstr ""
 
-#: CustomSupportsCylinder.py:453
+#: CustomSupportsCylinder.py:482
 msgctxt "@info:label"
 msgid "Info modification support_type new value : Everywhere"
 msgstr ""
 
-#: CustomSupportsCylinder.py:465
+#: CustomSupportsCylinder.py:494
 msgctxt "@label"
 msgid "Remove Last"
 msgstr ""
 
-#: qml_qt6/CustomSupport.qml:62 qml_qt5/CustomSupport.qml:59
+#: qml_qt6/CustomSupport.qml:63 qml_qt5/CustomSupport.qml:60
 msgctxt "@label"
 msgid "Cylinder"
 msgstr ""
 
-#: qml_qt6/CustomSupport.qml:78 qml_qt5/CustomSupport.qml:72
+#: qml_qt6/CustomSupport.qml:79 qml_qt5/CustomSupport.qml:73
 msgctxt "@label"
 msgid "Tube"
 msgstr ""
 
-#: qml_qt6/CustomSupport.qml:94 qml_qt5/CustomSupport.qml:85
+#: qml_qt6/CustomSupport.qml:95 qml_qt5/CustomSupport.qml:86
 msgctxt "@label"
 msgid "Cube"
 msgstr ""
 
-#: qml_qt6/CustomSupport.qml:118 qml_qt5/CustomSupport.qml:98
+#: qml_qt6/CustomSupport.qml:119 qml_qt5/CustomSupport.qml:99
 msgctxt "@label"
 msgid "Abutment"
 msgstr ""
 
-#: qml_qt6/CustomSupport.qml:134 qml_qt5/CustomSupport.qml:111
+#: qml_qt6/CustomSupport.qml:135 qml_qt5/CustomSupport.qml:112
 msgctxt "@label"
 msgid "Freeform"
 msgstr ""
 
-#: qml_qt6/CustomSupport.qml:150 qml_qt5/CustomSupport.qml:124
+#: qml_qt6/CustomSupport.qml:151 qml_qt5/CustomSupport.qml:125
 msgctxt "@label"
 msgid "Custom"
 msgstr ""
 
-#: qml_qt6/CustomSupport.qml:179 qml_qt5/CustomSupport.qml:149
+#: qml_qt6/CustomSupport.qml:180 qml_qt5/CustomSupport.qml:150
 msgctxt "@label"
 msgid "Size"
 msgstr ""
 
-#: qml_qt6/CustomSupport.qml:190 qml_qt5/CustomSupport.qml:160
+#: qml_qt6/CustomSupport.qml:191 qml_qt5/CustomSupport.qml:161
 msgctxt "@label"
 msgid "Max Size"
 msgstr ""
 
-#: qml_qt6/CustomSupport.qml:202 qml_qt5/CustomSupport.qml:172
+#: qml_qt6/CustomSupport.qml:203 qml_qt5/CustomSupport.qml:173
 msgctxt "@label"
 msgid "Type"
 msgstr ""
 
-#: qml_qt6/CustomSupport.qml:215 qml_qt5/CustomSupport.qml:184
+#: qml_qt6/CustomSupport.qml:216 qml_qt5/CustomSupport.qml:185
 msgctxt "@label"
 msgid "Interior Size"
 msgstr ""
 
-#: qml_qt6/CustomSupport.qml:227 qml_qt5/CustomSupport.qml:196
+#: qml_qt6/CustomSupport.qml:228 qml_qt5/CustomSupport.qml:197
 msgctxt "@label"
 msgid "Angle"
 msgstr ""
 
-#: qml_qt6/CustomSupport.qml:366 qml_qt5/CustomSupport.qml:338
+#: qml_qt6/CustomSupport.qml:367 qml_qt5/CustomSupport.qml:339
+msgctxt "@option:check"
+msgid "Define as Part"
+msgstr ""
+
+#: qml_qt6/CustomSupport.qml:380 qml_qt5/CustomSupport.qml:353
 msgctxt "@option:check"
 msgid "Set on Y direction"
 msgstr ""
 
-#: qml_qt6/CustomSupport.qml:366 qml_qt5/CustomSupport.qml:338
+#: qml_qt6/CustomSupport.qml:380 qml_qt5/CustomSupport.qml:353
 msgctxt "@option:check"
 msgid "Set on Main direction"
 msgstr ""
 
-#: qml_qt6/CustomSupport.qml:379 qml_qt5/CustomSupport.qml:352
+#: qml_qt6/CustomSupport.qml:393 qml_qt5/CustomSupport.qml:367
 msgctxt "@option:check"
 msgid "Rotate 180°"
 msgstr ""
 
-#: qml_qt6/CustomSupport.qml:392 qml_qt5/CustomSupport.qml:366
+#: qml_qt6/CustomSupport.qml:406 qml_qt5/CustomSupport.qml:381
 msgctxt "@option:check"
 msgid "Auto Orientation"
 msgstr ""
 
-#: qml_qt6/CustomSupport.qml:405 qml_qt5/CustomSupport.qml:380
+#: qml_qt6/CustomSupport.qml:419 qml_qt5/CustomSupport.qml:395
 msgctxt "@option:check"
 msgid "Scaling in main Directions"
 msgstr ""
 
-#: qml_qt6/CustomSupport.qml:417 qml_qt5/CustomSupport.qml:394
+#: qml_qt6/CustomSupport.qml:431 qml_qt5/CustomSupport.qml:409
 msgctxt "@option:check"
 msgid "Equalize heights"
 msgstr ""
