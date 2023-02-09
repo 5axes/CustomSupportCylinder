@@ -41,7 +41,9 @@
 # V2.6.5 11-07-2022 Change Style of Button for Cura 5.0  5.1
 # V2.6.6 07-08-2022 Internal modification for Maximum Z height
 # V2.7.0 18-01-2023 Prepare translation
-# V2.7.1 02-02-2023 Replace Rotation 180° / Auto Orientation
+# V2.7.1 02-02-2023 Replace Rotation 180° / Auto Orientation for FreeForm Model
+#
+# V2.8.0 09-02-2023 Add Define As part For Cylindrical Model
 #--------------------------------------------------------------------------------------------
 
 VERSION_QT5 = False
@@ -66,7 +68,6 @@ from cura.Operations.SetParentOperation import SetParentOperation
 from cura.Scene.SliceableObjectDecorator import SliceableObjectDecorator
 from cura.Scene.BuildPlateDecorator import BuildPlateDecorator
 from cura.Scene.CuraSceneNode import CuraSceneNode
-from cura.Scene.CuraSceneNode import CuraSceneNode
 
 from UM.Logger import Logger
 from UM.Message import Message
@@ -76,7 +77,6 @@ from UM.Tool import Tool
 from UM.Event import Event, MouseEvent
 from UM.Mesh.MeshBuilder import MeshBuilder
 from UM.Mesh.MeshData import MeshData, calculateNormalsFromIndexedVertices
-
 from UM.Operations.GroupedOperation import GroupedOperation
 from UM.Operations.AddSceneNodeOperation import AddSceneNodeOperation
 from UM.Operations.RemoveSceneNodeOperation import RemoveSceneNodeOperation
@@ -121,6 +121,7 @@ class CustomSupportsCylinder(Tool):
         self._ScaleMainDirection = True
         self._OrientSupport = False
         self._MirrorSupport = False
+        self._DefineAsPart = False
         self._SType = 'cylinder'
         self._SubType = 'cross'
         self._Mesg = False # To avoid message 
@@ -139,7 +140,7 @@ class CustomSupportsCylinder(Tool):
         
         self._application = CuraApplication.getInstance()
         
-        self.setExposedProperties("SSize", "MSize", "ISize", "AAngle", "SType" , "YDirection" , "EHeights" , "SMain" , "SubType" , "SOrient", "SMirror", "SMsg")
+        self.setExposedProperties("SSize", "MSize", "ISize", "AAngle", "SType" , "AsPart", "YDirection" , "EHeights" , "SMain" , "SubType" , "SOrient", "SMirror", "SMsg")
         
         CuraApplication.getInstance().globalContainerStackChanged.connect(self._updateEnabled)
         
@@ -162,6 +163,7 @@ class CustomSupportsCylinder(Tool):
         self._preferences.addPreference("customsupportcylinder/m_size", 10)
         self._preferences.addPreference("customsupportcylinder/i_size", 2)
         self._preferences.addPreference("customsupportcylinder/a_angle", 0)
+        self._preferences.addPreference("customsupportcylinder/d_part", False)
         self._preferences.addPreference("customsupportcylinder/y_direction", False)
         self._preferences.addPreference("customsupportcylinder/e_heights", True)
         self._preferences.addPreference("customsupportcylinder/scale_main_direction", True)
@@ -176,6 +178,8 @@ class CustomSupportsCylinder(Tool):
         self._UseISize = float(self._preferences.getValue("customsupportcylinder/i_size"))
         self._UseAngle = float(self._preferences.getValue("customsupportcylinder/a_angle"))
         # convert as boolean to avoid further issue
+        
+        self._DefineAsPart = bool(self._preferences.getValue("customsupportcylinder/d_part"))
         self._UseYDirection = bool(self._preferences.getValue("customsupportcylinder/y_direction"))
         self._EqualizeHeights = bool(self._preferences.getValue("customsupportcylinder/e_heights"))
         self._ScaleMainDirection = bool(self._preferences.getValue("customsupportcylinder/scale_main_direction"))
@@ -184,8 +188,7 @@ class CustomSupportsCylinder(Tool):
         # convert as string to avoid further issue
         self._SType = str(self._preferences.getValue("customsupportcylinder/t_type"))
         # Sub type for Free Form support
-        self._SubType = str(self._preferences.getValue("customsupportcylinder/s_type"))
- 
+        self._SubType = str(self._preferences.getValue("customsupportcylinder/s_type"))       
                 
     def event(self, event):
         super().event(event)
@@ -229,7 +232,7 @@ class CustomSupportsCylinder(Tool):
 
             node_stack = picked_node.callDecoration("getStack")
             if node_stack:
-                if node_stack.getProperty("support_mesh", "value") and not alt_is_active:
+                if (node_stack.getProperty("support_mesh", "value")  or  node_stack.getProperty("infill_mesh_order", "value") == 50 ) and not alt_is_active:
                     self._removeSupportMesh(picked_node)
                     self._SHeights=0
                     return
@@ -264,8 +267,7 @@ class CustomSupportsCylinder(Tool):
                     
                 # Add the support_mesh cube at the picked location
                 self._createSupportMesh(picked_node, picked_position,picked_position_b)
-
-
+                
     def _createSupportMesh(self, parent: CuraSceneNode, position: Vector , position2: Vector):
         node = CuraSceneNode()
         EName = parent.getName()
@@ -434,17 +436,44 @@ class CustomSupportsCylinder(Tool):
         # for key in ["support_mesh", "support_mesh_drop_down"]:
         # Don't fix
         
-        definition = stack.getSettingDefinition("support_mesh")
-        new_instance = SettingInstance(definition, settings)
-        new_instance.setProperty("value", True)
-        new_instance.resetState()  # Ensure that the state is not seen as a user state.
-        settings.addInstance(new_instance)
+        if self._DefineAsPart and self._SType == 'cylinder' :   
+            
+            definition = stack.getSettingDefinition("meshfix_union_all")
+            new_instance = SettingInstance(definition, settings)
+            new_instance.setProperty("value", False)
+            new_instance.resetState()  # Ensure that the state is not seen as a user state.
+            settings.addInstance(new_instance)
+            
+            definition = stack.getSettingDefinition("infill_mesh_order")
+            new_instance = SettingInstance(definition, settings)
+            new_instance.setProperty("value", 50) #50 "maximum_value_warning": "50"
+            new_instance.resetState()  # Ensure that the state is not seen as a user state.
+            settings.addInstance(new_instance)               
 
-        definition = stack.getSettingDefinition("support_mesh_drop_down")
-        new_instance = SettingInstance(definition, settings)
-        new_instance.setProperty("value", False)
-        new_instance.resetState()  # Ensure that the state is not seen as a user state.
-        settings.addInstance(new_instance)
+            definition = stack.getSettingDefinition("infill_sparse_density")
+            new_instance = SettingInstance(definition, settings)
+            new_instance.setProperty("value", 0) # set infill density to 0
+            new_instance.resetState()  # Ensure that the state is not seen as a user state.
+            settings.addInstance(new_instance)
+
+            definition = stack.getSettingDefinition("wall_line_count")
+            new_instance = SettingInstance(definition, settings)
+            new_instance.setProperty("value", 1) # Set wall_line_count to 1
+            new_instance.resetState()  # Ensure that the state is not seen as a user state.
+            settings.addInstance(new_instance)
+            
+        else:
+            definition = stack.getSettingDefinition("support_mesh")
+            new_instance = SettingInstance(definition, settings)
+            new_instance.setProperty("value", True)
+            new_instance.resetState()  # Ensure that the state is not seen as a user state.
+            settings.addInstance(new_instance)
+
+            definition = stack.getSettingDefinition("support_mesh_drop_down")
+            new_instance = SettingInstance(definition, settings)
+            new_instance.setProperty("value", False)
+            new_instance.resetState()  # Ensure that the state is not seen as a user state.
+            settings.addInstance(new_instance)
 
         global_container_stack = CuraApplication.getInstance().getGlobalContainerStack()    
         
@@ -1130,7 +1159,7 @@ class CustomSupportsCylinder(Tool):
         if self._all_picked_node:
             for node in self._all_picked_node:
                 node_stack = node.callDecoration("getStack")
-                if node_stack.getProperty("support_mesh", "value"):
+                if node_stack.getProperty("support_mesh", "value") or  node_stack.getProperty("infill_mesh_order", "value") == 50 :
                     self._removeSupportMesh(node)
             self._all_picked_node = []
             self._SMsg = catalog.i18nc("@label", "Remove All") 
@@ -1142,14 +1171,14 @@ class CustomSupportsCylinder(Tool):
                     # Logger.log('d', 'isSliceable : ' + str(N_Name))
                     node_stack=node.callDecoration("getStack")           
                     if node_stack:        
-                        if node_stack.getProperty("support_mesh", "value"):
+                        if node_stack.getProperty("support_mesh", "value") or  node_stack.getProperty("infill_mesh_order", "value") == 50 :
                             # N_Name=node.getName()
                             # Logger.log('d', 'support_mesh : ' + str(N_Name)) 
                             self._removeSupportMesh(node)
         
     def getSSize(self) -> float:
         """ 
-            return: golabl _UseSize  in mm.
+            return: global _UseSize  in mm.
         """           
         return self._UseSize
   
@@ -1172,7 +1201,7 @@ class CustomSupportsCylinder(Tool):
 
     def getMSize(self) -> float:
         """ 
-            return: golabl _MaxSize  in mm.
+            return: global _MaxSize  in mm.
         """           
         return self._MaxSize
   
@@ -1195,7 +1224,7 @@ class CustomSupportsCylinder(Tool):
         
     def getISize(self) -> float:
         """ 
-            return: golabl _UseISize  in mm.
+            return: global _UseISize  in mm.
         """           
         return self._UseISize
   
@@ -1218,7 +1247,7 @@ class CustomSupportsCylinder(Tool):
         
     def getAAngle(self) -> float:
         """ 
-            return: golabl _UseAngle  in °.
+            return: global _UseAngle  in °.
         """           
         return self._UseAngle
   
@@ -1241,7 +1270,7 @@ class CustomSupportsCylinder(Tool):
  
     def getSMsg(self) -> bool:
         """ 
-            return: golabl _SMsg  as text paramater.
+            return: global _SMsg  as text paramater.
         """ 
         return self._SMsg
     
@@ -1254,7 +1283,7 @@ class CustomSupportsCylinder(Tool):
         
     def getSType(self) -> bool:
         """ 
-            return: golabl _SType  as text paramater.
+            return: global _SType  as text paramater.
         """ 
         return self._SType
     
@@ -1268,7 +1297,7 @@ class CustomSupportsCylinder(Tool):
  
     def getSubType(self) -> bool:
         """ 
-            return: golabl _SubType  as text paramater.
+            return: global _SubType  as text paramater.
         """ 
         # Logger.log('d', 'Set SubType : ' + str(self._SubType))  
         return self._SubType
@@ -1280,10 +1309,23 @@ class CustomSupportsCylinder(Tool):
         self._SubType = SubType
         # Logger.log('d', 'Get SubType : ' + str(SubType))   
         self._preferences.setValue("customsupportcylinder/s_type", SubType)
-        
+
+    def getAsPart(self) -> bool:
+        """ 
+            return: global _AsPart  as boolean.
+        """ 
+        return self._DefineAsPart
+    
+    def setAsPart(self, AsPart: bool) -> None:
+        """
+        param AsPart: as boolean.
+        """
+        self._DefineAsPart = AsPart
+        self._preferences.setValue("customsupportcylinder/d_part", AsPart)
+ 
     def getYDirection(self) -> bool:
         """ 
-            return: golabl _UseYDirection  as boolean.
+            return: global _UseYDirection  as boolean.
         """ 
         return self._UseYDirection
     
@@ -1296,7 +1338,7 @@ class CustomSupportsCylinder(Tool):
  
     def getEHeights(self) -> bool:
         """ 
-            return: golabl _EqualizeHeights  as boolean.
+            return: global _EqualizeHeights  as boolean.
         """ 
         return self._EqualizeHeights
   
@@ -1309,7 +1351,7 @@ class CustomSupportsCylinder(Tool):
  
     def getSMain(self) -> bool:
         """ 
-            return: golabl _ScaleMainDirection  as boolean.
+            return: global _ScaleMainDirection  as boolean.
         """ 
         return self._ScaleMainDirection
   
@@ -1322,7 +1364,7 @@ class CustomSupportsCylinder(Tool):
         
     def getSOrient(self) -> bool:
         """ 
-            return: golabl _OrientSupport  as boolean.
+            return: global _OrientSupport  as boolean.
         """ 
         return self._OrientSupport
   
@@ -1335,7 +1377,7 @@ class CustomSupportsCylinder(Tool):
     
     def getSMirror(self) -> bool:
         """ 
-            return: golabl _MirrorSupport  as boolean.
+            return: global _MirrorSupport  as boolean.
         """ 
         return self._MirrorSupport
   
