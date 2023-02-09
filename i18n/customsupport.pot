@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Custom Support Cylinder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-09 14:00+0000\n"
+"POT-Creation-Date: 2023-02-09 15:19+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -121,7 +121,7 @@ msgstr ""
 
 #: qml_qt6/CustomSupport.qml:367 qml_qt5/CustomSupport.qml:339
 msgctxt "@option:check"
-msgid "Define as Part"
+msgid "Define as Model"
 msgstr ""
 
 #: qml_qt6/CustomSupport.qml:380 qml_qt5/CustomSupport.qml:353
