@@ -351,7 +351,7 @@ Item
 			anchors.left: parent.left
 			text: catalog.i18nc("@option:check","Rotate 180°")
 			style: UM.Theme.styles.partially_checkbox
-			visible: freeformButton.checked
+			visible: freeformButton.checked && !orientCheckbox.checked
 
 			checked: UM.ActiveTool.properties.getValue("SMirror")
 			onClicked: UM.ActiveTool.setProperty("SMirror", checked)
