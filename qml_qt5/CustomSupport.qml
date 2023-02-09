@@ -335,7 +335,7 @@ Item
 			anchors.top: baseCheckBox.top
 			// anchors.topMargin: UM.Theme.getSize("default_margin").height
 			anchors.left: parent.left
-			text: catalog.i18nc("@option:check","Set on Y direction")
+			text: !orientCheckbox.checked || abutmentButton.checked ? catalog.i18nc("@option:check","Set on Y direction") : catalog.i18nc("@option:check","Set on Main direction")
 			style: UM.Theme.styles.partially_checkbox
 			visible: abutmentButton.checked || freeformButton.checked
 

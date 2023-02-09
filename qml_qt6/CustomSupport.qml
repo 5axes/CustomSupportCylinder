@@ -363,12 +363,13 @@ Item
 			anchors.top: baseCheckBox.top
 			// anchors.topMargin: UM.Theme.getSize("default_margin").height
 			anchors.left: parent.left
-			text: catalog.i18nc("@option:check","Set on Y direction")
-			visible: abutmentButton.checked || freeformButton.checked || !orientCheckbox.checked
+			text: !orientCheckbox.checked || abutmentButton.checked ? catalog.i18nc("@option:check","Set on Y direction") : catalog.i18nc("@option:check","Set on Main direction")
+			visible: abutmentButton.checked || freeformButton.checked 
 
 			checked: UM.ActiveTool.properties.getValue("YDirection")
 			onClicked: UM.ActiveTool.setProperty("YDirection", checked)	
 		}
+		
 		UM.CheckBox
 		{
 			id: mirrorCheckbox
@@ -376,7 +377,7 @@ Item
 			anchors.topMargin: UM.Theme.getSize("default_margin").height
 			anchors.left: parent.left
 			text: catalog.i18nc("@option:check","Rotate 180°")
-			visible: freeformButton.checked || !orientCheckbox.checked
+			visible: freeformButton.checked && !orientCheckbox.checked
 
 			checked: UM.ActiveTool.properties.getValue("SMirror")
 			onClicked: UM.ActiveTool.setProperty("SMirror", checked)

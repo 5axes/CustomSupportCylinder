@@ -368,6 +368,8 @@ class CustomSupportsCylinder(Tool):
                     global_container_stack.setProperty(key, "value", 'skirt')
                     Logger.log('d', "Info adhesion_type --> " + str(adhesion)) 
                 _angle = self.defineAngle(EName,position)
+                if self._UseYDirection == True :
+                    _angle = self.mainAngle(_angle)
                 Logger.log('d', 'Angle : ' + str(_angle))
                 load_mesh.apply_transform(trimesh.transformations.rotation_matrix(_angle, [0, 0, 1]))
             
@@ -482,7 +484,13 @@ class CustomSupportsCylinder(Tool):
         # Message(catalog.i18nc("@info:status", "Please select one or more models first"))
 
         return []
-        
+ 
+
+    def mainAngle(self, radian : float) -> float:
+        degree = math.degrees(radian)
+        degree = round(degree / 90) * 90
+        return math.radians(degree)   
+    
     def defineAngle(self, Cname : str, act_position: Vector) -> float:
         Angle = 0
         min_lght = 9999999.999
