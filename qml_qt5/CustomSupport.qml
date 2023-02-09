@@ -10,8 +10,9 @@
 //   "EHeights"    : Equalize heights (Abutment)
 //   "SMain"       : Scale Main direction (Freeform)
 //   "SType"       : Support Type ( Cylinder/Tube/Cube/Abutment/Freeform/Custom ) 
-//   "SubType"     : Support Freeform Type ( Cross/Section/Pillar/Bridge/Custom ) 
-//   "SMirror"     : Support Mirror for Freeform Type
+//   "SubType"     : Support Freeform Type ( Cross/Section/Pillar/Bridge/Custom )
+//   "SMirror"     : Support Mirror for Freeform Type 
+//   "SOrient"     : Support Automatic Orientation for Freeform Type
 //-----------------------------------------------------------------------------
 
 import QtQuick 2.2
@@ -334,7 +335,7 @@ Item
 			anchors.top: baseCheckBox.top
 			// anchors.topMargin: UM.Theme.getSize("default_margin").height
 			anchors.left: parent.left
-			text: catalog.i18nc("@option:check","Set on Y direction")
+			text: !orientCheckbox.checked || abutmentButton.checked ? catalog.i18nc("@option:check","Set on Y direction") : catalog.i18nc("@option:check","Set on Main direction")
 			style: UM.Theme.styles.partially_checkbox
 			visible: abutmentButton.checked || freeformButton.checked
 
@@ -355,11 +356,25 @@ Item
 			checked: UM.ActiveTool.properties.getValue("SMirror")
 			onClicked: UM.ActiveTool.setProperty("SMirror", checked)
 			
+		}			
+		CheckBox
+		{
+			id: orientCheckbox
+			anchors.top: mirrorCheckbox.bottom
+			anchors.topMargin: UM.Theme.getSize("default_margin").height
+			anchors.left: parent.left
+			text: catalog.i18nc("@option:check","Auto Orientation")
+			style: UM.Theme.styles.partially_checkbox
+			visible: freeformButton.checked
+
+			checked: UM.ActiveTool.properties.getValue("SOrient")
+			onClicked: UM.ActiveTool.setProperty("SOrient", checked)
+			
 		}	
 		CheckBox
 		{
 			id: scaleMainDirectionCheckbox
-			anchors.top: mirrorCheckbox.bottom
+			anchors.top: orientCheckbox.bottom
 			anchors.topMargin: UM.Theme.getSize("default_margin").height
 			anchors.left: parent.left
 			text: catalog.i18nc("@option:check","Scaling in main Directions")

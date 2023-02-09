@@ -115,7 +115,10 @@ To create custom support you need to clic 2 points on the model.
 
 
 - Version 2.6.X : Update for Cura 5.0
-- 
+- Version 2.7.0 : Add possibility to translate the plugin. Add French translation
+
+- Version 2.7.1 add auto-orientation on freeform support.
+
 # Youtube Video
 
 [![Version 2.5.2](http://img.youtube.com/vi/lCSbLjEbc-E/0.jpg)](http://www.youtube.com/watch?v=lCSbLjEbc-E)

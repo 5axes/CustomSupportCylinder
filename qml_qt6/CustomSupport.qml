@@ -11,6 +11,7 @@
 //   "SMain"       : Scale Main direction (Freeform)
 //   "SType"       : Support Type ( Cylinder/Tube/Cube/Abutment/Freeform/Custom ) 
 //   "SubType"     : Support Freeform Type ( Cross/Section/Pillar/Bridge/Custom ) 
+//   "SOrient"     : Support Automatic Orientation for Freeform Type
 //   "SMirror"     : Support Mirror for Freeform Type
 //   "SMsg"        : Text for the Remove All Button
 //-----------------------------------------------------------------------------
@@ -362,12 +363,13 @@ Item
 			anchors.top: baseCheckBox.top
 			// anchors.topMargin: UM.Theme.getSize("default_margin").height
 			anchors.left: parent.left
-			text: catalog.i18nc("@option:check","Set on Y direction")
-			visible: abutmentButton.checked || freeformButton.checked
+			text: !orientCheckbox.checked || abutmentButton.checked ? catalog.i18nc("@option:check","Set on Y direction") : catalog.i18nc("@option:check","Set on Main direction")
+			visible: abutmentButton.checked || freeformButton.checked 
 
 			checked: UM.ActiveTool.properties.getValue("YDirection")
 			onClicked: UM.ActiveTool.setProperty("YDirection", checked)	
 		}
+		
 		UM.CheckBox
 		{
 			id: mirrorCheckbox
@@ -375,16 +377,29 @@ Item
 			anchors.topMargin: UM.Theme.getSize("default_margin").height
 			anchors.left: parent.left
 			text: catalog.i18nc("@option:check","Rotate 180°")
-			visible: freeformButton.checked
+			visible: freeformButton.checked && !orientCheckbox.checked
 
 			checked: UM.ActiveTool.properties.getValue("SMirror")
 			onClicked: UM.ActiveTool.setProperty("SMirror", checked)
+			
+		}		
+		UM.CheckBox
+		{
+			id: orientCheckbox
+			anchors.top: mirrorCheckbox.bottom
+			anchors.topMargin: UM.Theme.getSize("default_margin").height
+			anchors.left: parent.left
+			text: catalog.i18nc("@option:check","Auto Orientation")
+			visible: freeformButton.checked
+
+			checked: UM.ActiveTool.properties.getValue("SOrient")
+			onClicked: UM.ActiveTool.setProperty("SOrient", checked)
 			
 		}	
 		UM.CheckBox
 		{
 			id: scaleMainDirectionCheckbox
-			anchors.top: mirrorCheckbox.bottom
+			anchors.top: orientCheckbox.bottom
 			anchors.topMargin: UM.Theme.getSize("default_margin").height
 			anchors.left: parent.left
 			text: catalog.i18nc("@option:check","Scaling in main Directions")
