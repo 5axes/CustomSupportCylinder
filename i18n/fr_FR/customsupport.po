@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Custom Support Cylinder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-09 09:51+0000\n"
-"PO-Revision-Date: 2023-02-09 10:52+0200\n"
+"POT-Creation-Date: 2023-02-21 08:56+0000\n"
+"PO-Revision-Date: 2023-02-21 09:59+0200\n"
 "Last-Translator: 5axes <5axes@free.fr>\n"
 "Language-Team: 5axes\n"
 "Language: fr\n"
@@ -16,6 +16,45 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Virtaal 0.7.1\n"
+
+#: CustomSupportsCylinder.py:129 CustomSupportsCylinder.py:1213
+msgctxt "@label"
+msgid "Remove All"
+msgstr "Supprimer Tous"
+
+#: CustomSupportsCylinder.py:367
+msgctxt "@info:label"
+msgid "Info modification current profile '"
+msgstr "Information modification du profil actuel Paramètre '"
+
+#: CustomSupportsCylinder.py:367
+msgctxt "@info:label"
+msgid ""
+"' parameter\n"
+"New value : "
+msgstr ""
+"'\n"
+"Nouvelle Valeur : "
+
+#: CustomSupportsCylinder.py:367
+msgctxt "@info:label"
+msgid "Skirt"
+msgstr "Jupe"
+
+#: CustomSupportsCylinder.py:368 CustomSupportsCylinder.py:483
+msgctxt "@info:title"
+msgid "Warning ! Custom Supports Cylinder"
+msgstr "Attention ! Supports Custom Cylindrique"
+
+#: CustomSupportsCylinder.py:483
+msgctxt "@info:label"
+msgid "Info modification support_type new value : Everywhere"
+msgstr "Info modification support_type nouvelle valeur : Partout"
+
+#: CustomSupportsCylinder.py:495
+msgctxt "@label"
+msgid "Remove Last"
+msgstr "Supprimer Derniers"
 
 #: __init__.py:23
 msgctxt "@label"
@@ -27,126 +66,96 @@ msgctxt "@info:tooltip"
 msgid "Add 6 types of custom support"
 msgstr "Ajouter 6 types de support personnalisé"
 
-#: CustomSupportsCylinder.py:127 CustomSupportsCylinder.py:1136
-msgctxt "@label"
-msgid "Remove All"
-msgstr "Supprimer Tous"
-
-#: CustomSupportsCylinder.py:364
-msgctxt "@info:label"
-msgid "Info modification current profile '"
-msgstr "Information modification du profil actuel Paramètre '"
-
-#: CustomSupportsCylinder.py:364
-msgctxt "@info:label"
-msgid ""
-"' parameter\n"
-"New value : "
-msgstr ""
-"'\n"
-"Nouvelle Valeur : "
-
-#: CustomSupportsCylinder.py:364
-msgctxt "@info:label"
-msgid "Skirt"
-msgstr "Jupe"
-
-#: CustomSupportsCylinder.py:365 CustomSupportsCylinder.py:453
-msgctxt "@info:title"
-msgid "Warning ! Custom Supports Cylinder"
-msgstr "Attention ! Supports Custom Cylindrique"
-
-#: CustomSupportsCylinder.py:453
-msgctxt "@info:label"
-msgid "Info modification support_type new value : Everywhere"
-msgstr "Info modification support_type nouvelle valeur : Partout"
-
-#: CustomSupportsCylinder.py:465
-msgctxt "@label"
-msgid "Remove Last"
-msgstr "Supprimer Derniers"
-
-#: qml_qt6/CustomSupport.qml:62 qml_qt5/CustomSupport.qml:59
+#: qml_qt6/CustomSupport.qml:63 qml_qt5/CustomSupport.qml:60
 msgctxt "@label"
 msgid "Cylinder"
 msgstr "Cylindre"
 
-#: qml_qt6/CustomSupport.qml:78 qml_qt5/CustomSupport.qml:72
+#: qml_qt6/CustomSupport.qml:79 qml_qt5/CustomSupport.qml:73
 msgctxt "@label"
 msgid "Tube"
 msgstr "Tube"
 
-#: qml_qt6/CustomSupport.qml:94 qml_qt5/CustomSupport.qml:85
+#: qml_qt6/CustomSupport.qml:95 qml_qt5/CustomSupport.qml:86
 msgctxt "@label"
 msgid "Cube"
 msgstr "Cube"
 
-#: qml_qt6/CustomSupport.qml:118 qml_qt5/CustomSupport.qml:98
+#: qml_qt6/CustomSupport.qml:119 qml_qt5/CustomSupport.qml:99
 msgctxt "@label"
 msgid "Abutment"
 msgstr "Contrefort"
 
-#: qml_qt6/CustomSupport.qml:134 qml_qt5/CustomSupport.qml:111
+#: qml_qt6/CustomSupport.qml:135 qml_qt5/CustomSupport.qml:112
 msgctxt "@label"
 msgid "Freeform"
 msgstr "Forme libre"
 
-#: qml_qt6/CustomSupport.qml:150 qml_qt5/CustomSupport.qml:124
+#: qml_qt6/CustomSupport.qml:151 qml_qt5/CustomSupport.qml:125
 msgctxt "@label"
 msgid "Custom"
 msgstr "Personnalisé"
 
-#: qml_qt6/CustomSupport.qml:179 qml_qt5/CustomSupport.qml:149
+#: qml_qt6/CustomSupport.qml:180 qml_qt5/CustomSupport.qml:150
 msgctxt "@label"
 msgid "Size"
 msgstr "Taille"
 
-#: qml_qt6/CustomSupport.qml:190 qml_qt5/CustomSupport.qml:160
+#: qml_qt6/CustomSupport.qml:191 qml_qt5/CustomSupport.qml:161
 msgctxt "@label"
 msgid "Max Size"
 msgstr "Taille maxi"
 
-#: qml_qt6/CustomSupport.qml:202 qml_qt5/CustomSupport.qml:172
+#: qml_qt6/CustomSupport.qml:203 qml_qt5/CustomSupport.qml:173
 msgctxt "@label"
 msgid "Type"
 msgstr "Type"
 
-#: qml_qt6/CustomSupport.qml:215 qml_qt5/CustomSupport.qml:184
+#: qml_qt6/CustomSupport.qml:216 qml_qt5/CustomSupport.qml:185
 msgctxt "@label"
 msgid "Interior Size"
 msgstr "Taille intérieure"
 
-#: qml_qt6/CustomSupport.qml:227 qml_qt5/CustomSupport.qml:196
+#: qml_qt6/CustomSupport.qml:228 qml_qt5/CustomSupport.qml:197
 msgctxt "@label"
 msgid "Angle"
 msgstr "Angle"
 
-#: qml_qt6/CustomSupport.qml:366 qml_qt5/CustomSupport.qml:338
+#: qml_qt6/CustomSupport.qml:367 qml_qt5/CustomSupport.qml:339
+msgctxt "@option:check"
+msgid "Define as Model"
+msgstr "Définir comme Modèle"
+
+#: qml_qt6/CustomSupport.qml:380 qml_qt5/CustomSupport.qml:353
 msgctxt "@option:check"
 msgid "Set on Y direction"
 msgstr "Orienter selon Y"
 
-#: qml_qt6/CustomSupport.qml:366 qml_qt5/CustomSupport.qml:338
+#: qml_qt6/CustomSupport.qml:380 qml_qt5/CustomSupport.qml:353
 msgctxt "@option:check"
 msgid "Set on Main direction"
 msgstr "Orienter direction principale"
 
-#: qml_qt6/CustomSupport.qml:379 qml_qt5/CustomSupport.qml:352
+#: qml_qt6/CustomSupport.qml:393 qml_qt5/CustomSupport.qml:367
 msgctxt "@option:check"
 msgid "Rotate 180°"
 msgstr "Rotation 180°"
 
-#: qml_qt6/CustomSupport.qml:392 qml_qt5/CustomSupport.qml:366
+#: qml_qt6/CustomSupport.qml:406 qml_qt5/CustomSupport.qml:381
 msgctxt "@option:check"
 msgid "Auto Orientation"
 msgstr "Orientation automatique"
 
-#: qml_qt6/CustomSupport.qml:405 qml_qt5/CustomSupport.qml:380
+#: qml_qt6/CustomSupport.qml:419 qml_qt5/CustomSupport.qml:395
 msgctxt "@option:check"
 msgid "Scaling in main Directions"
 msgstr "Echelle selon directions principales"
 
-#: qml_qt6/CustomSupport.qml:417 qml_qt5/CustomSupport.qml:394
+#: qml_qt6/CustomSupport.qml:431 qml_qt5/CustomSupport.qml:409
 msgctxt "@option:check"
 msgid "Equalize heights"
 msgstr "Égaliser les hauteurs"
+
+#~ msgctxt "@option:check"
+#~ msgid "Define as Part"
+#~ msgstr "Définir comme pièce"

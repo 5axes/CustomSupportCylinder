@@ -6,6 +6,7 @@
 //   "MSize"       : Support Maximum Size in mm
 //   "ISize"       : Support Interior Size in mm
 //   "AAngle"      : Support Angle in °
+//   "AsModel"      : Cylindrical Support created as Model
 //   "YDirection"  : Support Y direction (Abutment)
 //   "EHeights"    : Equalize heights (Abutment)
 //   "SMain"       : Scale Main direction (Freeform)
@@ -324,11 +325,25 @@ Item
 	{
 		id: baseCheckBox
 		width: childrenRect.width
-		height: !freeformButton.checked && !abutmentButton.checked  ? 0 : (abutmentButton.checked ? (UM.Theme.getSize("setting_control").height*2+UM.Theme.getSize("default_margin").height): childrenRect.height)
+		height: !freeformButton.checked && !abutmentButton.checked && !cylinderButton.checked ?  0 : cylinderButton.checked ? UM.Theme.getSize("setting_control").height : abutmentButton.checked ? (UM.Theme.getSize("setting_control").height*2+UM.Theme.getSize("default_margin").height): childrenRect.height
 		anchors.leftMargin: UM.Theme.getSize("default_margin").width
 		anchors.top: textfields.bottom
 		anchors.topMargin: UM.Theme.getSize("default_margin").height
-		
+
+		CheckBox
+		{
+			id: setAsModel
+			anchors.top: baseCheckBox.top
+			// anchors.topMargin: UM.Theme.getSize("default_margin").height
+			anchors.left: parent.left
+			text: catalog.i18nc("@option:check","Define as Model")
+			style: UM.Theme.styles.partially_checkbox
+			visible: cylinderButton.checked 
+
+			checked: UM.ActiveTool.properties.getValue("AsModel")
+			onClicked: UM.ActiveTool.setProperty("AsModel", checked)
+			
+		}		
 		CheckBox
 		{
 			id: useYDirectionCheckbox

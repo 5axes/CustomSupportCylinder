@@ -112,12 +112,13 @@ To create custom support you need to clic 2 points on the model.
 
 - Version 2.5.X : New option for Freeform Support : Can add a support with a form freely defined by an STL file ( Model must have the size 1x1x1 bo be modified according to the Size value and the height ) :
 
-
-
 - Version 2.6.X : Update for Cura 5.0
-- Version 2.7.0 : Add possibility to translate the plugin. Add French translation
 
+- Version 2.7.0 : Add possibility to translate the plugin. Add French translation
 - Version 2.7.1 add auto-orientation on freeform support.
+
+- Version 2.8.0 Add Define As Model For Cylindrical Model.
+- Version 2.8.1 Change Code for automatic orientation.
 
 # Youtube Video
 
@@ -129,6 +130,4 @@ To create custom support you need to clic 2 points on the model.
 [![Version 2.6.4](http://img.youtube.com/vi/mttGebG2k3o/0.jpg)](http://www.youtube.com/watch?v=mttGebG2k3o)
 ## Version 2.7.1
 [![Version 2.7.1](http://img.youtube.com/vi/xLy8lSbEBqs/0.jpg)](https://www.youtube.com/watch?v=xLy8lSbEBqs)
-
-
 
