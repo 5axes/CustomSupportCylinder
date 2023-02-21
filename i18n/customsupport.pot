@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Custom Support Cylinder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-09 15:21+0000\n"
+"POT-Creation-Date: 2023-02-21 08:56+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,43 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: CustomSupportsCylinder.py:129 CustomSupportsCylinder.py:1213
+msgctxt "@label"
+msgid "Remove All"
+msgstr ""
+
+#: CustomSupportsCylinder.py:367
+msgctxt "@info:label"
+msgid "Info modification current profile '"
+msgstr ""
+
+#: CustomSupportsCylinder.py:367
+msgctxt "@info:label"
+msgid ""
+"' parameter\n"
+"New value : "
+msgstr ""
+
+#: CustomSupportsCylinder.py:367
+msgctxt "@info:label"
+msgid "Skirt"
+msgstr ""
+
+#: CustomSupportsCylinder.py:368 CustomSupportsCylinder.py:483
+msgctxt "@info:title"
+msgid "Warning ! Custom Supports Cylinder"
+msgstr ""
+
+#: CustomSupportsCylinder.py:483
+msgctxt "@info:label"
+msgid "Info modification support_type new value : Everywhere"
+msgstr ""
+
+#: CustomSupportsCylinder.py:495
+msgctxt "@label"
+msgid "Remove Last"
+msgstr ""
 
 #: __init__.py:23
 msgctxt "@label"
@@ -25,43 +62,6 @@ msgstr ""
 #: __init__.py:24
 msgctxt "@info:tooltip"
 msgid "Add 6 types of custom support"
-msgstr ""
-
-#: CustomSupportsCylinder.py:128 CustomSupportsCylinder.py:1165
-msgctxt "@label"
-msgid "Remove All"
-msgstr ""
-
-#: CustomSupportsCylinder.py:366
-msgctxt "@info:label"
-msgid "Info modification current profile '"
-msgstr ""
-
-#: CustomSupportsCylinder.py:366
-msgctxt "@info:label"
-msgid ""
-"' parameter\n"
-"New value : "
-msgstr ""
-
-#: CustomSupportsCylinder.py:366
-msgctxt "@info:label"
-msgid "Skirt"
-msgstr ""
-
-#: CustomSupportsCylinder.py:367 CustomSupportsCylinder.py:482
-msgctxt "@info:title"
-msgid "Warning ! Custom Supports Cylinder"
-msgstr ""
-
-#: CustomSupportsCylinder.py:482
-msgctxt "@info:label"
-msgid "Info modification support_type new value : Everywhere"
-msgstr ""
-
-#: CustomSupportsCylinder.py:494
-msgctxt "@label"
-msgid "Remove Last"
 msgstr ""
 
 #: qml_qt6/CustomSupport.qml:63 qml_qt5/CustomSupport.qml:60
