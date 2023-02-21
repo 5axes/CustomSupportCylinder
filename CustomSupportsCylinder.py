@@ -44,6 +44,7 @@
 # V2.7.1 02-02-2023 Replace Rotation 180° / Auto Orientation for FreeForm Model
 #
 # V2.8.0 09-02-2023 Add Define As Model For Cylindrical Model
+# V2.8.1 20-02-2023 Change Code for automatic orientation
 #--------------------------------------------------------------------------------------------
 
 VERSION_QT5 = False
@@ -369,7 +370,7 @@ class CustomSupportsCylinder(Tool):
                     # Define temporary adhesion_type=skirt to force boundary calculation ?
                     global_container_stack.setProperty(key, "value", 'skirt')
                     Logger.log('d', "Info adhesion_type --> " + str(adhesion)) 
-                _angle = self.defineAngle(EName,position)
+                _angle = self._defineAngle(EName,position)
                 if self._UseYDirection == True :
                     _angle = self.mainAngle(_angle)
                 Logger.log('d', 'Angle : ' + str(_angle))
@@ -519,8 +520,28 @@ class CustomSupportsCylinder(Tool):
         degree = math.degrees(radian)
         degree = round(degree / 90) * 90
         return math.radians(degree)   
-    
-    def defineAngle(self, Cname : str, act_position: Vector) -> float:
+
+    def _distance(self,p1, p2):
+        """Calculates the distance between two points."""
+        x1, y1 = p1
+        x2, y2 = p2
+        return math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+
+    def _closest_point_on_segment(self, segment, point):
+        """Find the closest point between a segment and a given point."""
+        p, q = segment
+        pq_distance = self._distance(p, q)
+        if pq_distance == 0:
+            return p
+        u = ((point[0] - p[0]) * (q[0] - p[0]) + (point[1] - p[1]) * (q[1] - p[1])) / pq_distance ** 2
+        if u < 0:
+            return p
+        elif u > 1:
+            return q
+        else:
+            return (p[0] + u * (q[0] - p[0]), p[1] + u * (q[1] - p[1]))
+            
+    def _defineAngle(self, Cname : str, act_position: Vector) -> float:
         Angle = 0
         min_lght = 9999999.999
         # Set on the build plate for distance
@@ -551,8 +572,6 @@ class CustomSupportsCylinder(Tool):
                             
                         points=hull_polygon.getPoints()
                         # nb_pt = point[0] / point[1] must be divided by 2
-                        # Angle Ref for angle / Y Dir
-                        ref = Vector(0, 0, 1)
                         Id=0
                         Start_Id=0
                         End_Id=0
@@ -568,18 +587,7 @@ class CustomSupportsCylinder(Tool):
                             if lght<min_lght and lght>0 :
                                 min_lght=lght
                                 Start_Id=Id
-                                Select_position = new_position
-                                unit_vector2 = lg.normalized()
-                                # Logger.log('d', "unit_vector2 : {}".format(unit_vector2))
-                                LeSin = math.asin(ref.dot(unit_vector2))
-                                # LeCos = math.acos(ref.dot(unit_vector2))
-                                
-                                if unit_vector2.x>=0 :
-                                    # Logger.log('d', "Angle Pos 1a")
-                                    Angle = math.pi-LeSin  #angle in radian
-                                else :
-                                    # Logger.log('d', "Angle Pos 2a")
-                                    Angle = LeSin                                    
+                                Select_position = new_position                                   
                                     
                             if lght==min_lght and lght>0 :
                                 if Id > End_Id+1 :
@@ -590,29 +598,69 @@ class CustomSupportsCylinder(Tool):
                                     
                             Id+=1
                         
-                        # Could be the case with automatic .. rarely in pickpoint   
-                        if Start_Id != End_Id :
-                            # Logger.log('d', "Possibility   : {} / {}".format(Start_Id,End_Id))
-                            Id=int(Start_Id+0.5*(End_Id-Start_Id))
-                            # Logger.log('d', "Id   : {}".format(Id))
-                            new_position = Vector(points[Id][0], 0, points[Id][1])
-                            lg=calc_position-new_position                            
-                            unit_vector2 = lg.normalized()
-                            # Logger.log('d', "unit_vector2 : {}".format(unit_vector2))
-                            LeSin = math.asin(ref.dot(unit_vector2))
-                            # LeCos = math.acos(ref.dot(unit_vector2))
-                            
-                            if unit_vector2.x >=0 :
-                                # Logger.log('d', "Angle Pos 1b")
-                                Angle = math.pi-LeSin  #angle in radian
-                                
+                        # Could be the case in pickpoint 
+                        # Logger.log('d', "Start_Id : {}".format(Start_Id))
+                        # Logger.log('d', "End_Id : {}".format(End_Id))
+                        if Start_Id == End_Id :
+                            # Add First point at the end for Segment Analyse
+                            if Start_Id < len(points)-1 :
+                                p1 = points[Start_Id]
+                                p2 = points[Start_Id+1]
                             else :
-                                # Logger.log('d', "Angle Pos 2b")
-                                Angle = LeSin
+                                p1 = points[Start_Id]
+                                p2 = points[0]
                                 
+                            segment = ((p1[0], p1[1]), (p2[0], p2[1]))
+                            # Logger.log('d', "Segment : {}".format(segment))
+                            pt = (calc_position.x, calc_position.z)
+                            # Logger.log('d', "Point : {}".format(pt))
+                            pt_r=self._closest_point_on_segment(segment,pt)
+                            # Logger.log('d', "Closest_point_on_segment : {}".format(pt_r))
+                            new_position = Vector(pt_r[0], 0, pt_r[1]) 
+                            lg=calc_position-new_position
+                            lght = round(lg.length(),0)
                             
-                            # Modification / Spoon not ne same start orientation
+                            if lght<min_lght and lght>0 :                                
+                                # Logger.log('d', "New_position : {}".format(new_position))
+                                Select_position = new_position
+ 
+                            if Start_Id > 0 :
+                                p1 = points[Start_Id-1]
+                                p2 = points[Start_Id]
+                            else :
+                                p1 = points[len(points)-1]
+                                p2 = points[0]
+                                
+                            segment = ((p1[0], p1[1]), (p2[0], p2[1]))
+                            # Logger.log('d', "Segment : {}".format(segment))
+                            pt = (calc_position.x, calc_position.z)
+                            # Logger.log('d', "Point : {}".format(pt))
+                            pt_r=self._closest_point_on_segment(segment,pt)
+                            # Logger.log('d', "Closest_point_on_segment : {}".format(pt_r))
+                            new_position = Vector(pt_r[0], 0, pt_r[1]) 
+                            lg=calc_position-new_position
+                            lght = round(lg.length(),0)
                             
+                            if lght<min_lght and lght>0 :                                
+                                # Logger.log('d', "New_position : {}".format(new_position))
+                                Select_position = new_position
+                                
+                        else : # Could be the case with automatic .. rarely in pickpoint 
+                            Id=int(Start_Id+0.5*(End_Id-Start_Id))
+                            # Logger.log('d', "Id : {}".format(Id))
+                            Select_position = Vector(points[Id][0], 0, points[Id][1])
+                            
+                            
+                        lg=calc_position-Select_position                            
+                        unit_vector2 = lg.normalized()
+                        LeSin = math.asin(ref.dot(unit_vector2))
+                        # LeCos = math.acos(ref.dot(unit_vector2))
+                        
+                        if unit_vector2.x >=0 :
+                            Angle = math.pi-LeSin  #angle in radian                              
+                        else :
+                            Angle = LeSin
+                                
                         # Logger.log('d', "Pick_position   : {}".format(calc_position))
                         # Logger.log('d', "Close_position  : {}".format(Select_position))
                         # Logger.log('d', "Unit_vector2    : {}".format(unit_vector2))
