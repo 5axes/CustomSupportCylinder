@@ -45,6 +45,7 @@
 #
 # V2.8.0 09-02-2023 Add Define As Model For Cylindrical Model
 # V2.8.1 20-02-2023 Change Code for automatic orientation
+# V2.8.2 13-03-2023 Change Location for qml & i18n
 #--------------------------------------------------------------------------------------------
 
 VERSION_QT5 = False
@@ -94,7 +95,7 @@ i18n_catalog = i18nCatalog("fdmprinter.def.json")
 i18n_extrud_catalog = i18nCatalog("fdmextruder.def.json")
 
 Resources.addSearchPath(
-    os.path.join(os.path.abspath(os.path.dirname(__file__)))
+    os.path.join(os.path.abspath(os.path.dirname(__file__)),'resources')
 )  # Plugin translation file import
 
 catalog = i18nCatalog("customsupport")

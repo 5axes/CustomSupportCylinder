@@ -14,9 +14,9 @@ i18n_catalog = i18nCatalog("customsupport")
 
 def getMetaData():
     if not VERSION_QT5:
-        QmlFile="qml_qt6/CustomSupport.qml"
+        QmlFile="qml/qml_qt6/CustomSupport.qml"
     else:
-        QmlFile="qml_qt5/CustomSupport.qml"
+        QmlFile="qml/qml_qt5/CustomSupport.qml"
 
     return {
         "tool": {
