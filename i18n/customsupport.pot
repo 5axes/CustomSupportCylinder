@@ -1,0 +1,155 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the Custom Support Cylinder package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Custom Support Cylinder\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-03-14 02:33+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: CustomSupportsCylinder.py:130 CustomSupportsCylinder.py:1214
+msgctxt "@label"
+msgid "Remove All"
+msgstr ""
+
+#: CustomSupportsCylinder.py:368
+msgctxt "@info:label"
+msgid "Info modification current profile '"
+msgstr ""
+
+#: CustomSupportsCylinder.py:368
+msgctxt "@info:label"
+msgid ""
+"' parameter\n"
+"New value : "
+msgstr ""
+
+#: CustomSupportsCylinder.py:368
+msgctxt "@info:label"
+msgid "Skirt"
+msgstr ""
+
+#: CustomSupportsCylinder.py:369 CustomSupportsCylinder.py:484
+msgctxt "@info:title"
+msgid "Warning ! Custom Supports Cylinder"
+msgstr ""
+
+#: CustomSupportsCylinder.py:484
+msgctxt "@info:label"
+msgid "Info modification support_type new value : Everywhere"
+msgstr ""
+
+#: CustomSupportsCylinder.py:496
+msgctxt "@label"
+msgid "Remove Last"
+msgstr ""
+
+#: __init__.py:23
+msgctxt "@label"
+msgid "Custom Supports Cylinder"
+msgstr ""
+
+#: __init__.py:24
+msgctxt "@info:tooltip"
+msgid "Add 6 types of custom support"
+msgstr ""
+
+#: qml/qml_qt5/CustomSupport.qml:60 qml/qml_qt6/CustomSupport.qml:63
+msgctxt "@label"
+msgid "Cylinder"
+msgstr ""
+
+#: qml/qml_qt5/CustomSupport.qml:73 qml/qml_qt6/CustomSupport.qml:79
+msgctxt "@label"
+msgid "Tube"
+msgstr ""
+
+#: qml/qml_qt5/CustomSupport.qml:86 qml/qml_qt6/CustomSupport.qml:95
+msgctxt "@label"
+msgid "Cube"
+msgstr ""
+
+#: qml/qml_qt5/CustomSupport.qml:99 qml/qml_qt6/CustomSupport.qml:119
+msgctxt "@label"
+msgid "Abutment"
+msgstr ""
+
+#: qml/qml_qt5/CustomSupport.qml:112 qml/qml_qt6/CustomSupport.qml:135
+msgctxt "@label"
+msgid "Freeform"
+msgstr ""
+
+#: qml/qml_qt5/CustomSupport.qml:125 qml/qml_qt6/CustomSupport.qml:151
+msgctxt "@label"
+msgid "Custom"
+msgstr ""
+
+#: qml/qml_qt5/CustomSupport.qml:150 qml/qml_qt6/CustomSupport.qml:180
+msgctxt "@label"
+msgid "Size"
+msgstr ""
+
+#: qml/qml_qt5/CustomSupport.qml:161 qml/qml_qt6/CustomSupport.qml:191
+msgctxt "@label"
+msgid "Max Size"
+msgstr ""
+
+#: qml/qml_qt5/CustomSupport.qml:173 qml/qml_qt6/CustomSupport.qml:203
+msgctxt "@label"
+msgid "Type"
+msgstr ""
+
+#: qml/qml_qt5/CustomSupport.qml:185 qml/qml_qt6/CustomSupport.qml:216
+msgctxt "@label"
+msgid "Interior Size"
+msgstr ""
+
+#: qml/qml_qt5/CustomSupport.qml:197 qml/qml_qt6/CustomSupport.qml:228
+msgctxt "@label"
+msgid "Angle"
+msgstr ""
+
+#: qml/qml_qt5/CustomSupport.qml:339 qml/qml_qt6/CustomSupport.qml:367
+msgctxt "@option:check"
+msgid "Define as Model"
+msgstr ""
+
+#: qml/qml_qt5/CustomSupport.qml:353 qml/qml_qt6/CustomSupport.qml:380
+msgctxt "@option:check"
+msgid "Set on Y direction"
+msgstr ""
+
+#: qml/qml_qt5/CustomSupport.qml:353 qml/qml_qt6/CustomSupport.qml:380
+msgctxt "@option:check"
+msgid "Set on Main direction"
+msgstr ""
+
+#: qml/qml_qt5/CustomSupport.qml:367 qml/qml_qt6/CustomSupport.qml:393
+msgctxt "@option:check"
+msgid "Rotate 180°"
+msgstr ""
+
+#: qml/qml_qt5/CustomSupport.qml:381 qml/qml_qt6/CustomSupport.qml:406
+msgctxt "@option:check"
+msgid "Auto Orientation"
+msgstr ""
+
+#: qml/qml_qt5/CustomSupport.qml:395 qml/qml_qt6/CustomSupport.qml:419
+msgctxt "@option:check"
+msgid "Scaling in main Directions"
+msgstr ""
+
+#: qml/qml_qt5/CustomSupport.qml:409 qml/qml_qt6/CustomSupport.qml:431
+msgctxt "@option:check"
+msgid "Equalize heights"
+msgstr ""
